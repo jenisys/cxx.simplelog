@@ -11,7 +11,7 @@
 
 project:
     name: cxx_log
-    description: "Explore CXXLOG_...() macros"
+    description: "Explore CXXLOG_...() macros w/ spdlog, ..."
 
 run:
     echo: true

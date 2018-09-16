@@ -2,3 +2,5 @@
 *.log
 *.lib
 /build
+/bin/
+/.cproject
