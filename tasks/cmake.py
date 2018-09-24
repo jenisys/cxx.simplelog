@@ -158,6 +158,18 @@ def _cmake_build(ctx, project_dir, args=None, generator=None, build_dir=BUILD_DI
         ctx.run("cmake --build . %s" % build_args)
 
 
+def _cmake_test(ctx, project_dir, args=None, generator=None, build_dir=BUILD_DIR):
+    build_args = ""
+    if args:
+        build_args = " ".join(args)
+    project_dir = Path(project_dir)
+    project_build_dir = project_dir/build_dir
+    project_build_dir.makedirs_p()
+
+    with cd(project_build_dir):
+        print("CMAKE-TEST: %s" % project_build_dir)  # XXX os.getcwd())
+        ctx.run("ctest %s" % build_args)
+
 def _cmake_ensure_init(ctx, project_dir, generator=None, args=None, build_dir=BUILD_DIR):
     project_dir = Path(project_dir)
     project_build_dir = project_dir/build_dir
@@ -216,6 +228,15 @@ def _cmake_project_store_generator(cmake_project, cmake_generator):
     cmake_generator_marker_file.write_text(cmake_generator)
 
 
+def _cmake_project_load_generator_and_ensure_init(ctx, cmake_project, generator=None, 
+                                           init_args=None):
+    cmake_generator = _cmake_project_load_generator(cmake_project)
+    if generator and (cmake_generator != generator):
+        cmake_generator = generator
+    _cmake_ensure_init(ctx, cmake_project, generator=cmake_generator, args=init_args)
+    return cmake_generator
+
+
 # -----------------------------------------------------------------------------
 # TASKS:
 # -----------------------------------------------------------------------------
@@ -224,23 +245,38 @@ def init(ctx, project="all", generator=None, args=None):
     """Initialize all cmake projects."""
     cmake_projects = _cmake_select_projects(ctx, project)
     for cmake_project in cmake_projects:
-        cmake_generator = _cmake_project_load_generator(cmake_project)
-        if generator and (cmake_generator != generator):
-            cmake_generator = generator
-        _cmake_ensure_init(ctx, cmake_project,
-                           generator=cmake_generator, args=args)
+        _cmake_project_load_generator_and_ensure_init(ctx, cmake_project, 
+                                               generator, init_args=args)
+        # cmake_generator = _cmake_project_load_generator(cmake_project)
+        # if generator and (cmake_generator != generator):
+        #     cmake_generator = generator
+        # _cmake_ensure_init(ctx, cmake_project,
+        #                    generator=cmake_generator, args=args)
 
 @task
 def build(ctx, project="all", args=None, generator=None, init_args=None):
     """Build one or all cmake projects."""
     cmake_projects = _cmake_select_projects(ctx, project)
     for cmake_project in cmake_projects:
-        cmake_generator = _cmake_project_load_generator(cmake_project)
-        if generator and (cmake_generator != generator):
-            cmake_generator = generator
-        _cmake_ensure_init(ctx, cmake_project, generator=cmake_generator, args=init_args)
+        # cmake_generator = _cmake_project_load_generator(cmake_project)
+        # if generator and (cmake_generator != generator):
+        #     cmake_generator = generator
+        # _cmake_ensure_init(ctx, cmake_project, generator=cmake_generator, args=init_args)
+        _cmake_project_load_generator_and_ensure_init(ctx, cmake_project,
+                                                      generator,
+                                                      init_args=init_args)
         _cmake_build(ctx, cmake_project, args=args)
 
+
+@task
+def test(ctx, project="all", args=None, generator=None, init_args=None):
+    """Test one or all cmake projects."""
+    cmake_projects = _cmake_select_projects(ctx, project)
+    for cmake_project in cmake_projects:
+        _cmake_project_load_generator_and_ensure_init(ctx, cmake_project,
+                                                      generator,
+                                                      init_args=init_args)
+        _cmake_test(ctx, cmake_project, args=args)
 
 # @task
 # def build_clean(ctx, project="all", args=None, generator=None, init_args=None):
@@ -275,12 +311,41 @@ def rebuild(ctx, project="all", args=None, generator=None, init_args=None):
     build(ctx, project=project, args=args, generator=generator, init_args=init_args)
 
 
+@task
+def all(ctx, project="all", args=None, generator=None, init_args=None, test_args=None):
+    """Performs multiple stsps for one (or more) projects:
+    
+    - cmake.init
+    - cmake.build
+    - cmake.test (= ctest)
+    """
+    # init(ctx, project=project, generator=generator, args=init_args)
+    build(ctx, project=project, args=args, generator=generator, init_args=init_args)
+    test(ctx, project=project, args=test_args, generator=generator, init_args=init_args)
+    
+
+@task
+def redo_all(ctx, project="all", args=None, generator=None, init_args=None, test_args=None):
+    """Performs multiple steps for one (or more) projects:
+    
+    - cmake.reinit
+    - cmake.build
+    - cmake.test (= ctest)
+    """
+    reinit(ctx, project=project, generator=generator, args=init_args)
+    build(ctx, project=project, args=args, generator=generator, init_args=init_args)
+    test(ctx, project=project, args=test_args, generator=generator, init_args=init_args)
+    
+
 # -----------------------------------------------------------------------------
 # TASK CONFIGURATION:
 # -----------------------------------------------------------------------------
 namespace = Collection()
+namespace.add_task(all)
+namespace.add_task(redo_all)
 namespace.add_task(init)
 namespace.add_task(build, default=True)
+namespace.add_task(test)
 namespace.add_task(clean)
 namespace.add_task(reinit)
 namespace.add_task(rebuild)

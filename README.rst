@@ -110,4 +110,12 @@ BROWSING:
     - Stream-based
 
 * logog (license: BSD-like): https://github.com/johnwbyrd/logog
-    - 
+
+MORE:
+* https://github.com/3Hren/blackhole
+* https://www.boost.org/doc/libs/1_56_0/libs/log/doc/html
+
+RELATED: CMake and FindBoost
+* https://www.johnlamp.net/cmake-tutorial-6-realistically-getting-a-boost.html
+* http://gernotklingler.com/blog/simple-customized-logger-based-boost-log-v2/
+

@@ -20,13 +20,16 @@ run:
 clean:
     extra_directories:
       - "build"
+      - "**/build"
 
 clean_all:
     extra_directories:
       - .pytest_cache
+      - bin
 
 cmake:
     project_dirs:
       - .
+      # DISABLED: - boost_log.example
     generator: ninja
 
