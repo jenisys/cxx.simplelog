@@ -12,20 +12,19 @@
 #define SIMPLELOG_USE_BACKEND_SPDLOG 1
 // #define SIMPLELOG_USE_BACKEND 10
 #include "simplelog/LogMacros.hpp"
-#include "simplelog/backend/spdlog/Utils.hpp"
-#include <spdlog/sinks/stdout_sinks.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <iostream>
 
 
 // ==========================================================================
-// EXAMPLE
+// EXAMPLE: Logging sources/users
 // ==========================================================================
 void example_useLogging(void)
 {
     CXXLOG_DEFINE_CATEGORY(log, "foo.bar");
     // spdlog_setLevelToAll(CXXLOG_BACKEND_LEVEL_INFO);
 
+    // -- USING fmtlib/fmt: For safe, fast/efficient formatting of parameters.
+    // NOTE: Python-like: print("Hello {}".format("Alice"))
+    // SEE:  https://github.com/fmtlib/fmt
     CXXLOG_ERROR0(log, "Hello Alice");
     CXXLOG_WARN(log, "Hello {}", "Bob");
     CXXLOG_INFO(log, "Hello {0} and {1}", "Alice", "Bob");
@@ -69,11 +68,17 @@ CXXLOG_DEFINE_STATIC_CATEGORY(rootLog, "root");
 
 
 // ==========================================================================
-// MAIN-FUNCTION:
+// MAIN-FUNCTION: Setup logging subsystem
 // ==========================================================================
+#include "simplelog/backend/spdlog/Utils.hpp"
+#include <spdlog/sinks/stdout_sinks.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <iostream>
+
 int main(int argc, char **argv)
 {
     // -- SETUP LOGGING SUBSYSTEM:
+    auto logger1 = getLogger(); //< ENSURE: Logger is created and registered.
     auto console = spdlog::stdout_color_mt("console");
     // auto console = spdlog::stdout_logger_mt("console");
     spdlog::set_level(spdlog::level::debug);
@@ -81,11 +86,11 @@ int main(int argc, char **argv)
     // spdlog_setLevelToAll(CXXLOG_BACKEND_LEVEL_INFO);
     spdlog_setLevelToAll(spdlog::level::info);
 
+    // -- USE LOGGING SUBSYSTEM:
     console->warn("main: Logging started.");
     rootLog->info("main: Use static logger.root");
     example_useLogging();
-    // spdlog_setLevelToAll(CXXLOG_BACKEND_LEVEL_WARN);
-    spdlog_setLevelToAll(spdlog::level::warn);
+    spdlog_setLevelToAll(spdlog::level::warn); //< OR: CXXLOG_BACKEND_LEVEL_WARN
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
     example_useStaticLogger();
