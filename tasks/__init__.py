@@ -33,8 +33,8 @@ from path import Path
 from contextlib import contextmanager
 
 # -- TASK-LIBRARY:
-from . import clean
-from . import cmake
+from . import _tasklet_cleanup as cleanup
+from cmake_build import tasks as cmake_tasks
 # DISABLED: from . import docs
 # DISABLED: from . import test
 # DISABLED: from . import release
@@ -42,35 +42,24 @@ from . import cmake
 # -----------------------------------------------------------------------------
 # TASKS:
 # -----------------------------------------------------------------------------
-@task
-def init(ctx):
-    """Initialize everything."""
-    cmake.init(ctx)
-
-
-@task
-def reinit(ctx):
-    """Reinitialize everything."""
-    clean.clean(ctx)
-    init(ctx)
 
 
 # -----------------------------------------------------------------------------
 # TASK CONFIGURATION:
 # -----------------------------------------------------------------------------
 namespace = Collection()
-namespace.add_task(clean.clean)
-namespace.add_task(clean.clean_all)
-namespace.add_task(init)
-namespace.add_task(reinit)
-namespace.add_task(cmake.test, name="ctest")
-namespace.add_collection(Collection.from_module(cmake))
+namespace.add_collection(Collection.from_module(cmake_tasks, name="cmake"))
+namespace.add_collection(Collection.from_module(cleanup, name="cleanup"))
 # DISABLED: namespace.add_collection(Collection.from_module(docs))
 # DISABLED: namespace.add_collection(Collection.from_module(test))
 # DISABLED: namespace.add_collection(Collection.from_module(release))
 
 # -- INJECT: clean configuration into this namespace
-namespace.configure(clean.namespace.configuration())
+namespace.configure(cleanup.namespace.configuration())
+
+# -- EXTENSTION-POINT: CLEANUP TASKS (called by: "clean" task):
+cleanup.cleanup_tasks.add_task(cleanup.clean_python)
+
 if sys.platform.startswith("win"):
     # -- OVERRIDE SETTINGS: For platform=win32, ... (Windows)
     from ._compat_shutil import which

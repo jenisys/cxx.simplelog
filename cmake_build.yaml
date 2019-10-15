@@ -1,0 +1,37 @@
+# ===========================================================================
+# CMAKE-BUILD CONFIGURATION: cmake_build.yaml
+# ===========================================================================
+# PROJECT: cxx_log
+# DESCRIPTION:
+#   * Specifies one (or more) CMake projects to build.
+#   * Simplifies CMake project setup by providing pre-canned recipes
+#     for the build-configurations, cmake-toolchains, cmake-generators, etc.
+#   * Simplifies usage of multiple cmake-toolchains
+#   * Simplifies usage of multiple cmake-generators
+#
+# SEE ALSO:
+#   * https://github.com/jenisys/cmake-build
+# ===========================================================================
+
+cmake_generator: ninja
+build_dir_schema: "build.{BUILD_CONFIG}"
+build_config: host_debug
+build_configs:
+  - debug
+  - release
+
+run:
+  echo: true
+
+cleanup:
+  extra_directories:
+    - "build"
+    - "build.*"
+
+cleanup_all:
+  extra_directories:
+    - "**/build.*"
+    - .hypothesis
+    - .pytest_cache
+    - .tox
+    - .venv*
