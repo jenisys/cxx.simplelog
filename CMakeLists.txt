@@ -5,7 +5,9 @@
 cmake_minimum_required(VERSION 3.4.0)
 project(simplelog VERSION 0.1.0 LANGUAGES CXX)
 # OR: enable_language(CXX)
-option(BOOSTLOG_EXAMPLE_ON "Enable boost.log example" ON)
+
+# XXX option(USE_BOOSTLOG "Enable boost.log functionality" OFF)
+option(BOOSTLOG_EXAMPLE_ON "Enable boost.log example" OFF)
 
 # ---------------------------------------------------------------------------
 # SECTION: C++ Compiler Configuration
@@ -25,27 +27,38 @@ message(STATUS "USING BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 # ---------------------------------------------------------------------------
 # SHORTCUT:
 # set(SPDLOG_INCDIR "/usr/local/include")
-find_package(spdlog 1.1.0 REQUIRED)
+set(SPDLOG_VERSION "1.1.0")
+set(SPDLOG_VERSION "1.3.1")
+set(SPDLOG_VERSION "1.4.2")
+find_package(spdlog REQUIRED)
 message(STATUS "USING: spdlog")
+add_subdirectory(lib/spdlog spdlog)
 
-set(BOOSTLOG_COMPONENTS  "log" "log_setup" "date_time" "system" "filesystem")
-set(BOOSTLOG_COMPILE_DEFINITIONS    BOOST_LOG_DYN_LINK=1)
-set(BOOSTLOG_LIBRARIES 
-    Boost::log 
-    Boost::log_setup 
-    Boost::date_time 
-    Boost::system 
-    Boost::filesystem
-)
-find_package(Boost COMPONENTS ${BOOSTLOG_COMPONENTS} REQUIRED)
-# NOT-NEEDED: set(BOOST_INCDIR "/usr/local/include")
+
+if(BOOSTLOG_EXAMPLE_ON)
+    set(BOOSTLOG_COMPONENTS  "log" "log_setup" "date_time" "system" "filesystem")
+    set(BOOSTLOG_COMPILE_DEFINITIONS    BOOST_LOG_DYN_LINK=1)
+    set(BOOSTLOG_LIBRARIES
+        Boost::log
+        Boost::log_setup
+        Boost::date_time
+        Boost::system
+        Boost::filesystem
+    )
+    find_package(Boost COMPONENTS ${BOOSTLOG_COMPONENTS} REQUIRED)
+    # NOT-NEEDED: set(BOOST_INCDIR "/usr/local/include")
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: Target
 # ---------------------------------------------------------------------------
 add_executable(simplelog_example_spdlog
-    example_spdlog_main.cpp)
-target_link_libraries(simplelog_example_spdlog INTERFACE spdlog::spdlog)
+    example_spdlog_main.cpp
+)
+target_link_libraries(simplelog_example_spdlog 
+    PUBLIC 
+        spdlog::spdlog
+)
 target_include_directories(simplelog_example_spdlog
     # PUBLIC ${SPDLOG_INCDIR}
     PUBLIC
@@ -58,7 +71,7 @@ target_include_directories(simplelog_example_spdlog
 #    INTERFACE_COMPILE_DEFINITIONS
 #        "SIMPLELOG_USE_BACKEND_SPDLOG=1"
 # )
-# XXX set_property(TARGET simplelog_example PROPERTY EchoString "CXX-BUILD: hello_app ...")
+
 
 add_executable(simplelog_example_null
     example_null_main.cpp)

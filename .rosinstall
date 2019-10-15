@@ -1,0 +1,4 @@
+- git:
+    local-name: lib/spdlog
+    uri: https://github.com/gabime/spdlog.git
+    version: v1.4.2

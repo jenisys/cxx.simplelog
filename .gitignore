@@ -1,7 +1,12 @@
 *.o
 *.log
 *.lib
-/build
+/build/
+/build.*/
 /bin/
 /.cproject
 /.vscode/
+__*/
+
+# -- DISABLED: GIT-SUBPROJECTS
+/lib/spdlog
