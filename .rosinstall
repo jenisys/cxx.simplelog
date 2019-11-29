@@ -2,3 +2,11 @@
     local-name: lib/spdlog
     uri: https://github.com/gabime/spdlog.git
     version: v1.4.2
+- git:
+    local-name: lib/fmt
+    uri: https://github.com/fmtlib/fmt.git
+    version: 6.0.0
+- git:
+    local-name: lib/doctest
+    uri: https://github.com/onqtam/doctest.git
+    version: 2.3.5

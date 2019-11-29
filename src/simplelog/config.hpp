@@ -26,3 +26,14 @@
 #  error "UNKNOWN: SIMPLELOG_USE_BACKEND" SIMPLELOG_USE_BACKEND
 #  include "simplelog/backend/null/LogBackendMacros.hpp"
 #endif
+
+// -- ENABLE/DISABLE: Short LOG macros, like: 
+// SLOG_ERROR(...)       instead of SIMPLELOG_ERROR(...)
+// SLOGM_ERROR(log, ...) instead of SIMPLELOGM_ERROR(log, ...)
+#if SIMPLELOG_DISABLE_SHORT_MACROS
+#  undef SIMPLELOG_HAVE_SHORT_MACROS
+#  define SIMPLELOG_HAVE_SHORT_MACROS  0
+#endif
+#ifndef SIMPLELOG_HAVE_SHORT_MACROS
+#  define SIMPLELOG_HAVE_SHORT_MACROS  1
+#endif

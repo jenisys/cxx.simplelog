@@ -14,49 +14,48 @@
 // ==========================================================================
 void example_useLogging(void)
 {
-    CXXLOG_DEFINE_CATEGORY(log, "foo.bar");
-    // spdlog_setLevelToAll(CXXLOG_BACKEND_LEVEL_INFO);
+    SIMPLELOG_DEFINE_DEFAULT_MODULE("foo.bar");
+    // spdlog_setLevelToAll(SIMPLELOG_BACKEND_LEVEL_INFO);
 
-    CXXLOG_ERROR0(log, "Hello Alice");
-    CXXLOG_WARN(log, "Hello {}", "Bob");
-    CXXLOG_INFO(log, "Hello {0} and {1}", "Alice", "Bob");
-    CXXLOG_INFO(log, "Hello type {0}, int:{1} and bool:{2}", "Alice", 42, true);
+    SLOG_ERROR0("Hello Alice");
+    SLOG_WARN("Hello {}", "Bob");
+    SLOG_INFO("Hello {0} and {1}", "Alice", std::string("Bob"));
+    SLOG_INFO("Hello type {0}, int:{1} and bool:{2}", "Alice", 42, true);
 }
 
 void example_useTwoLoggers(void)
 {
-    CXXLOG_DEFINE_CATEGORY(log1, "foo.one");
-    CXXLOG_DEFINE_CATEGORY(log2, "foo.two");
+    SIMPLELOG_DEFINE_MODULE(log1, "foo.one");
+    SIMPLELOG_DEFINE_MODULE(log2, "foo.two");
 
-    CXXLOG_ERROR0(log1, "Logger_1");
-    CXXLOG_WARN0(log2, "Logger_2");
+    SLOGM_ERROR0(log1, "Logger_1");
+    SLOGM_WARN0(log2, "Logger_2");
 }
 
 void example_useTwoLoggersWithSameName(void)
 {
-    CXXLOG_DEFINE_CATEGORY(log1, "foo.same");
-    CXXLOG_DEFINE_CATEGORY(log2, "foo.same");
+    SIMPLELOG_DEFINE_MODULE(log1, "foo.same");
+    SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
 
-    CXXLOG_ERROR0(log1, "Logger_1");
-    CXXLOG_WARN0(log2,  "Logger_2");
+    SLOGM_ERROR0(log1, "Logger_1");
+    SLOGM_WARN0(log2,  "Logger_2");
 }
 
-// std::shared_ptr<spdlog::logger>
-auto getLogger(void)
+auto getStaticLogger(void)
 {
-    // static CXXLOG_DEFINE_CATEGORY(theLog, "foo.static");
-    CXXLOG_DEFINE_STATIC_CATEGORY(theLog, "foo.static");
+    SIMPLELOG_DEFINE_STATIC_MODULE(theLog, "foo.static");
+    // -- SAME AS: static SIMPLELOG_DEFINE_MODULE(theLog, "foo.static");
     return theLog;
 }
 
 void example_useStaticLogger(void)
 {
-    auto log = getLogger();
-    CXXLOG_ERROR0(log, "Hello Alice");
+    auto log = getStaticLogger();
+    SLOGM_ERROR0(log, "Hello Alice");
 }
 
 
-CXXLOG_DEFINE_STATIC_CATEGORY(rootLog, "root");
+SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
 
 // ==========================================================================

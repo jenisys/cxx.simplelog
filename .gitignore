@@ -9,4 +9,6 @@
 __*/
 
 # -- DISABLED: GIT-SUBPROJECTS
-/lib/spdlog
+/lib/spdlog/
+/lib/fmt/
+/lib/doctest/

@@ -15,19 +15,26 @@ struct NullCategory {};
 // --------------------------------------------------------------------------
 // LOGGING BACKEND MACROS
 // --------------------------------------------------------------------------
-// #define CXXLOG_BACKEND_NULL_IDENTIER(x) (x ## __LINE__)
-#define CXXLOG_BACKEND_NULL_STATEMENT /* (void) */
-#define CXXLOG_BACKEND_DEFINE_CATEGORY(vname, name) ::simplelog::backend::null::NullCategory *vname = nullptr
-#define CXXLOG_BACKEND_DEFINE_STATIC_CATEGORY(vname, name) static ::simplelog::backend::null::NullCategory* vname = nullptr
-#define CXXLOG_BACKEND_LOG(logger, level, format, ...)  CXXLOG_BACKEND_NULL_STATEMENT
-#define CXXLOG_BACKEND_LOG0(logger, level, message)     CXXLOG_BACKEND_NULL_STATEMENT
-#define CXXLOG_BACKEND_LOG_IF(condition, logger, level, format, ...) CXXLOG_BACKEND_NULL_STATEMENT
-#define CXXLOG_BACKEND_LOG0_IF(condition, logger, level, message)    CXXLOG_BACKEND_NULL_STATEMENT
+// #define SIMPLELOG_BACKEND_NULL_IDENTIER(x) (x ## __LINE__)
+#define SIMPLELOG_BACKEND_NULL_STATEMENT /* (void) */
+#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) ::simplelog::backend::null::NullCategory *vname = nullptr
+#define SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(vname, name) \
+    static SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name)
 
-#define CXXLOG_BACKEND_LEVEL_OFF        10
-#define CXXLOG_BACKEND_LEVEL_FATAL      6
-#define CXXLOG_BACKEND_LEVEL_CRITICAL   5
-#define CXXLOG_BACKEND_LEVEL_ERROR      4
-#define CXXLOG_BACKEND_LEVEL_WARN       3
-#define CXXLOG_BACKEND_LEVEL_INFO       2
-#define CXXLOG_BACKEND_LEVEL_DEBUG      1
+#define SIMPLELOG_BACKEND_LOG(logger, level, format, ...)  SIMPLELOG_BACKEND_NULL_STATEMENT
+#define SIMPLELOG_BACKEND_LOG0(logger, level, message)     SIMPLELOG_BACKEND_NULL_STATEMENT
+#define SIMPLELOG_BACKEND_LOG_IF(condition, logger, level, format, ...) SIMPLELOG_BACKEND_NULL_STATEMENT
+#define SIMPLELOG_BACKEND_LOG0_IF(condition, logger, level, message)    SIMPLELOG_BACKEND_NULL_STATEMENT
+
+#define SIMPLELOG_BACKEND_LEVEL_OFF        10
+#define SIMPLELOG_BACKEND_LEVEL_FATAL      6
+#define SIMPLELOG_BACKEND_LEVEL_CRITICAL   5
+#define SIMPLELOG_BACKEND_LEVEL_ERROR      4
+#define SIMPLELOG_BACKEND_LEVEL_WARN       3
+#define SIMPLELOG_BACKEND_LEVEL_INFO       2
+#define SIMPLELOG_BACKEND_LEVEL_DEBUG      1
+
+// --------------------------------------------------------------------------
+// REUSE: LOGGING BACKEND DERIVED MACROS
+// --------------------------------------------------------------------------
+// AVOIDED: #include "simplelog/backend/detail/LogBackendDerivedMacros.hpp"

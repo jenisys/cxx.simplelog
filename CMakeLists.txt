@@ -1,13 +1,14 @@
 # ===========================================================================
-# CMAKE: simplelog Explorations
+# CMAKE: cxx.simplelog
 # ===========================================================================
 
-cmake_minimum_required(VERSION 3.4.0)
-project(simplelog VERSION 0.1.0 LANGUAGES CXX)
-# OR: enable_language(CXX)
+cmake_minimum_required(VERSION 3.12)
+project(simplelog VERSION 0.1.2 LANGUAGES CXX)
 
-# XXX option(USE_BOOSTLOG "Enable boost.log functionality" OFF)
-option(BOOSTLOG_EXAMPLE_ON "Enable boost.log example" OFF)
+option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
+option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
+option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled spdlog library" OFF)
+option(BUILD_TESTING "Enable tests (and examples)" ON)
 
 # ---------------------------------------------------------------------------
 # SECTION: C++ Compiler Configuration
@@ -18,92 +19,81 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic")
 
 
-# XXX include("${PROJECT_SOURCE_DIR}/../cmake/build_config.cmake")
 include("cmake/build_config.cmake")
 message(STATUS "USING BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT:
-# set(SPDLOG_INCDIR "/usr/local/include")
-set(SPDLOG_VERSION "1.1.0")
-set(SPDLOG_VERSION "1.3.1")
-set(SPDLOG_VERSION "1.4.2")
+# SHORTCUT: set(SPDLOG_VERSION "1.4.2")
 find_package(spdlog REQUIRED)
-message(STATUS "USING: spdlog")
-add_subdirectory(lib/spdlog spdlog)
+if(NOT spdlog_FOUND)
+    set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
+endif()
 
-
-if(BOOSTLOG_EXAMPLE_ON)
-    set(BOOSTLOG_COMPONENTS  "log" "log_setup" "date_time" "system" "filesystem")
-    set(BOOSTLOG_COMPILE_DEFINITIONS    BOOST_LOG_DYN_LINK=1)
-    set(BOOSTLOG_LIBRARIES
-        Boost::log
-        Boost::log_setup
-        Boost::date_time
-        Boost::system
-        Boost::filesystem
-    )
-    find_package(Boost COMPONENTS ${BOOSTLOG_COMPONENTS} REQUIRED)
-    # NOT-NEEDED: set(BOOST_INCDIR "/usr/local/include")
+# -- THIRD-PARTY PARTS:
+if(SIMPLELOG_USE_BUNDLED_SPDLOG)
+    message(STATUS "USING: spdlog (bundled, as subproject)")
+    add_subdirectory(lib/spdlog spdlog)
+endif()
+if(SIMPLELOG_USE_BUNDLED_FMTLIB)
+    message(STATUS "USING: fmt (bundled, as subproject)")
+    add_subdirectory(lib/fmt fmt)
 endif()
 
 # ---------------------------------------------------------------------------
-# SECTION: Target
+# SECTION: LIBS
+# ---------------------------------------------------------------------------
+# -- HEADER-ONLY LIBRARY:
+add_library(simplelog INTERFACE)
+add_library(SimpleLog::simplelog ALIAS simplelog)
+target_include_directories(simplelog
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        $<INSTALL_INTERFACE:include>
+)
+# -- SIMPLELOG DEFAULT-BACKEND:
+if(SIMPLELOG_USE_BACKEND_SPDLOG)
+    target_link_libraries(simplelog INTERFACE spdlog::spdlog)
+    set_target_properties(simplelog 
+        PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+            "SIMPLELOG_USE_BACKEND_SPDLOG=1"
+    )
+endif()
+
+
+# ---------------------------------------------------------------------------
+# SECTION: EXECUTABLES
 # ---------------------------------------------------------------------------
 add_executable(simplelog_example_spdlog
-    example_spdlog_main.cpp
+    main.example_spdlog.cpp
 )
 target_link_libraries(simplelog_example_spdlog 
-    PUBLIC 
+    PRIVATE
+        SimpleLog::simplelog
         spdlog::spdlog
+        # PREPARED: fmt::fmt
 )
-target_include_directories(simplelog_example_spdlog
-    # PUBLIC ${SPDLOG_INCDIR}
-    PUBLIC
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+target_compile_options(simplelog_example_spdlog
+    PRIVATE  -Wall -Wpedantic
 )
-# set_property(TARGET simplelog_example_spdlog::simplelog_example_spdlog
-#    INTERFACE_COMPILE_DEFINITIONS
-#        "SIMPLELOG_USE_BACKEND_SPDLOG=1"
-# )
+target_compile_definitions(simplelog_example_spdlog
+    PRIVATE  SIMPLELOG_USE_BACKEND_SPDLOG=1
+)
 
-
+# -- EXECUTABLE:
 add_executable(simplelog_example_null
-    example_null_main.cpp)
-target_include_directories(simplelog_example_null
-    PUBLIC
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+    main.example_null.cpp
 )
-
-# DISABLED: Link problems: Missing symbol
-if(BOOSTLOG_EXAMPLE_ON)
-    add_executable(simplelog_example_boostlog example_boostlog_main.cpp)
-    target_link_libraries(simplelog_example_boostlog 
-        PRIVATE ${BOOSTLOG_LIBRARIES}
-        # PRIVATE Boost::log Boost::log_setup Boost::date_time Boost::system Boost::filesystem
-    )
-    target_include_directories(simplelog_example_boostlog
-        PUBLIC ${Boost_INCLUDE_DIRS}
-        PUBLIC
-            $<INSTALL_INTERFACE:include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
-    )
-    target_compile_definitions(simplelog_example_boostlog
-        PRIVATE ${BOOSTLOG_COMPILE_DEFINITIONS}
-    )
-endif()
-
-
+target_link_libraries(simplelog_example_null 
+    PRIVATE  SimpleLog::simplelog
+)
+target_compile_options(simplelog_example_null
+    PRIVATE  -Wpedantic
+)
+target_compile_definitions(simplelog_example_null
+    PRIVATE  SIMPLELOG_USE_BACKEND_NULL=1
+)
 # ---------------------------------------------------------------------------
 # SECTION: AUTO-RUN PROGRAMS
 # ---------------------------------------------------------------------------
@@ -117,49 +107,33 @@ add_custom_target(run.simplelog_example_null ALL
     DEPENDS simplelog_example_null
     COMMENT "RUN: simplelog_example_null")
 
-if(BOOSTLOG_EXAMPLE_ON)
-    add_custom_target(run.simplelog_example_boostlog ALL
-        COMMAND simplelog_example_boostlog
-        DEPENDS simplelog_example_boostlog
-        COMMENT "RUN: simplelog_example_boostlog")
-endif()
-
 # ---------------------------------------------------------------------------
-# SECTION: Unittests
+# SECTION: Unittests / Examples
 # ---------------------------------------------------------------------------
-enable_testing()
-set(TEST_PROGRAMS
-    simplelog_example_spdlog
-    simplelog_example_null
-)
-if(BOOSTLOG_EXAMPLE_ON)
-    list(APPEND TEST_PROGRAMS simplelog_example_boostlog)
+if(BUILD_TESTING)
+    enable_testing()
+    set(TEST_PROGRAMS
+        simplelog_example_spdlog
+        simplelog_example_null
+    )
+
+
+    # -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
+    set(RUN_AUTO_TESTS ON)
+    if(RUN_AUTO_TESTS)
+        add_custom_target(tests ALL
+            COMMAND ctest
+            DEPENDS ${TEST_PROGRAMS}
+            COMMENT "AUTO-RUN TESTS with: all")
+    endif()
+
+    # -- TESTS:
+    add_test(NAME test.simplelog_example_spdlog   COMMAND simplelog_example_spdlog)
+    set_tests_properties(test.simplelog_example_spdlog PROPERTIES 
+        PASS_REGULAR_EXPRESSION "\\[foo.bar\\] \\[info\\] Hello Alice and Bob")
+
+    add_test(NAME test.simplelog_example_null   COMMAND simplelog_example_null)
+    set_tests_properties(test.simplelog_example_null PROPERTIES 
+        PASS_REGULAR_EXPRESSION "NULL-EXAMPLE: Finished.")
+
 endif()
-
-
-# -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
-set(RUN_AUTO_TESTS ON)
-if(RUN_AUTO_TESTS)
-    add_custom_target(tests ALL
-        COMMAND ctest
-        DEPENDS ${TEST_PROGRAMS}
-        COMMENT "AUTO-RUN TESTS with: all")
-endif()
-
-# -- TEST PROGRAM: test.hello_Responder
-# add_executable(test.hello_Responder
-#     test/hello/test.Responder.cpp)
-# target_link_libraries(test.hello_Responder HELLO::hello)
-# NOT-NEEDED: Due to using the package-dependency: HELLO::hello
-#   target_include_directories(test.hello_Responder
-#       PRIVATE ${HELLO_LIB_INCLUDE_DIR})
-
-# -- TESTS:
-add_test(NAME test.simplelog_example_spdlog   COMMAND simplelog_example_spdlog)
-set_tests_properties(test.simplelog_example_spdlog PROPERTIES 
-    PASS_REGULAR_EXPRESSION "\\[foo.bar\\] \\[info\\] Hello Alice and Bob")
-
-add_test(NAME test.simplelog_example_null   COMMAND simplelog_example_null)
-set_tests_properties(test.simplelog_example_null PROPERTIES 
-    PASS_REGULAR_EXPRESSION "NULL-EXAMPLE: Finished.")
-
