@@ -1,7 +1,7 @@
 # ===========================================================================
 # CMAKE-BUILD CONFIGURATION: cmake_build.yaml
 # ===========================================================================
-# PROJECT: cxx_log
+# PROJECT: cxx.simplelog
 # DESCRIPTION:
 #   * Specifies one (or more) CMake projects to build.
 #   * Simplifies CMake project setup by providing pre-canned recipes
@@ -19,6 +19,18 @@ build_config: host_debug
 build_configs:
   - debug
   - release
+  - host_debug.clang:
+      cmake_toolchain: cmake/toolchain/host_clang.cmake
+  - host_release.clang:
+      cmake_toolchain: cmake/toolchain/host_clang.cmake
+  - host_debug.gcc:
+      cmake_toolchain: cmake/toolchain/host_gcc.cmake
+  - host_release.gcc:
+      cmake_toolchain: cmake/toolchain/host_gcc.cmake
+  - macOS_x86_64_debug.clang:
+      cmake_toolchain: cmake/toolchain/macOS_clang_x86_64.cmake
+  - macOS_x86_64_release.clang:
+      cmake_toolchain: cmake/toolchain/macOS_clang_x86_64.cmake
 
 run:
   echo: true

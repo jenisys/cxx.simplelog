@@ -97,7 +97,7 @@ void example_useStaticLogger(void)
 // ==========================================================================
 // MAIN-FUNCTION: Setup logging subsystem
 // ==========================================================================
-#include "simplelog/backend/spdlog/Utils.hpp"
+#include "simplelog/backend/spdlog/SetupUtil.hpp"
 #include <spdlog/sinks/stdout_sinks.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <iostream>
@@ -110,7 +110,11 @@ void use_simplelog(void)
     example_useLoggingWithOverriddenDefaultModule();
 
     // -- SPECIAL CASE: Reassign LOGGING_THRESHOLD_LEVEL here.
-    spdlog_setLevelToAll(spdlog::level::warn); //< OR: SIMPLELOG_BACKEND_LEVEL_WARN
+    // OR: SIMPLELOG_BACKEND_LEVEL_WARN
+    SIMPLELOG_DEFINE_MODULE(console, "console");
+    SLOGM_WARN0(console, "SETUP_LOGGING: setMinLevel=warn");
+    simplelog::backend_spdlog::setMinLevel(spdlog::level::warn);
+    
     // -- SPECIAL CASE END.
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
@@ -124,10 +128,21 @@ int main(int argc, char **argv)
     auto logger1 = getLogger(); //< ENSURE: Logger is created and registered.
     auto console = spdlog::stdout_color_mt("console");
     // auto console = spdlog::stdout_logger_mt("console");
+
+    // -- CHANGE: LOG-MESSAGE FORMAT PATTERN:
+    // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
+    // PATTERN %v: message text
+    // PATTERN %@: source-location
+    // SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>  <message>
+    spdlog::set_pattern("%Y-%m-%d_%T.%f  %^%10n::%-7l%$  %v");
+    
+    console->warn("SETUP_LOGGING: Set level=debug");
     spdlog::set_level(spdlog::level::debug);
-    spdlog_useSinkAsDefaultSink(console);
-    spdlog_setLevelToAll(spdlog::level::info);
-    // -- SAME AS: spdlog_setLevelToAll(SIMPLELOG_BACKEND_LEVEL_INFO);
+    auto theSink = console->sinks().front();
+    simplelog::backend_spdlog::assignSink(theSink);
+    console->warn("SETUP_LOGGING: Set min-level=info");
+    simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
+    // -- SAME AS: setMinLevel(SIMPLELOG_BACKEND_LEVEL_INFO);
 
     // -- PHASE 2: USE LOGGING SUBSYSTEM
     console->warn("main: Logging started.");

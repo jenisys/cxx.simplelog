@@ -6,9 +6,6 @@
  * 
  * @see https://github.com/gabime/spdlog
  * @see https://github.com/fmtlib/fmt
- * 
- * More:
- * @see https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
  **/
 
 #pragma once
@@ -23,26 +20,14 @@
 #ifdef SIMPLELOG_BACKEND_LOG
 #error "ALREADY_DEFINED: SIMPLELOG_BACKEND_LOG"
 #endif
-#ifndef SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION
-#define SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION 1
-#endif
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND MACROS
 // --------------------------------------------------------------------------
 // #define _SIMPLELOG_NUMARGS(...) (sizeof((int[]){__VA_ARGS__}) / sizeof(int))
-#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) \
-    auto vname = ::simplelog::backend_spdlog::useOrCreateLogger(name)
-
-#if SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION
-#  define SIMPLELOG_BACKEND_LOG(logger, level, format, ...) \
-    logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, format, __VA_ARGS__)
-#  define SIMPLELOG_BACKEND_LOG0(logger, level, message) \
-    logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, message)
-#else
-#  define SIMPLELOG_BACKEND_LOG(logger, level, format, ...) logger->log(level, format, __VA_ARGS__)
-#  define SIMPLELOG_BACKEND_LOG0(logger, level, message)    logger->log(level, message)
-#endif
+#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) auto vname = ::simplelog::backend_spdlog::useOrCreateLogger(name)
+#define SIMPLELOG_BACKEND_LOG(logger, level, format, ...) logger->log(level, format, __VA_ARGS__)
+#define SIMPLELOG_BACKEND_LOG0(logger, level, message)    logger->log(level, message)
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND: LEVEL DEFINITIONS

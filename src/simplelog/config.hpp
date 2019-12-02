@@ -5,6 +5,12 @@
 
 #pragma once
 
+// -- PRE-CONFIGURED:
+// DISABLED: #define SIMPLELOG_DIAG 1
+
+// --------------------------------------------------------------------------
+// SIMPLELOG CONFIGURATION: Select backend, etc.
+// --------------------------------------------------------------------------
 #ifndef SIMPLELOG_DEFAULT_BACKEND
 #  define SIMPLELOG_DEFAULT_BACKEND 1
 #endif
@@ -37,3 +43,9 @@
 #ifndef SIMPLELOG_HAVE_SHORT_MACROS
 #  define SIMPLELOG_HAVE_SHORT_MACROS  1
 #endif
+
+#ifndef SIMPLELOG_DIAG
+#  define SIMPLELOG_DIAG 0
+#endif
+
+// -- ENDOF-HEADER-FILE

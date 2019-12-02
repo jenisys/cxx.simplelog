@@ -3,24 +3,47 @@
 # ===========================================================================
 
 cmake_minimum_required(VERSION 3.12)
-project(simplelog VERSION 0.1.2 LANGUAGES CXX)
+
+# include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ccache.cmake)
+include(cmake/ccache.cmake)
+
+# ---------------------------------------------------------------------------
+# PROJECT: simplelog
+# ---------------------------------------------------------------------------
+project(cxx.simplelog VERSION 0.1.4 LANGUAGES CXX)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
 option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled spdlog library" OFF)
+option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" OFF)
+option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
+option(BUILD_EXAMPLES "Enable simplelog examples" ON)
 option(BUILD_TESTING "Enable tests (and examples)" ON)
+set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
+
+# -- CMAKE_CONFIGURATION_TYPES
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type" FORCE)
+endif()
+# SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
+# IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
+#    SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  ${CMAKE_CONFIGURATION_TYPES})
+# ENDIF()
+
+# -- ARTIFACT DIRECTORY LAYOUT in BINARY_DIR:
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
 
 # ---------------------------------------------------------------------------
 # SECTION: C++ Compiler Configuration
 # ---------------------------------------------------------------------------
 # -- CMAKE_CXX_STANDARD: Needs to defined before any target to have effect.
-set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic")
-
-
+include("cmake/cxx.setup_cxx_standard.cmake")
 include("cmake/build_config.cmake")
-message(STATUS "USING BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "USING: CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
@@ -44,9 +67,10 @@ endif()
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
 # ---------------------------------------------------------------------------
+set(PROJECT_NAMESPACE "cxx_simplelog")
 # -- HEADER-ONLY LIBRARY:
 add_library(simplelog INTERFACE)
-add_library(SimpleLog::simplelog ALIAS simplelog)
+add_library(${PROJECT_NAMESPACE}::simplelog ALIAS simplelog)
 target_include_directories(simplelog
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -65,75 +89,58 @@ endif()
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
 # ---------------------------------------------------------------------------
-add_executable(simplelog_example_spdlog
-    main.example_spdlog.cpp
-)
-target_link_libraries(simplelog_example_spdlog 
-    PRIVATE
-        SimpleLog::simplelog
-        spdlog::spdlog
-        # PREPARED: fmt::fmt
-)
-target_compile_options(simplelog_example_spdlog
-    PRIVATE  -Wall -Wpedantic
-)
-target_compile_definitions(simplelog_example_spdlog
-    PRIVATE  SIMPLELOG_USE_BACKEND_SPDLOG=1
-)
-
-# -- EXECUTABLE:
-add_executable(simplelog_example_null
-    main.example_null.cpp
-)
-target_link_libraries(simplelog_example_null 
-    PRIVATE  SimpleLog::simplelog
-)
-target_compile_options(simplelog_example_null
-    PRIVATE  -Wpedantic
-)
-target_compile_definitions(simplelog_example_null
-    PRIVATE  SIMPLELOG_USE_BACKEND_NULL=1
-)
-# ---------------------------------------------------------------------------
-# SECTION: AUTO-RUN PROGRAMS
-# ---------------------------------------------------------------------------
-add_custom_target(run.simplelog_example_spdlog ALL
-    COMMAND simplelog_example_spdlog
-    DEPENDS simplelog_example_spdlog
-    COMMENT "RUN: simplelog_example_spdlog")
-
-add_custom_target(run.simplelog_example_null ALL
-    COMMAND simplelog_example_null
-    DEPENDS simplelog_example_null
-    COMMENT "RUN: simplelog_example_null")
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: Unittests / Examples
 # ---------------------------------------------------------------------------
 if(BUILD_TESTING)
-    enable_testing()
-    set(TEST_PROGRAMS
-        simplelog_example_spdlog
-        simplelog_example_null
-    )
-
-
-    # -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
-    set(RUN_AUTO_TESTS ON)
-    if(RUN_AUTO_TESTS)
-        add_custom_target(tests ALL
-            COMMAND ctest
-            DEPENDS ${TEST_PROGRAMS}
-            COMMENT "AUTO-RUN TESTS with: all")
-    endif()
-
-    # -- TESTS:
-    add_test(NAME test.simplelog_example_spdlog   COMMAND simplelog_example_spdlog)
-    set_tests_properties(test.simplelog_example_spdlog PROPERTIES 
-        PASS_REGULAR_EXPRESSION "\\[foo.bar\\] \\[info\\] Hello Alice and Bob")
-
-    add_test(NAME test.simplelog_example_null   COMMAND simplelog_example_null)
-    set_tests_properties(test.simplelog_example_null PROPERTIES 
-        PASS_REGULAR_EXPRESSION "NULL-EXAMPLE: Finished.")
-
+    include(CTest)
+    # find_package(doctest REQUIRED)
+    add_subdirectory(lib/doctest doctest)
+    add_subdirectory(tests)
 endif()
+
+# ----------------------------------------------------------------------------
+# SECTION: Install
+# ----------------------------------------------------------------------------
+# MORE: https://foonathan.net/2016/03/cmake-install/
+install(TARGETS simplelog EXPORT ${PROJECT_NAMESPACE}-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(EXPORT ${PROJECT_NAMESPACE}-targets
+        NAMESPACE   ${PROJECT_NAMESPACE}::
+        DESTINATION lib/cmake/${PROJECT_NAMESPACE})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/simplelog
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.hpp"
+        PATTERN ".cmake" EXCLUDE
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/.cmake/project-config.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
+    INSTALL_DESTINATION "lib/cmake/${PROJECT_NAME}"
+)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
+        DESTINATION "lib/cmake/${PROJECT_NAMESPACE}")
+
+# -- MAYBE:
+# export(EXPORT cpp_compat NAMESPACE CppCompat)
+# ----------------------------------------------------------------------------
+# SECTION: Pack
+# ----------------------------------------------------------------------------
+# HINT: Source-pack includes CMAKE_CURRENT_BUILDIR, ...
+# set(CPACK_SOURCE_GENERATOR "ZIP")
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;__;\.DS_Store")
+if(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY)
+    message("CPACK-SOURCE: Ignore bundled third-party libraries.")
+    set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};lib/")
+endif()
+# set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+
+include(CPack)

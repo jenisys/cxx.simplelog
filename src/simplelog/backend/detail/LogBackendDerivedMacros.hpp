@@ -1,5 +1,5 @@
 /**
- * @file simplelog/backend/detail/DerivedMacros.hpp
+ * @file simplelog/backend/detail/LogBackendDerivedMacros.hpp
  * 
  * Generic derived logging backend macros that simplify writing 
  * a logging backend.

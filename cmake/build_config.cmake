@@ -1,19 +1,20 @@
 # ===========================================================================
 # CMAKE PART: BUILD_CONFIG="{OS}_{PROCESSOR}_{CMAKE_BUILD_TYPE}"
 # ===========================================================================
-# USE: include("${PROJECT_SOURCE_DIR}/../cmake/build_config.cmake")
+# USE: include("${PROJECT_SOURCE_DIR}/cmake/build_config.cmake")
 
 include_guard(DIRECTORY)
 
-if("${BUILD_CONFIG_TYPE}" STREQUAL "")
-    set(BUILD_CONFIG_TYPE "debug")
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type" FORCE)
 endif()
+set(BUILD_CONFIG_TYPE "${CMAKE_BUILD_TYPE}")
 string(TOLOWER "${BUILD_CONFIG_TYPE}" BUILD_CONFIG_TYPE)
-set(CMAKE_BUILD_TYPE ${BUILD_CONFIG_TYPE})
+# DISABLED: set(CMAKE_BUILD_TYPE ${BUILD_CONFIG_TYPE})
 
 set(BUILD_CONFIG_OS     "${CMAKE_HOST_SYSTEM_NAME}")
 set(BUILD_CONFIG_ARCH   "${CMAKE_HOST_SYSTEM_PROCESSOR}")
 if("${BUILD_CONFIG}" STREQUAL "")
     set(BUILD_CONFIG "${BUILD_CONFIG_OS}_${BUILD_CONFIG_ARCH}_${BUILD_CONFIG_TYPE}")
 endif()
-message(STATUS "BUILD_CONFIG=${BUILD_CONFIG}")
+message(STATUS "USING: BUILD_CONFIG=${BUILD_CONFIG}")
