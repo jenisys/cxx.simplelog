@@ -1,10 +1,24 @@
-SIMPLELOG: Meta-Logging for C++
+cxx.simplelog: A Meta-Logging Layer for C++
 =============================================================================
 
-:REQUIRES: Modern C++ (C++11 or newer)
-:LICENSE:  MIT
+:Requires: Modern C++ (C++11 or newer)
+:License:  MIT
+:Library Kind: Header-only (currently; backends may have libs)
 
-CORE IDEAS:
+`cxx.simplelog`_ provides a meta-logging layer for C++.
+It does not provide a logging library (or framework).
+But it uses excellent existing C++ logging libraries (like `spdlog`_)
+as **logging backend** instead.
+
+In addition, it provides a stable API as **logging-frontend**
+to log-users / log-sources that makes it easier to replace one logging 
+backend with a another one. Therefore, there is no need to adapt the many 
+places where the logging statements are used (in many libraries).
+
+This approach makes it also easier to integrate and support new logging backends
+in the future.
+
+Core ideas:
 
 * Provide common set of preprocessor macros for logging (and tracing)
 * Log engine/subsystem is hidden and can be replaced w/ another implementation
@@ -12,16 +26,18 @@ CORE IDEAS:
 
 PROCESSING MODEL::
 
-    0..N LOG-SOURCE(s) => LOGGING-SUBSYSTEM => 0..M LOG-SINKS
+     0..N LOG-SOURCE(s) => LOGGING-SUBSYSTEM => 0..M LOG-SINKS
+    |<-  Stable API   ->|<- Logging backend specific part (or sink) ->|
 
     * Log-source(s) generate log records by using the logging subsystem
-    * Log-source(s) may perform log-level based filtering (to skip records)
+    * Log-source(s) may perform log-level based filtering (to avoid records)
     * The logging subsystem delegates log-record output to log-sinks
     * The logging subsystem has normally at least one log-sink (configured)
-    * A log-source may have zero or more log-sink(s) (normally: 1 or more)
-    * A log-source 1 may have other log-sink(s) than log-source 2
+    * A log-sink may perform additional filtering (by log-level, etc.)
+    * A log-source may use zero or more log-sink(s) (normally: 1 or more)
+    * A log-source 1 may use other log-sink(s) than log-source 2
 
-ASPECTS:
+DOMAIN SPECIFIC ASPECTS:
 
 * log-user: log statements are used in many places
 * log-user: Does not care about setup of logging subsystem and threshold levels
@@ -41,17 +57,26 @@ DESIGN INTENTIONS:
 NEEDS:
 
 * Support for multiple categories/loggers per program
-  (reason: configuration-point for threshold, context for functionality)
 
-DESIGN OPTION: Compact, safe and efficient log-record placeholder needed
+.. note:: REASON
 
-* Log with parameters / placeholders:
-  printf-like/vargs, iostream-like, format-like (fmt), ...
+    * configuration-point for threshold, context for functionality,
+    * reduce or avoid unneeded log-records at log-source point
+      (as earliest possible filter).
+
+DESIGN VARIATION POINT: Approach to placeholders in log-records
+
+* printf-like/var-args, iostream-like, format-like (`fmt`_), ...
+* A compact, safe and efficient syntax is needed
+  (iostream-style is not compact; printf-style is compact, but not safe)
+* Many new C++ logging frameworks use the `fmt`_ library
+  (due to its compact syntax and efficiency)
+* The `fmt`_ library is part of STD-C++20
 
 
-DESIGN DECISION:
+DESIGN DECISIONS:
 
-* Use fmt by default (reason: readable, rather efficient/speedy, part of C++20)
+* Use `fmt`_ library for placeholders by default (reason: see above)
 * Use explicit log-level configuration with wildcards (instead of: log-level inheritance)
 * Avoid log-level enums/types at log-points (logging-sources)
   (should be hidden by macro to make it easier to replace implementation)
@@ -59,11 +84,27 @@ DESIGN DECISION:
 * Use default logging-module (logger) in most cases (if possible).
   REASON: Makes logging statement shorter/simpler (at logging source)
 
+SUPPORTED LOGGING BACKENDS:
+
+* `spdlog`_ (sinks: console, file, rotating-file, sd_journal, syslog, ...)
+* null (as blackhole ;-)
+
+CANDIDATES FOR LOGGING BACKENDS:
+
+* sd_journal (systemd journal service; supported by `spdlog`_ as sink)
+* syslog (supported by `spdlog`_ as sink)
+* ...
 
 SEE ALSO:
 
+* https://github.com/jenisys/cxx.simplelog
 * https://github.com/fmtlib/fmt
 * https://github.com/gabime/spdlog
+
+.. _`cxx.simplelog`: https://github.com/jenisys/cxx.simplelog
+.. _simplelog: https://github.com/jenisys/cxx.simplelog
+.. _fmt:    https://github.com/fmtlib/fmt
+.. _spdlog: https://github.com/gabime/spdlog
 
 RELATED: Overview C++ logging libraries
 
@@ -123,11 +164,11 @@ The following sections shows how the functionality can be used in C++:
     void process_setupLogging(void)
     {
         // -- HERE is the LOGGING-BACKEND-SPECIFIC part.
-        // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
         auto console = spdlog::stdout_color_mt("console");
         auto theSink = console->sinks().front();
 
         // -- GLOBAL SETUP: Define log-sink(s), formatter pattern and DEFAULT log-level.
+        // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
         // PATTERN SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>  <message>
         simplelog::backend_spdlog::assignSink(theSink);
         spdlog::set_pattern("%Y-%m-%d_%T.%f  %^%10n::%-7l%$  %v");
