@@ -4,17 +4,23 @@
 
 cmake_minimum_required(VERSION 3.12)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ccache.cmake)
-include(cmake/ccache.cmake)
+# include(cmake/ccache.cmake)
+include(ccache)
+
+# MAYBE:
+include(GenerateExportHeader)
+include(WriteCompilerDetectionHeader)
 
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.4 LANGUAGES CXX)
+project(cxx.simplelog VERSION 0.1.5 LANGUAGES CXX)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
 option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" OFF)
+option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" ON)
 option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
 option(BUILD_EXAMPLES "Enable simplelog examples" ON)
 option(BUILD_TESTING "Enable tests (and examples)" ON)
@@ -22,7 +28,7 @@ set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FO
 
 # -- CMAKE_CONFIGURATION_TYPES
 if(NOT DEFINED CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type" FORCE)
+    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type: Debug, Release, ..." FORCE)
 endif()
 # SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 # IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
@@ -41,20 +47,22 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
 # set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic")
+message(STATUS "USING: CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 include("cmake/cxx.setup_cxx_standard.cmake")
 include("cmake/build_config.cmake")
-message(STATUS "USING: CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT: set(SPDLOG_VERSION "1.4.2")
-find_package(spdlog REQUIRED)
+# SHORTCUT: 
+set(SPDLOG_MIN_VERSION "1.4.2")
+find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 if(NOT spdlog_FOUND)
     set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
 endif()
 
 # -- THIRD-PARTY PARTS:
+# set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
 if(SIMPLELOG_USE_BUNDLED_SPDLOG)
     message(STATUS "USING: spdlog (bundled, as subproject)")
     add_subdirectory(lib/spdlog spdlog)
@@ -63,6 +71,10 @@ if(SIMPLELOG_USE_BUNDLED_FMTLIB)
     message(STATUS "USING: fmt (bundled, as subproject)")
     add_subdirectory(lib/fmt fmt)
 endif()
+# TODO: SPDLOG_VERSION, FMT_VERSION is EMPTY or UNDEFINED
+message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
+message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
+
 
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
@@ -75,6 +87,11 @@ target_include_directories(simplelog
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
         $<INSTALL_INTERFACE:include>
+)
+target_compile_options(simplelog
+    INTERFACE
+        # -- HINT: Disable compiler-warning when using gnu-variadic-macro trick.
+        -Wno-gnu-zero-variadic-macro-arguments
 )
 # -- SIMPLELOG DEFAULT-BACKEND:
 if(SIMPLELOG_USE_BACKEND_SPDLOG)

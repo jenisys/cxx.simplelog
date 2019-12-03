@@ -22,6 +22,6 @@
 #endif
 
 #define SIMPLELOG_BACKEND_LOG_IF(condition, logger, level, format, ...) \
-    if (condition) { SIMPLELOG_BACKEND_LOG(logger, level, format, __VA_AGRS__); }
+    if (condition) { SIMPLELOG_BACKEND_LOG(logger, level, format, ## __VA_AGRS__); }
 #define SIMPLELOG_BACKEND_LOG0_IF(condition, logger, level, message) \
     if (condition) { SIMPLELOG_BACKEND_LOG0(logger, level, message); }

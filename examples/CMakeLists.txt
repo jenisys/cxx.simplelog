@@ -39,12 +39,32 @@ target_compile_definitions(simplelog_example_null
         SIMPLELOG_USE_BACKEND_NULL=1
         SIMPLELOG_DIAG=1
 )
+
+# ---------------------------------------------------------------------------
+# SECTION: Run examples as tests
+# ---------------------------------------------------------------------------
+# -- EXECUTABLE:
+add_executable(example_gcc_trick_variadic_args
+    main.gcc_variadic_args_recipe_for_zero_args.cpp
+)
+target_link_libraries(example_gcc_trick_variadic_args
+    fmt::fmt
+)
+target_compile_options(example_gcc_trick_variadic_args
+    PRIVATE  
+        -Wall -Wpedantic
+        # -- HINT: Disable compiler-warning when using gnu-variadic-macro trick.
+        -Wno-gnu-zero-variadic-macro-arguments
+)
+list(APPEND EXAMPLE_PROGRAMS  example_gcc_trick_variadic_args)
+
 # ---------------------------------------------------------------------------
 # SECTION: AUTO-RUN PROGRAMS
 # ---------------------------------------------------------------------------
 set(EXAMPLE_PROGRAMS
     simplelog_example_spdlog
     simplelog_example_null
+    example_gcc_trick_variadic_args
 )
 
 add_custom_target(examples
@@ -63,6 +83,12 @@ add_custom_target(run.simplelog_example_null
     COMMAND simplelog_example_null
     DEPENDS simplelog_example_null
     COMMENT "RUN: simplelog_example_null")
+
+add_custom_target(run.example_gcc_trick
+    COMMAND example_gcc_trick_variadic_args
+    DEPENDS example_gcc_trick_variadic_args
+    COMMENT "RUN: example_gcc_trick_variadic_args")
+
 
 # ---------------------------------------------------------------------------
 # SECTION: Run examples as tests
