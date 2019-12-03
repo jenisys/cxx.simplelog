@@ -75,6 +75,14 @@ endif()
 message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
 message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
 
+# -- CLANG: -Wno-gnu-zero-variadic-macro-arguments
+# REQUIRED FOR: SIMPELOG_xxx() macros (using gnu variadic-macros trick for zero args)
+# SEE: https://clang.llvm.org/docs/DiagnosticsReference.html#wgnu-zero-variadic-macro-arguments
+set(CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS "")
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    message(STATUS "DISABLED CXX_COMPILER WARNING: gnu-zero-variadic-macro-arguments")
+    set(CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS "-Wno-gnu-zero-variadic-macro-arguments")
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
@@ -90,8 +98,8 @@ target_include_directories(simplelog
 )
 target_compile_options(simplelog
     INTERFACE
-        # -- HINT: Disable compiler-warning when using gnu-variadic-macro trick.
-        -Wno-gnu-zero-variadic-macro-arguments
+        # -- CLANG HINT: Disable compiler-warning when using gnu-variadic-macro trick.
+        ${CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS}
 )
 # -- SIMPLELOG DEFAULT-BACKEND:
 if(SIMPLELOG_USE_BACKEND_SPDLOG)

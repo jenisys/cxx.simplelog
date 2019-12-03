@@ -43,18 +43,24 @@ target_compile_definitions(simplelog_example_null
 # ---------------------------------------------------------------------------
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
+set(CXX_FMTLIB "spdlog::spdlog")    # Use embedded FMT library.
+if(SIMPLELOG_USE_BUNDLED_FMTLIB OR FMT_FOUND)
+    set(CXX_FMTLIB "fmt::fmt")
+endif()
 # -- EXECUTABLE:
 add_executable(example_gcc_trick_variadic_args
     main.gcc_variadic_args_recipe_for_zero_args.cpp
 )
 target_link_libraries(example_gcc_trick_variadic_args
-    fmt::fmt
+    # fmt::fmt
+    ${CXX_FMTLIB}
 )
 target_compile_options(example_gcc_trick_variadic_args
     PRIVATE  
         -Wall -Wpedantic
-        # -- HINT: Disable compiler-warning when using gnu-variadic-macro trick.
-        -Wno-gnu-zero-variadic-macro-arguments
+        # -- CLANG HINT: Disable compiler-warning when using gnu-variadic-macro trick.
+        # CXX_OPTION: -Wno-gnu-zero-variadic-macro-arguments
+        ${CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS}
 )
 list(APPEND EXAMPLE_PROGRAMS  example_gcc_trick_variadic_args)
 

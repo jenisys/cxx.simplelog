@@ -6,6 +6,7 @@
     local-name: lib/fmt
     uri: https://github.com/fmtlib/fmt.git
     version: 6.0.0
+    # MAYBE: version: 6.1.0
 - git:
     local-name: lib/doctest
     uri: https://github.com/onqtam/doctest.git
