@@ -57,18 +57,36 @@ void example_useStaticLogger(void)
 
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
-
 // ==========================================================================
-// MAIN-FUNCTION
+// EXAMPLE: Use logging subsystem (see above)
 // ==========================================================================
-int main(int argc, char **argv)
+void use_simplelog(void)
 {
-    // -- SETUP LOGGING SUBSYSTEM: noop
     std::cout << "NULL-EXAMPLE: No output expected."<< std::endl;
+ 
     example_useLogging();
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
     example_useStaticLogger();
+ 
     std::cout << "NULL-EXAMPLE: Finished." << std::endl;
-    return 0;
+}
+
+// ==========================================================================
+// MAIN-FUNCTION
+// ==========================================================================
+void process_setupLogging(void)
+{
+    // -- HINT: NOTHING TO DO (here) => NULL pattern
+}
+
+int main(int argc, char **argv)
+{
+    // -- PHASE 1: SETUP LOGGING SUBSYSTEM
+    // NOTE: Specific for each logging-backend / logging-framework.
+    process_setupLogging();
+
+    // -- PHASE 2: USE LOGGING SUBSYSTEM
+    use_simplelog();
+    return EXIT_SUCCESS;
 }
