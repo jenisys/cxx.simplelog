@@ -27,7 +27,7 @@ void example_useLoggingWithDefaultModule(void)
     // -- USING fmtlib/fmt: For safe, fast/efficient formatting of parameters.
     // NOTE: Python-like: print("Hello {}".format("Alice"))
     // SEE:  https://github.com/fmtlib/fmt
-    SIMPLELOG_ERROR0("Hello Alice");
+    SIMPLELOG_ERROR("Hello Alice");
     SIMPLELOG_WARN("Hello {}", "Bob");
     SIMPLELOG_INFO("Hello {0} and {1}", "Alice", std::string("Bob"));
     SIMPLELOG_INFO("Hello type {0}, int:{1} and bool:{2}", "Alice", 42, true);

@@ -29,7 +29,8 @@ namespace simplelog { namespace backend_spdlog {
 
 
 //! Lambda predicate function that matches any logger.
-constexpr const auto matchesEachLogger = [](LoggerPtr) { 
+// DISABLED: constexpr
+const auto matchesEachLogger = [](LoggerPtr) {
     return true; 
 };
 

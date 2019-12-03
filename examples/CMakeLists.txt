@@ -11,8 +11,7 @@ add_executable(simplelog_example_spdlog
 )
 target_link_libraries(simplelog_example_spdlog 
     PRIVATE
-        cxx_simplelog::simplelog
-        spdlog::spdlog
+        cxx_simplelog::simplelog_spdlog
         # PREPARED: fmt::fmt
 )
 target_compile_options(simplelog_example_spdlog
@@ -29,14 +28,14 @@ add_executable(simplelog_example_null
     main.example_null.cpp
 )
 target_link_libraries(simplelog_example_null 
-    PRIVATE  cxx_simplelog::simplelog
+    PRIVATE  cxx_simplelog::simplelog_null
 )
 target_compile_options(simplelog_example_null
     PRIVATE  -Wpedantic
 )
 target_compile_definitions(simplelog_example_null
     PRIVATE  
-        SIMPLELOG_USE_BACKEND_NULL=1
+        # NOT-NEEDED: SIMPLELOG_USE_BACKEND_NULL=1
         SIMPLELOG_DIAG=1
 )
 
@@ -44,6 +43,7 @@ target_compile_definitions(simplelog_example_null
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
 set(CXX_FMTLIB "spdlog::spdlog")    # Use embedded FMT library.
+# XXX-MARKER: set(CXX_FMTLIB "spdlog")    # Use embedded FMT library.
 if(SIMPLELOG_USE_BUNDLED_FMTLIB OR FMT_FOUND)
     set(CXX_FMTLIB "fmt::fmt")
 endif()
@@ -55,13 +55,12 @@ target_link_libraries(example_gcc_trick_variadic_args
     # fmt::fmt
     ${CXX_FMTLIB}
 )
-target_compile_options(example_gcc_trick_variadic_args
-    PRIVATE  
-        -Wall -Wpedantic
-        # -- CLANG HINT: Disable compiler-warning when using gnu-variadic-macro trick.
-        # CXX_OPTION: -Wno-gnu-zero-variadic-macro-arguments
-        ${CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS}
-)
+if(SIMPLELOG_USE_BUNDLED_FMTLIB)
+    target_compile_definitions(example_gcc_trick_variadic_args
+        PRIVATE
+            SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB=0
+    )
+endif()
 list(APPEND EXAMPLE_PROGRAMS  example_gcc_trick_variadic_args)
 
 # ---------------------------------------------------------------------------

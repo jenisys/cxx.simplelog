@@ -17,7 +17,7 @@ target_sources(test_simplelog_backend_spdlog
         test_setup_spdlog.cpp
 )
 target_link_libraries(test_simplelog_backend_spdlog
-    cxx_simplelog::simplelog
+    cxx_simplelog::simplelog_spdlog
     doctest::doctest
 )
 target_compile_definitions(test_simplelog_backend_spdlog

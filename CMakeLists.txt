@@ -16,15 +16,17 @@ include(WriteCompilerDetectionHeader)
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.5 LANGUAGES CXX)
+project(cxx.simplelog VERSION 0.1.6 LANGUAGES CXX)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
-option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
+option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
 option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" ON)
 option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
 option(BUILD_EXAMPLES "Enable simplelog examples" ON)
 option(BUILD_TESTING "Enable tests (and examples)" ON)
 set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
+set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
+                    "Normally include spdlog from packages" FORCE)
 
 # -- CMAKE_CONFIGURATION_TYPES
 if(NOT DEFINED CMAKE_BUILD_TYPE)
@@ -56,15 +58,18 @@ include("cmake/build_config.cmake")
 # ---------------------------------------------------------------------------
 # SHORTCUT: 
 set(SPDLOG_MIN_VERSION "1.4.2")
-find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-if(NOT spdlog_FOUND)
+# find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
+# DISABLED: if(NOT spdlog_FOUND)
+if(TRUE)
     set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
+    # set(spdlog_FOUND ON)
 endif()
 
 # -- THIRD-PARTY PARTS:
 # set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
 if(SIMPLELOG_USE_BUNDLED_SPDLOG)
     message(STATUS "USING: spdlog (bundled, as subproject)")
+    set(SPDLOG_INSTALL ON)
     add_subdirectory(lib/spdlog spdlog)
 endif()
 if(SIMPLELOG_USE_BUNDLED_FMTLIB)
@@ -75,31 +80,20 @@ endif()
 message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
 message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
 
-# -- CLANG: -Wno-gnu-zero-variadic-macro-arguments
-# REQUIRED FOR: SIMPELOG_xxx() macros (using gnu variadic-macros trick for zero args)
-# SEE: https://clang.llvm.org/docs/DiagnosticsReference.html#wgnu-zero-variadic-macro-arguments
-set(CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS "")
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    message(STATUS "DISABLED CXX_COMPILER WARNING: gnu-zero-variadic-macro-arguments")
-    set(CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS "-Wno-gnu-zero-variadic-macro-arguments")
-endif()
-
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
 # ---------------------------------------------------------------------------
 set(PROJECT_NAMESPACE "cxx_simplelog")
+set(SIMPLELOG_LIBRARIES )
+
 # -- HEADER-ONLY LIBRARY:
 add_library(simplelog INTERFACE)
 add_library(${PROJECT_NAMESPACE}::simplelog ALIAS simplelog)
+list(APPEND SIMPLELOG_LIBRARIES simplelog)
 target_include_directories(simplelog
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
         $<INSTALL_INTERFACE:include>
-)
-target_compile_options(simplelog
-    INTERFACE
-        # -- CLANG HINT: Disable compiler-warning when using gnu-variadic-macro trick.
-        ${CXX_COMPILER_WARNING__NO_GNU_ZERO_VARIADIC_MACRO_ARGUMENTS}
 )
 # -- SIMPLELOG DEFAULT-BACKEND:
 if(SIMPLELOG_USE_BACKEND_SPDLOG)
@@ -110,6 +104,37 @@ if(SIMPLELOG_USE_BACKEND_SPDLOG)
     )
 endif()
 
+
+# -- BACKEND-SPECIFIC LIBRARY: simplelog_spdlog (HEADER-ONLY)
+# USED-FOR: Use simplelog library with simplelog.backend.spdlog.
+add_library(simplelog_spdlog INTERFACE)
+add_library(${PROJECT_NAMESPACE}::simplelog_spdlog ALIAS simplelog_spdlog)
+list(APPEND SIMPLELOG_LIBRARIES simplelog_spdlog)
+target_link_libraries(simplelog_spdlog INTERFACE spdlog::spdlog)
+set_target_properties(simplelog_spdlog
+    PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+        "SIMPLELOG_USE_BACKEND_SPDLOG=1"
+)
+target_include_directories(simplelog_spdlog
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        $<INSTALL_INTERFACE:include>
+)
+
+# -- BACKEND-SPECIFIC LIBRARY: simplelog_null (HEADER-ONLY)
+# USED-FOR: Use simplelog library with simplelog.backend.null.
+add_library(simplelog_null INTERFACE)
+add_library(${PROJECT_NAMESPACE}::simplelog_null ALIAS simplelog_null)
+list(APPEND SIMPLELOG_LIBRARIES simplelog_null)
+set_target_properties(simplelog_null
+    PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+        "SIMPLELOG_USE_BACKEND_NULL=1"
+)
+target_include_directories(simplelog_null
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        $<INSTALL_INTERFACE:include>
+)
 
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
@@ -132,7 +157,8 @@ endif()
 # SECTION: Install
 # ----------------------------------------------------------------------------
 # MORE: https://foonathan.net/2016/03/cmake-install/
-install(TARGETS simplelog EXPORT ${PROJECT_NAMESPACE}-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS ${SIMPLELOG_LIBRARIES}
+    EXPORT ${PROJECT_NAMESPACE}-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(EXPORT ${PROJECT_NAMESPACE}-targets
         NAMESPACE   ${PROJECT_NAMESPACE}::
         DESTINATION lib/cmake/${PROJECT_NAMESPACE})
@@ -146,7 +172,7 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/.cmake/project-config.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
-    INSTALL_DESTINATION "lib/cmake/${PROJECT_NAME}"
+    INSTALL_DESTINATION "lib/cmake/${PROJECT_NAMESPACE}"
 )
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
         DESTINATION "lib/cmake/${PROJECT_NAMESPACE}")

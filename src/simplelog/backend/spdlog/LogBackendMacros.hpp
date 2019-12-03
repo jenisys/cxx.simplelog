@@ -35,12 +35,12 @@
     auto vname = ::simplelog::backend_spdlog::useOrCreateLogger(name)
 
 #if SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION
-#  define SIMPLELOG_BACKEND_LOG(logger, level, format, ...) \
-    logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, format, ## __VA_ARGS__)
+#  define SIMPLELOG_BACKEND_LOG(logger, level, ...) \
+    logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, __VA_ARGS__)
 #  define SIMPLELOG_BACKEND_LOG0(logger, level, message) \
     logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, message)
 #else
-#  define SIMPLELOG_BACKEND_LOG(logger, level, format, ...) logger->log(level, format, ## __VA_ARGS__)
+#  define SIMPLELOG_BACKEND_LOG(logger, level, ...)         logger->log(level, __VA_ARGS__)
 #  define SIMPLELOG_BACKEND_LOG0(logger, level, message)    logger->log(level, message)
 #endif
 

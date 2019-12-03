@@ -54,28 +54,6 @@
  * @endcode
  **/
 // ----------------------------------------------------------------------------
-/**
- * @par IMPLEMENTATION DETAIL: GNU CPP Preprocessor Variadic-Macro Trick
- * The GNU CPP Preprocessor variadic-macro trick with zero args is used here.
- * The trick eats up (deletes) a preceeding COMMA if zero __VA_ARGS__ are used.
- * @note TRICK: ", ## __VA_ARGS__"
- * @note NEEDS CXX COMPILER FLAG: -Wno-gnu-zero-variadic-macro-arguments
- * @since C++2a: __VA_OPT__ (as alternative)
- *
- * EXAMPLE:
- * @code
- *  #define DIAG_PRINT(format_, ...) fmt::print(format_, ## __VA_ARGS__)
- *
- *  DIAG_PRINT("__ZERO_ARGS__");
- *  DIAG_PRINT("__ONE_ARGS: {}}", "Alice");
- *  DIAG_PRINT("__TWO_ARGS: {} and {}}", "Alice", "Bob");
- * @endcode
- * @see
- *   * https://stackoverflow.com/questions/5588855/standard-alternative-to-gccs-va-args-trick
- *   * https://gcc.gnu.org/onlinedocs/gcc/Variadic-Macros.html
- *   * https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html
- **/
-// ----------------------------------------------------------------------------
 
 // -- DEFINE: SPECIFIC-MODULE (logger)
 #define SIMPLELOG_DEFINE_MODULE(var_name, name)            SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)
@@ -84,20 +62,25 @@
 #define SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE(name)       SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(simplelog_defaultModule, name)
 
 // -- USE: DEFAULT-MODULE (logger)
-// USE-TRICK: gnu-zero-variadic-macro-arguments (provided by: GNU gcc/cpp, VisualC++, ...)
-#define SIMPLELOG_FATAL(format, ...)        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, format, ## __VA_ARGS__)
-#define SIMPLELOG_CRITICAL(format, ...)     SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, format, ## __VA_ARGS__)
-#define SIMPLELOG_ERROR(format, ...)        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, format, ## __VA_ARGS__)
-#define SIMPLELOG_WARN(format, ...)         SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, format, ## __VA_ARGS__)
-#define SIMPLELOG_INFO(format, ...)         SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, format, ## __VA_ARGS__)
-#define SIMPLELOG_DEBUG(format, ...)        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, format, ## __VA_ARGS__)
+// MACRO-SIGNATURE:
+//  SIMPLELOG_xxx(message)        -- Message as string w/o placeholders.
+//  SIMPLELOG_xxx(format, ...)    -- Message w/ placeholders; format describes message schema.
+#define SIMPLELOG_FATAL(...)        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#define SIMPLELOG_CRITICAL(...)     SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#define SIMPLELOG_ERROR(...)        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#define SIMPLELOG_WARN(...)         SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
+#define SIMPLELOG_INFO(...)         SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
+#define SIMPLELOG_DEBUG(...)        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
-#define SIMPLELOG_FATAL_IF(condition, format, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, format, ## __VA_ARGS__)
-#define SIMPLELOG_CRITICAL_IF(condition, format, ...)  SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, format, ## __VA_ARGS__)
-#define SIMPLELOG_ERROR_IF(condition, format, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, format, ## __VA_ARGS__)
-#define SIMPLELOG_WARN_IF(condition, format, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, format, ## __VA_ARGS__)
-#define SIMPLELOG_INFO_IF(condition, format, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, format, ## __VA_ARGS__)
-#define SIMPLELOG_DEBUG_IF(condition, format, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, format, ## __VA_ARGS__)
+// MACRO-SIGNATURE:
+//  SIMPLELOG_xxx_IF(condition, message)        -- Message as string w/o placeholders.
+//  SIMPLELOG_xxx_IF(condition, format, ...)    -- Message w/ placeholders; format describes message schema.
+#define SIMPLELOG_FATAL_IF(condition, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#define SIMPLELOG_CRITICAL_IF(condition, ...)  SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#define SIMPLELOG_ERROR_IF(condition, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#define SIMPLELOG_WARN_IF(condition, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
+#define SIMPLELOG_INFO_IF(condition, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
+#define SIMPLELOG_DEBUG_IF(condition, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
 // HINT: SIMPLELOG_xxx0(), SIMPLELOG_xxx0_IF() macros may become unused (and/or deprecated).
 #define SIMPLELOG_FATAL0(message)      SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, message)
@@ -115,19 +98,19 @@
 #define SIMPLELOG_DEBUG0_IF(condition, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, message)
 
 // -- USE: SPECIFIC-MODULE (logger)
-#define SIMPLELOGM_FATAL(logger, format, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_FATAL, format, ## __VA_ARGS__)
-#define SIMPLELOGM_CRITICAL(logger, format, ...)    SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, format, ## __VA_ARGS__)
-#define SIMPLELOGM_ERROR(logger, format, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_ERROR, format, ## __VA_ARGS__)
-#define SIMPLELOGM_WARN(logger, format, ...)        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_WARN, format, ## __VA_ARGS__)
-#define SIMPLELOGM_INFO(logger, format, ...)        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_INFO, format, ## __VA_ARGS__)
-#define SIMPLELOGM_DEBUG(logger, format, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, format, ## __VA_ARGS__)
+#define SIMPLELOGM_FATAL(logger, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#define SIMPLELOGM_CRITICAL(logger, ...)    SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#define SIMPLELOGM_ERROR(logger, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#define SIMPLELOGM_WARN(logger, ...)        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
+#define SIMPLELOGM_INFO(logger, ...)        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
+#define SIMPLELOGM_DEBUG(logger, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
-#define SIMPLELOGM_FATAL_IF(condition, logger, format, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_FATAL, format, ## __VA_ARGS__)
-#define SIMPLELOGM_CRITICAL_IF(condition, logger, format, ...)  SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, format, ## __VA_ARGS__)
-#define SIMPLELOGM_ERROR_IF(condition, logger, format, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_ERROR, format, ## __VA_ARGS__)
-#define SIMPLELOGM_WARN_IF(condition, logger, format, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_WARN, format, ## __VA_ARGS__)
-#define SIMPLELOGM_INFO_IF(condition, logger, format, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_INFO, format, ## __VA_ARGS__)
-#define SIMPLELOGM_DEBUG_IF(condition, logger, format, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, format, ## __VA_ARGS__)
+#define SIMPLELOGM_FATAL_IF(condition, logger, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#define SIMPLELOGM_CRITICAL_IF(condition, logger, ...)  SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#define SIMPLELOGM_ERROR_IF(condition, logger, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#define SIMPLELOGM_WARN_IF(condition, logger, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
+#define SIMPLELOGM_INFO_IF(condition, logger, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
+#define SIMPLELOGM_DEBUG_IF(condition, logger, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
 // HINT: SIMPLELOGM_xxx0(), SIMPLELOGM_xxx0_IF() macros may become unused (and/or deprecated).
 #define SIMPLELOGM_FATAL0(logger, message)      SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_FATAL, message)
@@ -150,19 +133,25 @@
 // --------------------------------------------------------------------------
 #if SIMPLELOG_HAVE_SHORT_MACROS
 // -- USE: DEFAULT-MODULE (logger)
-#define SLOG_FATAL(format, ...)       SIMPLELOG_FATAL(format, ## __VA_ARGS__)
-#define SLOG_CRITICAL(format, ...)    SIMPLELOG_CRITICAL(format, ## __VA_ARGS__)
-#define SLOG_ERROR(format, ...)       SIMPLELOG_ERROR(format, ## __VA_ARGS__)
-#define SLOG_WARN(format, ...)        SIMPLELOG_WARN(format, ## __VA_ARGS__)
-#define SLOG_INFO(format, ...)        SIMPLELOG_INFO(format, ## __VA_ARGS__)
-#define SLOG_DEBUG(format, ...)       SIMPLELOG_DEBUG(format, ## __VA_ARGS__)
+// MACRO-SIGNATURE:
+//  SLOG_xxx(message)        -- Message as string w/o placeholders.
+//  SLOG_xxx(format, ...)    -- Message w/ placeholders; format describes message schema.
+#define SLOG_FATAL(...)       SIMPLELOG_FATAL(__VA_ARGS__)
+#define SLOG_CRITICAL(...)    SIMPLELOG_CRITICAL(__VA_ARGS__)
+#define SLOG_ERROR(...)       SIMPLELOG_ERROR(__VA_ARGS__)
+#define SLOG_WARN(...)        SIMPLELOG_WARN(__VA_ARGS__)
+#define SLOG_INFO(...)        SIMPLELOG_INFO(__VA_ARGS__)
+#define SLOG_DEBUG(...)       SIMPLELOG_DEBUG(__VA_ARGS__)
 
-#define SLOG_FATAL_IF(condition, format, ...)     SIMPLELOG_FATAL_IF(condition, format, ## __VA_ARGS__)
-#define SLOG_CRITICAL_IF(condition, format, ...)  SIMPLELOG_CRITICAL_IF(condition, format, ## __VA_ARGS__)
-#define SLOG_ERROR_IF(condition, format, ...)     SIMPLELOG_ERROR_IF(condition, format, ## __VA_ARGS__)
-#define SLOG_WARN_IF(condition, format, ...)      SIMPLELOG_WARN_IF(condition, format, ## __VA_ARGS__)
-#define SLOG_INFO_IF(condition, format, ...)      SIMPLELOG_INFO_IF(condition, format, ## __VA_ARGS__)
-#define SLOG_DEBUG_IF(condition, format, ...)     SIMPLELOG_DEBUG_IF(condition, format, ## __VA_ARGS__)
+// MACRO-SIGNATURE:
+//  SLOG_xxx_IF(condition, message)        -- Message as string w/o placeholders.
+//  SLOG_xxx_IF(condition, format, ...)    -- Message w/ placeholders; format describes message schema.
+#define SLOG_FATAL_IF(condition, ...)     SIMPLELOG_FATAL_IF(condition, __VA_ARGS__)
+#define SLOG_CRITICAL_IF(condition, ...)  SIMPLELOG_CRITICAL_IF(condition, __VA_ARGS__)
+#define SLOG_ERROR_IF(condition, ...)     SIMPLELOG_ERROR_IF(condition, __VA_ARGS__)
+#define SLOG_WARN_IF(condition, ...)      SIMPLELOG_WARN_IF(condition, __VA_ARGS__)
+#define SLOG_INFO_IF(condition, ...)      SIMPLELOG_INFO_IF(condition, __VA_ARGS__)
+#define SLOG_DEBUG_IF(condition, ...)     SIMPLELOG_DEBUG_IF(condition, __VA_ARGS__)
 
 // HINT: SLOG_xxx0(), SLOG_xxx0_IF() macros may become unused (and/or deprecated).
 #define SLOG_FATAL0(message)          SIMPLELOG_FATAL0(message)
@@ -180,19 +169,25 @@
 #define SLOG_DEBUG0_IF(condition, message)    SIMPLELOG_DEBUG0_IF(condition, message)
 
 // -- USE: SPECIFIC-MODULE (logger)
-#define SLOGM_FATAL(logger, format, ...)       SIMPLELOGM_FATAL(logger, format, ## __VA_ARGS__)
-#define SLOGM_CRITICAL(logger, format, ...)    SIMPLELOGM_CRITICAL(logger, format, ## __VA_ARGS__)
-#define SLOGM_ERROR(logger, format, ...)       SIMPLELOGM_ERROR(logger, format, ## __VA_ARGS__)
-#define SLOGM_WARN(logger, format, ...)        SIMPLELOGM_WARN(logger, format, ## __VA_ARGS__)
-#define SLOGM_INFO(logger, format, ...)        SIMPLELOGM_INFO(logger, format, ## __VA_ARGS__)
-#define SLOGM_DEBUG(logger, format, ...)       SIMPLELOGM_DEBUG(logger, format, ## __VA_ARGS__)
+// MACRO-SIGNATURE:
+//  SLOGM_xxx(logger, message)        -- Message as string w/o placeholders.
+//  SLOG;_xxx(logger, format, ...)    -- Message w/ placeholders; format describes message schema.
+#define SLOGM_FATAL(logger, ...)       SIMPLELOGM_FATAL(logger, __VA_ARGS__)
+#define SLOGM_CRITICAL(logger, ...)    SIMPLELOGM_CRITICAL(logger, __VA_ARGS__)
+#define SLOGM_ERROR(logger, ...)       SIMPLELOGM_ERROR(logger, __VA_ARGS__)
+#define SLOGM_WARN(logger, ...)        SIMPLELOGM_WARN(logger, __VA_ARGS__)
+#define SLOGM_INFO(logger, ...)        SIMPLELOGM_INFO(logger, __VA_ARGS__)
+#define SLOGM_DEBUG(logger, ...)       SIMPLELOGM_DEBUG(logger, __VA_ARGS__)
 
-#define SLOGM_FATAL_IF(condition, logger, format, ...)     SIMPLELOGM_FATAL_IF(condition, logger, format, ## __VA_ARGS__)
-#define SLOGM_CRITICAL_IF(condition, logger, format, ...)  SIMPLELOGM_CRITICAL_IF(condition, logger, format, ## __VA_ARGS__)
-#define SLOGM_ERROR_IF(condition, logger, format, ...)     SIMPLELOGM_ERROR_IF(condition, logger, format, ## __VA_ARGS__)
-#define SLOGM_WARN_IF(condition, logger, format, ...)      SIMPLELOGM_WARN_IF(condition, logger, format, ## __VA_ARGS__)
-#define SLOGM_INFO_IF(condition, logger, format, ...)      SIMPLELOGM_INFO_IF(condition, logger, format, ## __VA_ARGS__)
-#define SLOGM_DEBUG_IF(condition, logger, format, ...)     SIMPLELOGM_DEBUG_IF(condition, logger, format, ## __VA_ARGS__)
+// MACRO-SIGNATURE:
+//  SLOGM_xxx_IF(condition, logger, message)        -- Message as string w/o placeholders.
+//  SLOGM_xxx_IF(condition, logger, format, ...)    -- Message w/ placeholders; format describes message schema.
+#define SLOGM_FATAL_IF(condition, logger, ...)     SIMPLELOGM_FATAL_IF(condition, logger, __VA_ARGS__)
+#define SLOGM_CRITICAL_IF(condition, logger, ...)  SIMPLELOGM_CRITICAL_IF(condition, logger, __VA_ARGS__)
+#define SLOGM_ERROR_IF(condition, logger, ...)     SIMPLELOGM_ERROR_IF(condition, logger, __VA_ARGS__)
+#define SLOGM_WARN_IF(condition, logger, ...)      SIMPLELOGM_WARN_IF(condition, logger, __VA_ARGS__)
+#define SLOGM_INFO_IF(condition, logger, ...)      SIMPLELOGM_INFO_IF(condition, logger, __VA_ARGS__)
+#define SLOGM_DEBUG_IF(condition, logger, ...)     SIMPLELOGM_DEBUG_IF(condition, logger, __VA_ARGS__)
 
 // HINT: SLOGM_xxx0(), SLOGM_xxx0_IF() macros may become unused (and/or deprecated).
 #define SLOGM_FATAL0(logger, message)      SIMPLELOGM_FATAL0(logger, message)
