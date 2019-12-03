@@ -117,7 +117,8 @@ The following sections shows how the functionality can be used in C++:
     // -- FILE: main.cpp
     // SETUP LOGGING HERE: With BACKEND=spdlog
     #define SIMPLELOG_USE_BACKEND_SPDLOG 1
-    #include <simplelog/backend/spdlog/SetupUtil.hpp>
+    #include <simplelog/backend/spdlog/SetupUtil.hpp>   //< USE: assignSink(), ...
+    #include <simplelog/backend/spdlog/ModuleUtil.hpp>  //< USE: useOrCreateLogger()
 
     void process_setupLogging(void)
     {
