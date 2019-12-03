@@ -134,7 +134,7 @@ The following sections shows how the functionality can be used in C++:
         // SAME AS: simplelog::backend_spdlog::setLevel(spdlog::level::warn);
 
         // -- SPECIFIC SETUP: OVERRIDE CONFIG FOR SPECIFIC MODULES: log-level, ...
-        simplelog::backend_spdlog::useOrCreateLogger;
+        using simplelog::backend_spdlog::useOrCreateLogger;
         auto log1 = useOrCreateLogger("foo.bar");
         auto log2 = useOrCreateLogger("example.1");
         log1->set_level(spdlog::level::info);
