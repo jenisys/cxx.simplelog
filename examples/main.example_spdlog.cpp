@@ -95,59 +95,75 @@ void example_useStaticLogger(void)
 
 
 // ==========================================================================
-// MAIN-FUNCTION: Setup logging subsystem
+// EXAMPLE: Use logging subsystem (see above)
 // ==========================================================================
-#include "simplelog/backend/spdlog/SetupUtil.hpp"
-#include <spdlog/sinks/stdout_sinks.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <iostream>
+#include "simplelog/backend/spdlog/SetupUtil.hpp"  //< USE: setMinLevel()
 
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
 void use_simplelog(void)
 {
+    SIMPLELOG_DEFINE_MODULE(console, "console");
+    console->warn("MAIN: Logging started.");
+    rootLog->info("MAIN: Use static logger.root");
     example_useLoggingWithDefaultModule();
     example_useLoggingWithOverriddenDefaultModule();
 
     // -- SPECIAL CASE: Reassign LOGGING_THRESHOLD_LEVEL here.
     // OR: SIMPLELOG_BACKEND_LEVEL_WARN
-    SIMPLELOG_DEFINE_MODULE(console, "console");
-    SLOGM_WARN0(console, "SETUP_LOGGING: setMinLevel=warn");
+    SLOGM_WARN0(console, "MAIN: SETUP_LOGGING with setMinLevel=warn");
     simplelog::backend_spdlog::setMinLevel(spdlog::level::warn);
     
     // -- SPECIAL CASE END.
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
     example_useStaticLogger();
+
+    // -- FINALLY:
+    console->warn("MAIN: Ends here.");
+}
+
+// ==========================================================================
+// MAIN-FUNCTION: Setup logging subsystem
+// ==========================================================================
+#include <simplelog/backend/spdlog/SetupUtil.hpp>   //< USE: assignSink(), ...
+#include <simplelog/backend/spdlog/ModuleUtil.hpp>  //< USE: useOrCreateLogger()
+#include <spdlog/sinks/stdout_sinks.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <iostream>
+
+void process_setupLogging(void)
+{
+    // -- HERE is the LOGGING-BACKEND-SPECIFIC part.
+    auto console = spdlog::stdout_color_mt("console");
+    auto theSink = console->sinks().front();
+
+    // -- GLOBAL SETUP: Define log-sink(s), formatter pattern and DEFAULT log-level.
+    // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
+    // PATTERN SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>  <message>
+    simplelog::backend_spdlog::assignSink(theSink);
+    spdlog::set_pattern("%Y-%m-%d_%T.%f  %^%10n::%-7l%$  %v");
+    spdlog::set_level(spdlog::level::warn);
+    // SAME AS: simplelog::backend_spdlog::setLevel(spdlog::level::warn);
+
+    // -- SPECIFIC SETUP: OVERRIDE CONFIG FOR SPECIFIC MODULES: log-level, ...
+    using simplelog::backend_spdlog::useOrCreateLogger;
+    auto log1 = useOrCreateLogger("foo.bar");
+    auto log2 = useOrCreateLogger("example.1");
+    log1->set_level(spdlog::level::info);
+    log2->set_level(spdlog::level::debug);
+
+    // -- MAYBE: Ensure that at least level=info is used (by all loggers).
+    simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
 }
 
 int main(int argc, char **argv)
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.
-    auto logger1 = getLogger(); //< ENSURE: Logger is created and registered.
-    auto console = spdlog::stdout_color_mt("console");
-    // auto console = spdlog::stdout_logger_mt("console");
-
-    // -- CHANGE: LOG-MESSAGE FORMAT PATTERN:
-    // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
-    // PATTERN %v: message text
-    // PATTERN %@: source-location
-    // SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>  <message>
-    spdlog::set_pattern("%Y-%m-%d_%T.%f  %^%10n::%-7l%$  %v");
-    
-    console->warn("SETUP_LOGGING: Set level=debug");
-    spdlog::set_level(spdlog::level::debug);
-    auto theSink = console->sinks().front();
-    simplelog::backend_spdlog::assignSink(theSink);
-    console->warn("SETUP_LOGGING: Set min-level=info");
-    simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
-    // -- SAME AS: setMinLevel(SIMPLELOG_BACKEND_LEVEL_INFO);
+    process_setupLogging();
 
     // -- PHASE 2: USE LOGGING SUBSYSTEM
-    console->warn("main: Logging started.");
-    rootLog->info("main: Use static logger.root");
     use_simplelog();
-    console->warn("main: Ends here.");
-    return 0;
+    return EXIT_SUCCESS;
 }
