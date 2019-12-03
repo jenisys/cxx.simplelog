@@ -96,17 +96,17 @@ target_include_directories(simplelog
         $<INSTALL_INTERFACE:include>
 )
 # -- SIMPLELOG DEFAULT-BACKEND:
-if(SIMPLELOG_USE_BACKEND_SPDLOG)
-    target_link_libraries(simplelog INTERFACE spdlog::spdlog)
-    set_target_properties(simplelog 
-        PROPERTIES INTERFACE_COMPILE_DEFINITIONS
-            "SIMPLELOG_USE_BACKEND_SPDLOG=1"
-    )
-endif()
+# if(SIMPLELOG_USE_BACKEND_SPDLOG)
+#     target_link_libraries(simplelog INTERFACE spdlog::spdlog)
+#     set_target_properties(simplelog
+#         PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+#             "SIMPLELOG_USE_BACKEND_SPDLOG=1"
+#     )
+# endif()
 
 
 # -- BACKEND-SPECIFIC LIBRARY: simplelog_spdlog (HEADER-ONLY)
-# USED-FOR: Use simplelog library with simplelog.backend.spdlog.
+# USED-FOR: Use simplelog library with configured simplelog.backend.spdlog.
 add_library(simplelog_spdlog INTERFACE)
 add_library(${PROJECT_NAMESPACE}::simplelog_spdlog ALIAS simplelog_spdlog)
 list(APPEND SIMPLELOG_LIBRARIES simplelog_spdlog)
@@ -122,7 +122,7 @@ target_include_directories(simplelog_spdlog
 )
 
 # -- BACKEND-SPECIFIC LIBRARY: simplelog_null (HEADER-ONLY)
-# USED-FOR: Use simplelog library with simplelog.backend.null.
+# USED-FOR: Use simplelog library with configured simplelog.backend.null.
 add_library(simplelog_null INTERFACE)
 add_library(${PROJECT_NAMESPACE}::simplelog_null ALIAS simplelog_null)
 list(APPEND SIMPLELOG_LIBRARIES simplelog_null)
