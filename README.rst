@@ -83,7 +83,7 @@ The following sections shows how the functionality can be used in C++:
 * Use case: LOG-SOURCE that generates log-records (generic, backend independent)
 * Use case: Setup of the logging subsystem (context: main.cpp; backend specific)
 
-.. code-block: c++
+.. code-block:: c++
 
     // -- FILE: my_library1/.../example_1.cpp
     // EXAMPLE: Use LOG-MACROS with DEFAULT_MODULE in local scope
@@ -112,7 +112,7 @@ The following sections shows how the functionality can be used in C++:
         SLOGM_INFO(log1, "Use another logger"); //< OTHER_MODULE_2
     }
 
-.. code-block: c++
+.. code-block:: c++
 
     // -- FILE: main.cpp
     // SETUP LOGGING HERE: With BACKEND=spdlog
@@ -140,7 +140,7 @@ The following sections shows how the functionality can be used in C++:
         log1->set_level(spdlog::level::info);
         log2->set_level(spdlog::level::debug);
 
-        // -- MAYBE: Override and use at least level=info is used (for all loggers):
+        // -- MAYBE: Ensure that at least level=info is used (by all loggers).
         // simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
     }
 
