@@ -85,57 +85,20 @@ message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUND
 # SECTION: LIBS
 # ---------------------------------------------------------------------------
 set(PROJECT_NAMESPACE "cxx_simplelog")
-set(SIMPLELOG_LIBRARIES )
-
-# -- HEADER-ONLY LIBRARY:
-add_library(simplelog INTERFACE)
-add_library(${PROJECT_NAMESPACE}::simplelog ALIAS simplelog)
-list(APPEND SIMPLELOG_LIBRARIES simplelog)
-target_include_directories(simplelog
-    INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:include>
-)
-# -- SIMPLELOG DEFAULT-BACKEND:
-# if(SIMPLELOG_USE_BACKEND_SPDLOG)
-#     target_link_libraries(simplelog INTERFACE spdlog::spdlog)
-#     set_target_properties(simplelog
-#         PROPERTIES INTERFACE_COMPILE_DEFINITIONS
-#             "SIMPLELOG_USE_BACKEND_SPDLOG=1"
-#     )
-# endif()
-
-
-# -- BACKEND-SPECIFIC LIBRARY: simplelog_spdlog (HEADER-ONLY)
-# USED-FOR: Use simplelog library with configured simplelog.backend.spdlog.
-add_library(simplelog_spdlog INTERFACE)
-add_library(${PROJECT_NAMESPACE}::simplelog_spdlog ALIAS simplelog_spdlog)
-list(APPEND SIMPLELOG_LIBRARIES simplelog_spdlog)
-target_link_libraries(simplelog_spdlog INTERFACE spdlog::spdlog)
-set_target_properties(simplelog_spdlog
-    PROPERTIES INTERFACE_COMPILE_DEFINITIONS
-        "SIMPLELOG_USE_BACKEND_SPDLOG=1"
-)
-target_include_directories(simplelog_spdlog
-    INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:include>
+set(SIMPLELOG_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(SIMPLELOG_LIBRARIES
+    simplelog
+    simplelog_null
+    simplelog_spdlog
 )
 
-# -- BACKEND-SPECIFIC LIBRARY: simplelog_null (HEADER-ONLY)
-# USED-FOR: Use simplelog library with configured simplelog.backend.null.
-add_library(simplelog_null INTERFACE)
-add_library(${PROJECT_NAMESPACE}::simplelog_null ALIAS simplelog_null)
-list(APPEND SIMPLELOG_LIBRARIES simplelog_null)
-set_target_properties(simplelog_null
-    PROPERTIES INTERFACE_COMPILE_DEFINITIONS
-        "SIMPLELOG_USE_BACKEND_NULL=1"
-)
-target_include_directories(simplelog_null
-    INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:include>
-)
+# -- HEADER-ONLY LIBS:
+# LIBRARY: cxx_simplelog::simplelog         -- To reference generic library.
+# LIBRARY: cxx_simplelog::simplelog_null    -- Use simplelog w/ backend=null
+# LIBRARY: cxx_simplelog::simplelog_spdlog  -- Use simplelog w/ backend=spdlog
+add_subdirectory(src/simplelog simplelog)
+add_subdirectory(src/simplelog/backend/null   simplelog_backend_null)
+add_subdirectory(src/simplelog/backend/spdlog simplelog_backend_spdlog)
 
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
