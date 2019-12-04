@@ -6,7 +6,8 @@
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
 # ---------------------------------------------------------------------------
-add_executable(simplelog_example_spdlog
+add_executable(simplelog_example_spdlog)
+target_sources(simplelog_example_spdlog PRIVATE
     main.example_spdlog.cpp
 )
 target_link_libraries(simplelog_example_spdlog 
@@ -28,7 +29,8 @@ target_compile_definitions(simplelog_example_spdlog
 )
 
 # -- EXECUTABLE:
-add_executable(simplelog_example_null
+add_executable(simplelog_example_null)
+target_sources(simplelog_example_null PRIVATE
     main.example_null.cpp
 )
 target_link_libraries(simplelog_example_null 
@@ -56,20 +58,21 @@ if(SIMPLELOG_USE_BUNDLED_FMTLIB OR FMT_FOUND)
     set(CXX_FMTLIB "fmt::fmt")
 endif()
 # -- EXECUTABLE:
-add_executable(example_gcc_trick_variadic_args
-    main.gcc_variadic_args_recipe_for_zero_args.cpp
+add_executable(example_variadic_args)
+target_sources(example_variadic_args PRIVATE
+    main.variadic_args_recipe_for_zero_args.cpp
 )
-target_link_libraries(example_gcc_trick_variadic_args
+target_link_libraries(example_variadic_args
     # fmt::fmt
     ${CXX_FMTLIB}
 )
 if(SIMPLELOG_USE_BUNDLED_FMTLIB)
-    target_compile_definitions(example_gcc_trick_variadic_args
+    target_compile_definitions(example_variadic_args
         PRIVATE
             SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB=0
     )
 endif()
-list(APPEND EXAMPLE_PROGRAMS  example_gcc_trick_variadic_args)
+list(APPEND EXAMPLE_PROGRAMS  example_variadic_args)
 
 # ---------------------------------------------------------------------------
 # SECTION: AUTO-RUN PROGRAMS
@@ -77,7 +80,7 @@ list(APPEND EXAMPLE_PROGRAMS  example_gcc_trick_variadic_args)
 set(EXAMPLE_PROGRAMS
     simplelog_example_spdlog
     simplelog_example_null
-    example_gcc_trick_variadic_args
+    example_variadic_args
 )
 
 add_custom_target(examples
@@ -87,21 +90,12 @@ add_custom_target(examples
     COMMENT "RUN: examples"
 )
 
-add_custom_target(run.simplelog_example_spdlog
-    COMMAND simplelog_example_spdlog
-    DEPENDS simplelog_example_spdlog
-    COMMENT "RUN: simplelog_example_spdlog")
-
-add_custom_target(run.simplelog_example_null
-    COMMAND simplelog_example_null
-    DEPENDS simplelog_example_null
-    COMMENT "RUN: simplelog_example_null")
-
-add_custom_target(run.example_gcc_trick
-    COMMAND example_gcc_trick_variadic_args
-    DEPENDS example_gcc_trick_variadic_args
-    COMMENT "RUN: example_gcc_trick_variadic_args")
-
+foreach(_EXAMPLE_PROGRAM ${EXAMPLE_PROGRAMS})
+    add_custom_target("run.${_EXAMPLE_PROGRAM}"
+        COMMAND ${_EXAMPLE_PROGRAM}
+        DEPENDS ${_EXAMPLE_PROGRAM}
+        COMMENT "RUN: ${_EXAMPLE_PROGRAM}")
+endforeach()
 
 # ---------------------------------------------------------------------------
 # SECTION: Run examples as tests
