@@ -17,7 +17,7 @@
 #ifdef __has_include
 #  if  __has_include("simplelog.user_config.hpp")
 #    include "simplelog.user_config.hpp"
-#  elif defined(SIMPLELOG_USE_USER_CONFIG) && (SIMPLELOG_USE_USER_CONFIG >= 0)
+#  elif defined(SIMPLELOG_USE_USER_CONFIG) && !(SIMPLELOG_USE_USER_CONFIG == 0)
 #    include "simplelog.user_config.hpp"
 #  endif
 #endif
@@ -50,16 +50,15 @@
 // -- ENABLE/DISABLE: Short LOG macros, like: 
 // SLOG_ERROR(...)       instead of SIMPLELOG_ERROR(...)
 // SLOGM_ERROR(log, ...) instead of SIMPLELOGM_ERROR(log, ...)
-#if SIMPLELOG_DISABLE_SHORT_MACROS
-#  undef SIMPLELOG_HAVE_SHORT_MACROS
-#  define SIMPLELOG_HAVE_SHORT_MACROS  0
-#endif
 #ifndef SIMPLELOG_HAVE_SHORT_MACROS
-#  define SIMPLELOG_HAVE_SHORT_MACROS  1
+#  define SIMPLELOG_HAVE_SHORT_MACROS  1    //< ENABLED
+#endif
+#ifndef SIMPLELOG_HAVE_MACROS0
+#  define SIMPLELOG_HAVE_MACROS0  1         //< ENABLED (for now)
 #endif
 
 #ifndef SIMPLELOG_DIAG
-#  define SIMPLELOG_DIAG 0
+#  define SIMPLELOG_DIAG 0      //< DISABLED
 #endif
 
 // -- ENDOF-HEADER-FILE

@@ -28,7 +28,7 @@
  *      // -- USE DEFAULT LOGGING-MODULE from outer-scope (DEFAULT_MODULE_0)
  *      // HINT: short-log-macro are preferred over long-macro-names if possible
  *      //       EXAMPLE: SLOG_WARN(...) <=> SIMPLELOG_WARN(...)
- *      SLOG_WARN0("Hello Alice");
+ *      SLOG_WARN("Hello Alice");
  *      SLOG_ERROR("Hello {0} and {1}", "Alice", "Bob"); //< With params
  *
  *      int value = 42;
@@ -40,7 +40,7 @@
  *  {
  *      // -- DEFINE AND USE DEFAULT LOGGING-MODULE (hint: less params in log-macros)
  *      SIMPLELOG_DEFINE_DEFAULT_MODULE("foo.default");
- *      SLOG_WARN0("Hello Alice");
+ *      SLOG_WARN("Hello Alice");
  *      SLOG_ERROR("Hello {0} and {1}", "Alice", "Bob"); //< With params
  *  }
  * 
@@ -48,19 +48,24 @@
  *  {
  *      SIMPLELOG_DEFINE_MODULE(log, "foo.two");
  *
- *      SLOGM_WARN0(log0, "Hello Alice");  //< Only message (use module above)
+ *      SLOGM_WARN(log0, "Hello Alice");  //< Only message (use module above)
  *      SLOGM_ERROR(log, "Hello {0} and {1}", "Alice", "Bob"); //< With params
  *  }
  * @endcode
  **/
 // ----------------------------------------------------------------------------
 
-// -- DEFINE: SPECIFIC-MODULE (logger)
+// ----------------------------------------------------------------------------
+// DEFINE MODULES: SPECIFIC-MODULE (logger)
+// ----------------------------------------------------------------------------
 #define SIMPLELOG_DEFINE_MODULE(var_name, name)            SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)
 #define SIMPLELOG_DEFINE_STATIC_MODULE(var_name, name)     SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(var_name, name)
 #define SIMPLELOG_DEFINE_DEFAULT_MODULE(name)              SIMPLELOG_BACKEND_DEFINE_MODULE(simplelog_defaultModule, name)
 #define SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE(name)       SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(simplelog_defaultModule, name)
 
+// ----------------------------------------------------------------------------
+// SIMPLELOG LOG MACROS
+// ----------------------------------------------------------------------------
 // -- USE: DEFAULT-MODULE (logger)
 // MACRO-SIGNATURE:
 //  SIMPLELOG_xxx(message)        -- Message as string w/o placeholders.
@@ -82,21 +87,6 @@
 #define SIMPLELOG_INFO_IF(condition, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
 #define SIMPLELOG_DEBUG_IF(condition, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
-// HINT: SIMPLELOG_xxx0(), SIMPLELOG_xxx0_IF() macros may become unused (and/or deprecated).
-#define SIMPLELOG_FATAL0(message)      SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, message)
-#define SIMPLELOG_CRITICAL0(message)   SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, message)
-#define SIMPLELOG_ERROR0(message)      SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, message)
-#define SIMPLELOG_WARN0(message)       SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, message)
-#define SIMPLELOG_INFO0(message)       SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, message)
-#define SIMPLELOG_DEBUG0(message)      SIMPLELOG_BACKEND_LOG0(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, message)
-
-#define SIMPLELOG_FATAL0_IF(condition, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, message)
-#define SIMPLELOG_CRITICAL0_IF(condition, message) SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, message)
-#define SIMPLELOG_ERROR0_IF(condition, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, message)
-#define SIMPLELOG_WARN0_IF(condition, message)     SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, message)
-#define SIMPLELOG_INFO0_IF(condition, message)     SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, message)
-#define SIMPLELOG_DEBUG0_IF(condition, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, message)
-
 // -- USE: SPECIFIC-MODULE (logger)
 #define SIMPLELOGM_FATAL(logger, ...)       SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
 #define SIMPLELOGM_CRITICAL(logger, ...)    SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
@@ -111,21 +101,6 @@
 #define SIMPLELOGM_WARN_IF(condition, logger, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
 #define SIMPLELOGM_INFO_IF(condition, logger, ...)      SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
 #define SIMPLELOGM_DEBUG_IF(condition, logger, ...)     SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
-
-// HINT: SIMPLELOGM_xxx0(), SIMPLELOGM_xxx0_IF() macros may become unused (and/or deprecated).
-#define SIMPLELOGM_FATAL0(logger, message)      SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_FATAL, message)
-#define SIMPLELOGM_CRITICAL0(logger, message)   SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, message)
-#define SIMPLELOGM_ERROR0(logger, message)      SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_ERROR, message)
-#define SIMPLELOGM_WARN0(logger, message)       SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_WARN, message)
-#define SIMPLELOGM_INFO0(logger, message)       SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_INFO, message)
-#define SIMPLELOGM_DEBUG0(logger, message)      SIMPLELOG_BACKEND_LOG0(logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, message)
-
-#define SIMPLELOGM_FATAL0_IF(condition, logger, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_FATAL, message)
-#define SIMPLELOGM_CRITICAL0_IF(condition, logger, message) SIMPLELOG_BACKEND_LOG0_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, message)
-#define SIMPLELOGM_ERROR0_IF(condition, logger, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_ERROR, message)
-#define SIMPLELOGM_WARN0_IF(condition, logger, message)     SIMPLELOG_BACKEND_LOG0_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_WARN, message)
-#define SIMPLELOGM_INFO0_IF(condition, logger, message)     SIMPLELOG_BACKEND_LOG0_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_INFO, message)
-#define SIMPLELOGM_DEBUG0_IF(condition, logger, message)    SIMPLELOG_BACKEND_LOG0_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, message)
 
 
 // --------------------------------------------------------------------------
@@ -153,21 +128,6 @@
 #define SLOG_INFO_IF(condition, ...)      SIMPLELOG_INFO_IF(condition, __VA_ARGS__)
 #define SLOG_DEBUG_IF(condition, ...)     SIMPLELOG_DEBUG_IF(condition, __VA_ARGS__)
 
-// HINT: SLOG_xxx0(), SLOG_xxx0_IF() macros may become unused (and/or deprecated).
-#define SLOG_FATAL0(message)          SIMPLELOG_FATAL0(message)
-#define SLOG_CRITICAL0(message)       SIMPLELOG_CRITICAL0(message)
-#define SLOG_ERROR0(message)          SIMPLELOG_ERROR0(message)
-#define SLOG_WARN0(message)           SIMPLELOG_WARN0(message)
-#define SLOG_INFO0(message)           SIMPLELOG_INFO0(message)
-#define SLOG_DEBUG0(message)          SIMPLELOG_DEBUG0(message)
-
-#define SLOG_FATAL0_IF(condition, message)    SIMPLELOG_FATAL0_IF(condition, message)
-#define SLOG_CRITICAL0_IF(condition, message) SIMPLELOG_CRITICAL0_IF(condition, message)
-#define SLOG_ERROR0_IF(condition, message)    SIMPLELOG_ERROR0_IF(condition, message)
-#define SLOG_WARN0_IF(condition, message)     SIMPLELOG_WARN0_IF(condition, message)
-#define SLOG_INFO0_IF(condition, message)     SIMPLELOG_INFO0_IF(condition, message)
-#define SLOG_DEBUG0_IF(condition, message)    SIMPLELOG_DEBUG0_IF(condition, message)
-
 // -- USE: SPECIFIC-MODULE (logger)
 // MACRO-SIGNATURE:
 //  SLOGM_xxx(logger, message)        -- Message as string w/o placeholders.
@@ -188,21 +148,11 @@
 #define SLOGM_WARN_IF(condition, logger, ...)      SIMPLELOGM_WARN_IF(condition, logger, __VA_ARGS__)
 #define SLOGM_INFO_IF(condition, logger, ...)      SIMPLELOGM_INFO_IF(condition, logger, __VA_ARGS__)
 #define SLOGM_DEBUG_IF(condition, logger, ...)     SIMPLELOGM_DEBUG_IF(condition, logger, __VA_ARGS__)
+#endif
 
-// HINT: SLOGM_xxx0(), SLOGM_xxx0_IF() macros may become unused (and/or deprecated).
-#define SLOGM_FATAL0(logger, message)      SIMPLELOGM_FATAL0(logger, message)
-#define SLOGM_CRITICAL0(logger, message)   SIMPLELOGM_CRITICAL0(logger, message)
-#define SLOGM_ERROR0(logger, message)      SIMPLELOGM_ERROR0(logger, message)
-#define SLOGM_WARN0(logger, message)       SIMPLELOGM_WARN0(logger, message)
-#define SLOGM_INFO0(logger, message)       SIMPLELOGM_INFO0(logger, message)
-#define SLOGM_DEBUG0(logger, message)      SIMPLELOGM_DEBUG0(logger, message)
-
-#define SLOGM_FATAL0_IF(condition, logger, message)    SIMPLELOGM_FATAL0_IF(condition, logger, message)
-#define SLOGM_CRITICAL0_IF(condition, logger, message) SIMPLELOGM_CRTICAL0_IF(condition, logger, message)
-#define SLOGM_ERROR0_IF(condition, logger, message)    SIMPLELOGM_ERROR0_IF(condition, logger, message)
-#define SLOGM_WARN0_IF(condition, logger, message)     SIMPLELOGM_WARN0_IF(condition, logger, message)
-#define SLOGM_INFO0_IF(condition, logger, message)     SIMPLELOGM_INFO0_IF(condition, logger, message)
-#define SLOGM_DEBUG0_IF(condition, logger, message)    SIMPLELOGM_DEBUG0_IF(condition, logger, message)
+// -- AFTER-HEADER: CONVENIENCE-INCLUDE
+#if SIMPLELOG_HAVE_MACROS0
+#include "simplelog/detail/LogMacros0.hpp"
 #endif
 
 // -- ENDOF-HEADER-FILE

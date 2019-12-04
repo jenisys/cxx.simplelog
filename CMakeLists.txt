@@ -5,8 +5,6 @@
 cmake_minimum_required(VERSION 3.12)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-# include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ccache.cmake)
-# include(cmake/ccache.cmake)
 include(ccache)
 
 # MAYBE:
@@ -16,7 +14,7 @@ include(WriteCompilerDetectionHeader)
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.6 LANGUAGES CXX)
+project(cxx.simplelog VERSION 0.1.7 LANGUAGES CXX)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
 option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
@@ -30,12 +28,15 @@ set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
 
 # -- CMAKE_CONFIGURATION_TYPES
 if(NOT DEFINED CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type: Debug, Release, ..." FORCE)
+    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type: Debug, Release, ...")
 endif()
 # SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 # IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
 #    SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  ${CMAKE_CONFIGURATION_TYPES})
 # ENDIF()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG=1)
+endif()
 
 # -- ARTIFACT DIRECTORY LAYOUT in BINARY_DIR:
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")

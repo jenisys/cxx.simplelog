@@ -1,14 +1,13 @@
 /**
- * @file simplelog/backend/detail/LogBackendDerivedMacros.hpp
- * 
- * Generic derived logging backend macros that simplify writing 
- * a logging backend.
+ * @file simplelog/detail/LogBackendDerivedMacros.hpp
+ * Provides generic derived logging backend macros
+ * that simplify writing a logging backend.
  **/
 
 #pragma once
 
 #ifndef SIMPLELOG_BACKEND_LOG
-#  error "INCLUDE-ORDERING: Include LogBackendMacros.hpp first."
+#  error "INCLUDE-ORDERING: Include simplelog/backend/xxx/LogBackendMacros.hpp first."
 #endif
 // SAME FOR: SIMPLELOG_BACKEND_LOG0
 // SAME FOR: SIMPLELOG_BACKEND_DEFINE_MODULE
@@ -21,7 +20,9 @@
     static SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)
 #endif
 
+#ifndef SIMPLELOG_BACKEND_LOG_IF
 #define SIMPLELOG_BACKEND_LOG_IF(condition, logger, level, format, ...) \
     if (condition) { SIMPLELOG_BACKEND_LOG(logger, level, format, ## __VA_AGRS__); }
-#define SIMPLELOG_BACKEND_LOG0_IF(condition, logger, level, message) \
-    if (condition) { SIMPLELOG_BACKEND_LOG0(logger, level, message); }
+#endif
+
+// -- ENDOF-HEADER-FILE

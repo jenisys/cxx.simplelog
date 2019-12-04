@@ -23,17 +23,16 @@ namespace simplelog { namespace backend {
 // --------------------------------------------------------------------------
 // LOGGING BACKEND MACROS
 // --------------------------------------------------------------------------
-// #define SIMPLELOG_BACKEND_NULL_IDENTIER(x) (x ## __LINE__)
-#define SIMPLELOG_BACKEND_NULL_STATEMENT /* (void) */
+#define SIMPLELOG_BACKEND_NULL_STATEMENT  (void)0
 #define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) ::simplelog::backend_null::NullCategory *vname = nullptr
-#define SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(vname, name) \
-    static SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name)
 
-#define SIMPLELOG_BACKEND_LOG(logger, level, format, ...)  SIMPLELOG_BACKEND_NULL_STATEMENT
-#define SIMPLELOG_BACKEND_LOG0(logger, level, message)     SIMPLELOG_BACKEND_NULL_STATEMENT
-#define SIMPLELOG_BACKEND_LOG_IF(condition, logger, level, format, ...) SIMPLELOG_BACKEND_NULL_STATEMENT
-#define SIMPLELOG_BACKEND_LOG0_IF(condition, logger, level, message)    SIMPLELOG_BACKEND_NULL_STATEMENT
+#define SIMPLELOG_BACKEND_LOG(logger, level, ...)                   SIMPLELOG_BACKEND_NULL_STATEMENT
+#define SIMPLELOG_BACKEND_LOG_IF(condition, logger, level, ...)     SIMPLELOG_BACKEND_NULL_STATEMENT
 
+
+// --------------------------------------------------------------------------
+// LOGGING BACKEND: LEVEL DEFINITIONS
+// --------------------------------------------------------------------------
 #define SIMPLELOG_BACKEND_LEVEL_OFF        10
 #define SIMPLELOG_BACKEND_LEVEL_FATAL      6
 #define SIMPLELOG_BACKEND_LEVEL_CRITICAL   5
@@ -45,4 +44,6 @@ namespace simplelog { namespace backend {
 // --------------------------------------------------------------------------
 // REUSE: LOGGING BACKEND DERIVED MACROS
 // --------------------------------------------------------------------------
-// AVOIDED: #include "simplelog/backend/detail/LogBackendDerivedMacros.hpp"
+#include "simplelog/detail/LogBackendDerivedMacros.hpp"
+
+// -- ENDOF-HEADER-FILE
