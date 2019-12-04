@@ -14,6 +14,10 @@ target_link_libraries(simplelog_example_spdlog
         cxx_simplelog::simplelog_spdlog
         # PREPARED: fmt::fmt
 )
+target_include_directories(simplelog_example_spdlog
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
 target_compile_options(simplelog_example_spdlog
     PRIVATE  -Wall -Wpedantic
 )
@@ -29,6 +33,10 @@ add_executable(simplelog_example_null
 )
 target_link_libraries(simplelog_example_null 
     PRIVATE  cxx_simplelog::simplelog_null
+)
+target_include_directories(simplelog_example_null
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_compile_options(simplelog_example_null
     PRIVATE  -Wpedantic

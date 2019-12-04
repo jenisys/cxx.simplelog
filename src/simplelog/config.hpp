@@ -9,6 +9,20 @@
 // DISABLED: #define SIMPLELOG_DIAG 1
 
 // --------------------------------------------------------------------------
+// SIMPLELOG CONFIGURATION EXTENSION-POINT: User-specific
+// --------------------------------------------------------------------------
+// USING: C++/CPP __has_include() macro to check if header-file exists.
+// SINCE: C++17 (or for some compilers before: C++14, ...)
+// SEE: https://en.cppreference.com/w/cpp/preprocessor/include
+#ifdef __has_include
+#  if  __has_include("simplelog.user_config.hpp")
+#    include "simplelog.user_config.hpp"
+#  elif defined(SIMPLELOG_USE_USER_CONFIG) && (SIMPLELOG_USE_USER_CONFIG >= 0)
+#    include "simplelog.user_config.hpp"
+#  endif
+#endif
+
+// --------------------------------------------------------------------------
 // SIMPLELOG CONFIGURATION: Select backend, etc.
 // --------------------------------------------------------------------------
 #ifndef SIMPLELOG_DEFAULT_BACKEND
