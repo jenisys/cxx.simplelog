@@ -33,7 +33,7 @@ auto& spdlog_registry(void)
 }
 #endif
 
-auto makeLogger(const std::string& name)
+auto makeLogger(const std::string& name) -> LoggerPtr
 {
     return std::make_shared<spdlog::logger>(name);
 }

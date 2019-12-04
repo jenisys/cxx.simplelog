@@ -57,7 +57,7 @@ inline void inheritSinksFromOther(LoggerPtr& log, const LoggerPtr& other)
  * @param name  Name of the logger/category/module (as string).
  * @return Pointer to newly created logger (as shared_ptr).
  **/
-inline auto makeLogger(std::string name)
+inline auto makeLogger(std::string name) -> LoggerPtr
 {
     return std::make_shared<::spdlog::logger>(name);
 }
@@ -71,7 +71,7 @@ inline auto makeLogger(std::string name)
  * @return Logger pointer to newly created logger (shared_ptr)
  * @see spdlog::create<Sink>(name, sinkArgs...)
  **/
-inline auto createAndRegisterLogger(const std::string& name, bool inheritSinks=true)
+inline LoggerPtr createAndRegisterLogger(const std::string& name, bool inheritSinks=true)
 {
     auto newLogger = makeLogger(name);
     spdlog::initialize_logger(newLogger);
@@ -93,7 +93,7 @@ inline auto createAndRegisterLogger(const std::string& name, bool inheritSinks=t
  * @param level Default level for the logger (if it is newly created). 
  * @return Pointer to logger object.
  **/
-inline auto useOrCreateLogger(const std::string& name)
+inline auto useOrCreateLogger(const std::string& name) -> LoggerPtr
 {
     auto logPtr = spdlog::get(name);
     if (!logPtr)

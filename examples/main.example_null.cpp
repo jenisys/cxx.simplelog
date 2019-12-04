@@ -41,7 +41,8 @@ void example_useTwoLoggersWithSameName(void)
     SLOGM_WARN0(log2,  "Logger_2");
 }
 
-auto getStaticLogger(void)
+// HINT: C++11 needs trailing-return-type specification, C++14 not.
+auto getStaticLogger(void) -> simplelog::backend_null::LoggerPtr
 {
     SIMPLELOG_DEFINE_STATIC_MODULE(theLog, "foo.static");
     // -- SAME AS: static SIMPLELOG_DEFINE_MODULE(theLog, "foo.static");

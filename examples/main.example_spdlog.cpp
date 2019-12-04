@@ -80,7 +80,8 @@ void example_useTwoLoggersWithSameName(void)
 }
 
 // std::shared_ptr<spdlog::logger>
-auto getLogger(void)
+// HINT: C++11 needs trailing-return-type specification, C++14 not.
+auto getLogger(void) -> simplelog::backend_spdlog::LoggerPtr
 {
     // static SIMPLELOG_DEFINE_MODULE(theLog, "foo.static");
     SIMPLELOG_DEFINE_STATIC_MODULE(theLog, "foo.static");

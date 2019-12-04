@@ -6,18 +6,26 @@
 
 #pragma once
 
-namespace simplelog { namespace backend { namespace null {
+namespace simplelog { namespace backend_null {
 
 struct NullCategory {};
+typedef NullCategory* LoggerPtr;
 
-}}}
+}}
+
+// -- SPECIFY: LoggerPtr in a backend-independent way.
+#if 0
+namespace simplelog { namespace backend {
+    using simplelog::backend_null::LoggerPtr;
+}
+#endif
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND MACROS
 // --------------------------------------------------------------------------
 // #define SIMPLELOG_BACKEND_NULL_IDENTIER(x) (x ## __LINE__)
 #define SIMPLELOG_BACKEND_NULL_STATEMENT /* (void) */
-#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) ::simplelog::backend::null::NullCategory *vname = nullptr
+#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) ::simplelog::backend_null::NullCategory *vname = nullptr
 #define SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(vname, name) \
     static SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name)
 

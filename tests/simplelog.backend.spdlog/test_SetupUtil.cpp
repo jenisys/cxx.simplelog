@@ -33,10 +33,12 @@ using NullSink = ::spdlog::sinks::null_sink_mt;
 // ============================================================================
 // TEST SUPPORT:
 // ============================================================================
+#if 0
 auto& spdlog_registry(void)
 {
     return ::spdlog::details::registry::instance();
 }
+#endif
 
 void assert_loggerHasSameSink(LoggerPtr logger, SinkPtr sink) 
 {
@@ -102,6 +104,7 @@ TEST_CASE("setMinLevel: Keeps logger.level if logger.level >= min_level")
 TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
+    using simplelog::backend_spdlog::LoggerPtr;
     CleanupLoggingFixture cleanupGuard;
     const auto DESIRED_LEVEL = SIMPLELOG_BACKEND_LEVEL_WARN;
     const auto LOG_LEVEL = SIMPLELOG_BACKEND_LEVEL_ERROR;
@@ -109,7 +112,8 @@ TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
     logger->set_level(LOG_LEVEL);
 
     // -- PERFORM-TEST: logger.level == min_level
-    auto hasSameName = [](auto log) {
+    // C++14: auto hasSameName = [](auto log) {
+    auto hasSameName = [](LoggerPtr log) {
         return log->name() == "foo";
     };
     simplelog::backend_spdlog::setLevelToAny(DESIRED_LEVEL, hasSameName);
@@ -121,6 +125,7 @@ TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
 TEST_CASE("setLevelToAny: Should keep level if predicate is false")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
+    using simplelog::backend_spdlog::LoggerPtr;
     CleanupLoggingFixture cleanupGuard;
     const auto DESIRED_LEVEL = SIMPLELOG_BACKEND_LEVEL_WARN;
     const auto LOG_LEVEL = SIMPLELOG_BACKEND_LEVEL_ERROR;
@@ -128,7 +133,8 @@ TEST_CASE("setLevelToAny: Should keep level if predicate is false")
     logger->set_level(LOG_LEVEL);
 
     // -- PERFORM-TEST: logger.level == min_level
-    auto hasOthergName = [](auto log) {
+    // C++14: auto hasOthergName = [](auto log) {
+    auto hasOthergName = [](LoggerPtr log) {
         return log->name() == "other";
     };
     simplelog::backend_spdlog::setLevelToAny(DESIRED_LEVEL, hasOthergName);
