@@ -10,7 +10,6 @@
 
 // -- INCLUDES:
 #define SIMPLELOG_USE_BACKEND_SPDLOG 1
-// #define SIMPLELOG_USE_BACKEND 10
 #include "simplelog/LogMacros.hpp"
 
 // -- SPECIAL CASE:
@@ -33,21 +32,21 @@ void example_useLoggingWithDefaultModule(void)
     SIMPLELOG_INFO("Hello type {0}, int:{1} and bool:{2}", "Alice", 42, true);
 
     // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES => PREFERRED.
-    SLOG_ERROR0("Hello Alice");
+    SLOG_ERROR("Hello Alice");
     SLOG_WARN("Hello {}", "Bob");
 }
 
 void example_useLoggingWithOverriddenDefaultModule(void)
 {
     SIMPLELOG_DEFINE_DEFAULT_MODULE("OUTER");
-    SLOG_WARN0("Use module=OUTER");
+    SLOG_WARN("Use module=OUTER");
 
     {
         // -- OVERRIDE DEFAULT LOGGING-MODULE: In this scope
         SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("INNER");
-        SLOG_WARN0("Use module=INNER (overrides: OUTER)");
+        SLOG_WARN("Use module=INNER (overrides: OUTER)");
     }
-    SLOG_WARN0("Use module=OUTER (again, after scope-exit)");
+    SLOG_WARN("Use module=OUTER (again, after scope-exit)");
 }
 
 #if 0
@@ -55,9 +54,9 @@ void example_useDefaultLoggerWithoutDefiningOne_does_not_compile(void)
 {
     // UNDEFINED: SIMPLELOG_DEFINE_DEFAULT_MODULE("foo");
 
-    SIMPLELOG_ERROR0("Hello Alice");
+    SIMPLELOG_ERROR("Hello Alice");
     // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES.
-    SLOG_ERROR0("Hello Alice");
+    SLOG_ERROR("Hello Alice");
 }
 #endif
 
@@ -66,8 +65,8 @@ void example_useTwoLoggers(void)
     SIMPLELOG_DEFINE_MODULE(log1, "foo.one");
     SIMPLELOG_DEFINE_MODULE(log2, "foo.two");
 
-    SLOGM_ERROR0(log1, "Logger_1");
-    SLOGM_WARN0(log2, "Logger_2");
+    SLOGM_ERROR(log1, "Logger_1");
+    SLOGM_WARN(log2, "Logger_2");
 }
 
 void example_useTwoLoggersWithSameName(void)
@@ -75,8 +74,8 @@ void example_useTwoLoggersWithSameName(void)
     SIMPLELOG_DEFINE_MODULE(log1, "foo.same");
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
 
-    SLOGM_ERROR0(log1, "Use Logger_1");
-    SLOGM_WARN0( log2, "Use Logger_2");
+    SLOGM_ERROR(log1, "Use Logger_1");
+    SLOGM_WARN( log2, "Use Logger_2");
 }
 
 // std::shared_ptr<spdlog::logger>
@@ -91,7 +90,7 @@ auto getLogger(void) -> simplelog::backend_spdlog::LoggerPtr
 void example_useStaticLogger(void)
 {
     auto log = getLogger();
-    SLOGM_ERROR0(log, "Hello Alice");
+    SLOGM_ERROR(log, "Hello Alice");
 }
 
 
@@ -112,7 +111,7 @@ void use_simplelog(void)
 
     // -- SPECIAL CASE: Reassign LOGGING_THRESHOLD_LEVEL here.
     // OR: SIMPLELOG_BACKEND_LEVEL_WARN
-    SLOGM_WARN0(console, "MAIN: SETUP_LOGGING with setMinLevel=warn");
+    SLOGM_WARN(console, "MAIN: SETUP_LOGGING with setMinLevel=warn");
     simplelog::backend_spdlog::setMinLevel(spdlog::level::warn);
     
     // -- SPECIAL CASE END.
