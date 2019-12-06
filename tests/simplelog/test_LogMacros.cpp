@@ -141,17 +141,32 @@ TEST_CASE("LogMacros: LogLevel below threshold is filtered-out")
     spdlog::set_pattern("*** %v");
     
     SIMPLELOG_DEFINE_STATIC_MODULE(logger, "default_1");
-    logger->set_level(SIMPLELOG_BACKEND_LEVEL_ERROR);
-    SIMPLELOGM_WARN(logger, "__FILTERED_OUT__");
-    SIMPLELOGM_INFO(logger, "__FILTERED_OUT__");
-    SIMPLELOGM_DEBUG(logger, "__FILTERED_OUT__");
+    {
+        logger->set_level(SIMPLELOG_BACKEND_LEVEL_ERROR);
+        SIMPLELOGM_WARN(logger, "__FILTERED_OUT__");
+        SIMPLELOGM_INFO(logger, "__FILTERED_OUT__");
+        SIMPLELOGM_DEBUG(logger, "__FILTERED_OUT__");
+        std::string logRecords = oss.str();
+        CHECK(logRecords.empty());
+        CHECK(count(logRecords, "__FILTERED_OUT__") == 0);
+    }
 
-    logger->set_level(SIMPLELOG_BACKEND_LEVEL_WARN);
-    SIMPLELOGM_INFO(logger, "__FILTERED_OUT__");
-    SIMPLELOGM_DEBUG(logger, "__FILTERED_OUT__");
+    {
+        logger->set_level(SIMPLELOG_BACKEND_LEVEL_WARN);
+        SIMPLELOGM_INFO(logger, "__FILTERED_OUT__");
+        SIMPLELOGM_DEBUG(logger, "__FILTERED_OUT__");
+        const std::string logRecords = oss.str();
+        CHECK(logRecords.empty());
+        CHECK(count(logRecords, "__FILTERED_OUT__") == 0);
+    }
 
-    logger->set_level(SIMPLELOG_BACKEND_LEVEL_INFO);
-    SIMPLELOGM_DEBUG(logger, "__FILTERED_OUT__");
+    {
+        logger->set_level(SIMPLELOG_BACKEND_LEVEL_INFO);
+        SIMPLELOGM_DEBUG(logger, "__FILTERED_OUT__");
+        const std::string logRecords = oss.str();
+        CHECK(logRecords.empty());
+        CHECK(count(logRecords, "__FILTERED_OUT__") == 0);
+    }
 }
 
 TEST_CASE("LogMacros: LogLevel >= threshold emits log-record")
