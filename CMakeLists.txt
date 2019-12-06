@@ -14,7 +14,7 @@ include(WriteCompilerDetectionHeader)
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.7 LANGUAGES CXX)
+project(cxx.simplelog VERSION 0.1.8 LANGUAGES CXX)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
 option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
