@@ -75,7 +75,7 @@
 #define SLOGM_DEBUG0(logger, message)      SIMPLELOGM_DEBUG0(logger, message)
 
 #define SLOGM_FATAL0_IF(condition, logger, message)    SIMPLELOGM_FATAL0_IF(condition, logger, message)
-#define SLOGM_CRITICAL0_IF(condition, logger, message) SIMPLELOGM_CRTICAL0_IF(condition, logger, message)
+#define SLOGM_CRITICAL0_IF(condition, logger, message) SIMPLELOGM_CRITICAL0_IF(condition, logger, message)
 #define SLOGM_ERROR0_IF(condition, logger, message)    SIMPLELOGM_ERROR0_IF(condition, logger, message)
 #define SLOGM_WARN0_IF(condition, logger, message)     SIMPLELOGM_WARN0_IF(condition, logger, message)
 #define SLOGM_INFO0_IF(condition, logger, message)     SIMPLELOGM_INFO0_IF(condition, logger, message)
