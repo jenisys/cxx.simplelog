@@ -178,11 +178,11 @@ TEST_CASE("LogMacros: LogLevel >= threshold emits log-record")
     
     SIMPLELOG_DEFINE_STATIC_MODULE(logger, "default_1");
     logger->set_level(SIMPLELOG_BACKEND_LEVEL_ERROR);
-    SIMPLELOGM_ERROR(logger, "__EMITS_RECORD__");
-    SIMPLELOGM_FATAL(logger, "__EMITS_RECORD__");
-    SIMPLELOGM_CRITICAL(logger, "__EMITS_RECORD__");
+    SIMPLELOGM_ERROR(logger, "__EMITS_RECORD:1");
+    SIMPLELOGM_FATAL(logger, "__EMITS_RECORD:2");
+    SIMPLELOGM_CRITICAL(logger, "__EMITS_RECORD:3");
     const std::string logRecords = oss.str();
-    CHECK(count(logRecords, "__EMITS_RECORD__") == 3);
+    CHECK(count(logRecords, "__EMITS_RECORD") == 3);
     oss.str("");
 }
 
