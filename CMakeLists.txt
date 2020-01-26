@@ -27,37 +27,36 @@ set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
                     "Normally include spdlog from packages" FORCE)
 
 include(cxx.setup_project)
-# # -- CMAKE_CONFIGURATION_TYPES
-# if(NOT DEFINED CMAKE_BUILD_TYPE)
-#     SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type: Debug, Release, ...")
-# endif()
-# # SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
-# # IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
-# #    SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  ${CMAKE_CONFIGURATION_TYPES})
-# # ENDIF()
-# if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-#     add_compile_definitions(DEBUG=1)
-# endif()
-
-# # -- ARTIFACT DIRECTORY LAYOUT in BINARY_DIR:
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
 
 # ---------------------------------------------------------------------------
-# SECTION: C++ Compiler Configuration
+# SECTION: BOOTSTRAP -- When wstool update was not done yet
 # ---------------------------------------------------------------------------
-# -- CMAKE_CXX_STANDARD: Needs to defined before any target to have effect.
-# set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic")
-# include("cmake/cxx.setup_cxx_standard.cmake")
-# include("cmake/build_config.cmake")
+# -- TARGET: wstool-update, manually trigger update of subprojects in build-script.
+set(GIT_SUBPROJECT_DIRS  lib/spdlog lib/fmt lib/doctest)
+add_custom_target(wstool-update
+    COMMAND wstool update
+    BYPRODUCTS ${GIT_SUBPROJECT_DIRS}
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    COMMENT "WSTOOL-UPDATE: Update/checkout git.subprojects ..."
+)
+
+# -- ENFORCE-INIT: wstool-update if lib/spdlog, ... are missing
+set(WSTOOL_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
+if(NOT EXISTS "${WSTOOL_UPDATE_DONE_MARKER_FILE}")
+    message(STATUS "REQUIRES-WSTOOL-UPDATE: Checkout subprojects => lib/spdlog, ...")
+    add_custom_command(OUTPUT ${GIT_SUBPROJECT_DIRS}
+        COMMAND wstool update
+        BYPRODUCTS ${GIT_SUBPROJECT_DIRS} GENERATED
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMENT "REQUIRES: wstool-update"
+    )
+endif()
+
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT:
+# SHORTCUT: Supports spdlog-1.5.0, spdlog-1.4.2 at least
 set(SPDLOG_MIN_VERSION "1.4.2")
 # find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 # DISABLED: if(NOT spdlog_FOUND)
