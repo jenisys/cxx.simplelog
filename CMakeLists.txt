@@ -40,15 +40,14 @@ add_custom_target(wstool-update
     COMMENT "WSTOOL-UPDATE: Update/checkout git.subprojects ..."
 )
 
-# -- ENFORCE-INIT: wstool-update if lib/spdlog, ... are missing
+# -- ENFORCE-INIT: wstool-update if lib/spdlog/, ... are missing
+# HINT: Must be executed immediatly before other CMake parts (that depend on it).
 set(WSTOOL_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
 if(NOT EXISTS "${WSTOOL_UPDATE_DONE_MARKER_FILE}")
     message(STATUS "REQUIRES-WSTOOL-UPDATE: Checkout subprojects => lib/spdlog, ...")
-    add_custom_command(OUTPUT ${GIT_SUBPROJECT_DIRS}
-        COMMAND wstool update
-        BYPRODUCTS ${GIT_SUBPROJECT_DIRS} GENERATED
+    execute_process(COMMAND wstool update
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        COMMENT "REQUIRES: wstool-update"
+        # DISABLED: TIMEOUT 600  # ABORT-AFTER: 10*60 seconds in OFFLINE mode
     )
 endif()
 
