@@ -1,6 +1,8 @@
 # ===========================================================================
 # CMAKE PART: PROJECT-SPECIFIC: Setup C++ Build Projects
 # ===========================================================================
+# STATE: alpha (may become deprecated, superceeded by: cxx.setup_project.cmake)
+# ===========================================================================
 # USE: INCLUDE-BEFORE add_executable(), add_library()
 
 include_guard(DIRECTORY)

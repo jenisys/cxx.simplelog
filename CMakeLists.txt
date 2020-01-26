@@ -26,22 +26,23 @@ set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FO
 set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
                     "Normally include spdlog from packages" FORCE)
 
-# -- CMAKE_CONFIGURATION_TYPES
-if(NOT DEFINED CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type: Debug, Release, ...")
-endif()
-# SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
-# IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
-#    SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  ${CMAKE_CONFIGURATION_TYPES})
-# ENDIF()
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_definitions(DEBUG=1)
-endif()
+include(cxx.setup_project)
+# # -- CMAKE_CONFIGURATION_TYPES
+# if(NOT DEFINED CMAKE_BUILD_TYPE)
+#     SET(CMAKE_BUILD_TYPE "Debug" CACHE STRING "CMake build type: Debug, Release, ...")
+# endif()
+# # SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
+# # IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
+# #    SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  ${CMAKE_CONFIGURATION_TYPES})
+# # ENDIF()
+# if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#     add_compile_definitions(DEBUG=1)
+# endif()
 
-# -- ARTIFACT DIRECTORY LAYOUT in BINARY_DIR:
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+# # -- ARTIFACT DIRECTORY LAYOUT in BINARY_DIR:
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
 
 # ---------------------------------------------------------------------------
 # SECTION: C++ Compiler Configuration
@@ -50,14 +51,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
 # set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic")
-message(STATUS "USING: CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
-include("cmake/cxx.setup_cxx_standard.cmake")
-include("cmake/build_config.cmake")
+# include("cmake/cxx.setup_cxx_standard.cmake")
+# include("cmake/build_config.cmake")
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT: 
+# SHORTCUT:
 set(SPDLOG_MIN_VERSION "1.4.2")
 # find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 # DISABLED: if(NOT spdlog_FOUND)

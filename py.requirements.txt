@@ -1,0 +1,54 @@
+# ===========================================================================
+# PYTHON PACKAGE REQUIREMENTS:
+# ===========================================================================
+# PRECONDITION: python 2.7.11 or newer is installed
+# DESCRIPTION:
+#    cmake-build: Simplify building CMake projects on command-line.
+#    cmake:       Python package from cmake.org to simplify update of cmake.
+#
+# USAGE:
+#    On Windows: pip install -U -r <THIS_FILE>
+#    On UNIX:    sudo pip install -U -r <THIS_FILE>
+#
+# USING VIRTUALENV FOR SETUP OF ISOLATED ENVIRONMENT:
+#    On Windows:
+#
+#        virtualenv .venv_py
+#        call .venv_py\Scripts\activate
+#        pip install -U -r py.requirements.txt
+#
+#    On UNIX:
+#
+#        virtualenv .venv_py
+#        source .venv_py/bin/activate
+#        pip install -U -r py.requirements.txt
+#
+# SEE ALSO:
+#    * https://github.com/jenisys/cmake-build
+#    * https://cmake.org
+# ===========================================================================
+# MAYBE: git+https://github.com/jenisys/cmake-build@v0.1.13
+
+# git+https://github.com/jenisys/cmake-build
+https://github.com/jenisys/cmake-build/archive/v0.1.20.zip
+cmake >= 3.15
+
+# -- wstool: multi-repo tool for git, svn, ...
+# SEE:
+# * https://github.com/vcstools/wstool
+# * https://github.com/vcstools/wstool/blob/master/doc/wstool_usage.rst
+# BETTER: wstool >= 0.1.18 (but version is not in pypi.org, yet)
+https://github.com/vcstools/wstool/archive/0.1.18.zip
+
+# -- meta: multi-repo tool which supports to splitup monorepos in meta-repos/multi-repos.
+# INSTALL: npm install -g meta
+# SEE:
+#   * https://github.com/mateodelnorte/meta
+#   * https://medium.com/@patrickleet/mono-repo-or-multi-repo-why-choose-one-when-you-can-have-both-e9c77bd0c668
+
+# MAYBE: CMake package manager
+# https://cget.readthedocs.io/en/latest/src/intro.html
+# PREPARED: cget
+
+# -- OPTIONAL: invoke constraints
+# DISABLED: -r tasks/py.requirements.txt

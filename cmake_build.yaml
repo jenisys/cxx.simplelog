@@ -34,6 +34,7 @@ build_configs:
 
 run:
   echo: true
+  shell: /bin/sh
 
 cleanup:
   extra_directories:

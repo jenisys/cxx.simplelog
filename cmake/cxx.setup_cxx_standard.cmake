@@ -1,7 +1,7 @@
 # ===========================================================================
 # CMAKE C++ COMPILER SETUP: cmake/cxx.setup_cxx_standard.cmake
 # ===========================================================================
-# HINTS: 
+# HINTS:
 #   * CMAKE_CXX_STANDARD: Needs to defined before target to have any effect.
 #
 # OPTIONAL FILES:
@@ -32,4 +32,5 @@ endif()
 #    file(READ "${PROJECT_CMAKE_CXX_STANDARD_FILE}" CMAKE_CXX_STANDARD)
 #    string(STRIP "${CMAKE_CXX_STANDARD}" CMAKE_CXX_STANDARD)
 # endif()
+message(STATUS "USING: CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "USING: CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} (REQUIRED: ${CMAKE_CXX_STANDARD_REQUIRED}, EXTENSIONS: ${CMAKE_CXX_EXTENSIONS})")
