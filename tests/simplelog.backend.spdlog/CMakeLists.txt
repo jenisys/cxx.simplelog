@@ -54,7 +54,7 @@ target_compile_definitions(test_simplelog_backend_spdlog
 # ---------------------------------------------------------------------------
 # SECTION: Tests
 # ---------------------------------------------------------------------------
-add_test(NAME test_simplelog.backend.spdlog   
+add_test(NAME test_simplelog.backend.spdlog
     COMMAND test_simplelog_backend_spdlog -s
 )
 # set_tests_properties(test_all PROPERTIES

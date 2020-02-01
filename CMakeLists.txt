@@ -43,10 +43,10 @@ if(CMAKE_VERSION VERSION_LESS "3.14")
 endif()
 
 if(SPDLOG_FMT_EXTERNAL_HO)
-    set(FMT_MIN_VERSION "6.1.2")
-    find_package(fmt ${FMT_MIN_VERSION} CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
-    if(NOT FMT_FOUND)
-        message(WARNING "Try to FetchContentget fmt with FetchContent ...")
+    set(FMT_MIN_VERSION 6.1.2)
+    find_package(fmt ${FMT_MIN_VERSION})
+    if(NOT TARGET fmt::fmt)
+        message(WARNING "Try to get fmt with FetchContent ...")
         fetchcontent_declare(
             fmt
             GIT_REPOSITORY https://github.com/fmtlib/fmt.git
@@ -56,10 +56,10 @@ if(SPDLOG_FMT_EXTERNAL_HO)
     endif()
 endif()
 
-set(SPDLOG_MIN_VERSION "1.5.0")
-find_package(spdlog ${SPDLOG_MIN_VERSION} CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
-if(NOT SPDLOG_FOUND)
-    message(WARNING "Try to FetchContentget spdlog with FetchContent ...")
+set(SPDLOG_MIN_VERSION 1.5.0)
+find_package(spdlog ${SPDLOG_MIN_VERSION})
+if(NOT TARGET spdlog::spdlog)
+    message(WARNING "Try to get spdlog with FetchContent ...")
     fetchcontent_declare(
         spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog.git
@@ -69,10 +69,10 @@ if(NOT SPDLOG_FOUND)
 endif()
 
 if(BUILD_TESTING)
-    set(DOCTEST_MIN_VERSION "2.3.6")
-    find_package(doctest ${DOCTEST_MIN_VERSION} CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
-    if(NOT FMT_FOUND)
-        message(WARNING "Try to FetchContentget doctest with FetchContent ...")
+    set(DOCTEST_MIN_VERSION 2.3.6)
+    find_package(doctest ${DOCTEST_MIN_VERSION})
+    if(NOT TARGET doctest::doctest)
+        message(WARNING "Try to get doctest with FetchContent ...")
         fetchcontent_declare(
             doctest
             GIT_REPOSITORY https://github.com/onqtam/doctest.git

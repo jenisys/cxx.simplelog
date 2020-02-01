@@ -2,7 +2,7 @@
 # CMAKE: cxx.simplelog/tests
 # ===========================================================================
 
-set(SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS 
+set(SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS
     "SIMPLELOG_DIAG=1"
 )
 
