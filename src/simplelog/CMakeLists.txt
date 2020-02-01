@@ -13,6 +13,7 @@ target_include_directories(simplelog
         $<BUILD_INTERFACE:${SIMPLELOG_INCLUDE_DIR}>
         $<INSTALL_INTERFACE:include>
 )
+
 # -- SIMPLELOG DEFAULT-BACKEND:
 # if(SIMPLELOG_USE_BACKEND_SPDLOG)
 #     target_link_libraries(simplelog INTERFACE spdlog::spdlog)

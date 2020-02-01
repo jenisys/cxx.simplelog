@@ -5,7 +5,7 @@
 #   * CMAKE_CXX_STANDARD: Needs to defined before target to have any effect.
 #
 # OPTIONAL FILES:
-#   ${PROJECT_SOURCE_DIR}/.cmake_project.cxx_standard
+#   ${CMAKE_SOURCE_DIR}/.cmake_project.cxx_standard
 #       CMake include file to specify the C++ standard for this project.
 #
 # FILE EXAMPLE:
@@ -15,9 +15,9 @@
 #   set(CMAKE_CXX_EXTENSIONS OFF)
 # ===========================================================================
 
-include("${PROJECT_SOURCE_DIR}/.cmake_project.cxx_standard" OPTIONAL)
+include("${CMAKE_SOURCE_DIR}/.cmake_project.cxx_standard" OPTIONAL)
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
+    set(CMAKE_CXX_STANDARD 17)  # Enable C++17 standard
 endif()
 if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,7 +27,7 @@ if(NOT DEFINED CMAKE_CXX_EXTENSIONS)
 endif()
 
 # -- OLD:
-# set(PROJECT_CMAKE_CXX_STANDARD_FILE "${PROJECT_SOURCE_DIR}/.cmake_project.cxx_standard")
+# set(PROJECT_CMAKE_CXX_STANDARD_FILE "${CMAKE_SOURCE_DIR}/.cmake_project.cxx_standard")
 # if(EXISTS "${PROJECT_CMAKE_CXX_STANDARD_FILE}")
 #    file(READ "${PROJECT_CMAKE_CXX_STANDARD_FILE}" CMAKE_CXX_STANDARD)
 #    string(STRIP "${CMAKE_CXX_STANDARD}" CMAKE_CXX_STANDARD)

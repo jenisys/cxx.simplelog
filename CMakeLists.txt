@@ -17,67 +17,70 @@ include(WriteCompilerDetectionHeader)
 project(cxx.simplelog VERSION 0.1.8 LANGUAGES CXX)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
-option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" ON)
-option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
+option(FMT_INSTALL "Generate the install target." ON)
+option(SPDLOG_FMT_EXTERNAL_HO "Use external fmt library instead of bundled" ON)
+option(SPDLOG_INSTALL "Generate the install target" ON)
+
 option(BUILD_EXAMPLES "Enable simplelog examples" ON)
 option(BUILD_TESTING "Enable tests (and examples)" ON)
 set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
-set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
-                    "Normally include spdlog from packages" FORCE)
 
 include(cxx.setup_project)
 
 # ---------------------------------------------------------------------------
-# SECTION: BOOTSTRAP -- When wstool update was not done yet
-# ---------------------------------------------------------------------------
-# -- TARGET: wstool-update, manually trigger update of subprojects in build-script.
-set(GIT_SUBPROJECT_DIRS  lib/spdlog lib/fmt lib/doctest)
-add_custom_target(wstool-update
-    COMMAND wstool update
-    BYPRODUCTS ${GIT_SUBPROJECT_DIRS}
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    COMMENT "WSTOOL-UPDATE: Update/checkout git.subprojects ..."
-)
-
-# -- ENFORCE-INIT: wstool-update if lib/spdlog/, ... are missing
-# HINT: Must be executed immediatly before other CMake parts (that depend on it).
-set(WSTOOL_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
-if(NOT EXISTS "${WSTOOL_UPDATE_DONE_MARKER_FILE}")
-    message(STATUS "REQUIRES-WSTOOL-UPDATE: Checkout subprojects => lib/spdlog, ...")
-    execute_process(COMMAND wstool update
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        # DISABLED: TIMEOUT 600  # ABORT-AFTER: 10*60 seconds in OFFLINE mode
-    )
-endif()
-
-
-# ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT: Supports spdlog-1.5.0, spdlog-1.4.2 at least
-set(SPDLOG_MIN_VERSION "1.4.2")
-# find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-# DISABLED: if(NOT spdlog_FOUND)
-if(TRUE)
-    set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
-    # set(spdlog_FOUND ON)
+include(FetchContent)
+if(CMAKE_VERSION VERSION_LESS "3.14")
+    function(fetchcontent_makeavailable name)
+        fetchcontent_getproperties(${name})
+        if(NOT ${name}_POPULATED)
+            fetchcontent_populate(${name})
+            add_subdirectory(${${name}_SOURCE_DIR} ${${name}_BINARY_DIR})
+            include_directories(${${name}_SOURCE_DIR}/include)
+        endif()
+    endfunction()
 endif()
 
-# -- THIRD-PARTY PARTS:
-# set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
-if(SIMPLELOG_USE_BUNDLED_SPDLOG)
-    message(STATUS "USING: spdlog (bundled, as subproject)")
-    set(SPDLOG_INSTALL ON)
-    add_subdirectory(lib/spdlog spdlog)
+if(SPDLOG_FMT_EXTERNAL_HO)
+    set(FMT_MIN_VERSION "6.1.2")
+    find_package(fmt ${FMT_MIN_VERSION} CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
+    if(NOT FMT_FOUND)
+        message(WARNING "Try to FetchContentget fmt with FetchContent ...")
+        fetchcontent_declare(
+            fmt
+            GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+            GIT_TAG ${FMT_MIN_VERSION}
+        )
+        fetchcontent_makeavailable(fmt)
+    endif()
 endif()
-if(SIMPLELOG_USE_BUNDLED_FMTLIB)
-    message(STATUS "USING: fmt (bundled, as subproject)")
-    add_subdirectory(lib/fmt fmt)
+
+set(SPDLOG_MIN_VERSION "1.5.0")
+find_package(spdlog ${SPDLOG_MIN_VERSION} CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
+if(NOT SPDLOG_FOUND)
+    message(WARNING "Try to FetchContentget spdlog with FetchContent ...")
+    fetchcontent_declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v${SPDLOG_MIN_VERSION}
+    )
+    fetchcontent_makeavailable(spdlog)
 endif()
-# TODO: SPDLOG_VERSION, FMT_VERSION is EMPTY or UNDEFINED
-message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
-message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
+
+if(BUILD_TESTING)
+    set(DOCTEST_MIN_VERSION "2.3.6")
+    find_package(doctest ${DOCTEST_MIN_VERSION} CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
+    if(NOT FMT_FOUND)
+        message(WARNING "Try to FetchContentget doctest with FetchContent ...")
+        fetchcontent_declare(
+            doctest
+            GIT_REPOSITORY https://github.com/onqtam/doctest.git
+            GIT_TAG ${DOCTEST_MIN_VERSION}
+        )
+        fetchcontent_makeavailable(doctest)
+    endif()
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
@@ -109,9 +112,7 @@ endif()
 # SECTION: Unittests / Examples
 # ---------------------------------------------------------------------------
 if(BUILD_TESTING)
-    include(CTest)
-    # find_package(doctest REQUIRED)
-    add_subdirectory(lib/doctest doctest)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
@@ -150,10 +151,6 @@ set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;__;\.DS_Store")
-if(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY)
-    message("CPACK-SOURCE: Ignore bundled third-party libraries.")
-    set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};lib/")
-endif()
 # set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 
 include(CPack)
