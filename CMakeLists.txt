@@ -27,6 +27,9 @@ set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FO
 
 include(cxx.setup_project)
 
+# MAYBE: add check target
+include(clang-tidy)
+
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------

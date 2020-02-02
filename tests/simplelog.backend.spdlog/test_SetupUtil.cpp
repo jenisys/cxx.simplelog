@@ -40,14 +40,14 @@ auto& spdlog_registry(void)
 }
 #endif
 
-void assert_loggerHasSameSink(LoggerPtr logger, SinkPtr sink) 
+void assert_loggerHasSameSink(LoggerPtr const &logger, SinkPtr const &sink)
 {
     CHECK_NE(logger, nullptr);
     CHECK_EQ(logger->sinks().size(), 1);
     CHECK_EQ(logger->sinks().front(), sink);
 }
 
-void assert_loggerHasSameSinks(LoggerPtr logger, const Sinks& sinks)
+void assert_loggerHasSameSinks(LoggerPtr const &logger, const Sinks& sinks)
 {
     CHECK_NE(logger, nullptr);
     CHECK_EQ(logger->sinks(), sinks);
@@ -113,7 +113,7 @@ TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
 
     // -- PERFORM-TEST: logger.level == min_level
     // C++14: auto hasSameName = [](auto log) {
-    auto hasSameName = [](LoggerPtr log) {
+    auto hasSameName = [](LoggerPtr const &log) {
         return log->name() == "foo";
     };
     simplelog::backend_spdlog::setLevelToAny(DESIRED_LEVEL, hasSameName);
@@ -134,7 +134,7 @@ TEST_CASE("setLevelToAny: Should keep level if predicate is false")
 
     // -- PERFORM-TEST: logger.level == min_level
     // C++14: auto hasOthergName = [](auto log) {
-    auto hasOthergName = [](LoggerPtr log) {
+    auto hasOthergName = [](LoggerPtr const &log) {
         return log->name() == "other";
     };
     simplelog::backend_spdlog::setLevelToAny(DESIRED_LEVEL, hasOthergName);
@@ -214,7 +214,7 @@ TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
     auto logger3 = useOrCreateLogger("foo_3");
 
     // -- ACT:
-    const auto& hasLoggerSameName = [](LoggerPtr log) {
+    const auto& hasLoggerSameName = [](LoggerPtr const &log) {
         return log->name() == "foo_2";
     };
     simplelog::backend_spdlog::assignSink(sink1);

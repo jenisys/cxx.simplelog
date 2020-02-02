@@ -46,7 +46,7 @@ const bool TRACE_MACROS_DISABLED = (DEBUG == 0);
 //     return std::make_shared<spdlog::logger>(name);
 // }
 
-void setupLoggingToNullSink(void)
+void setupLoggingToNullSink()
 {
     // OR: using NullSink = spdlog::sinks::null_sink_st;
     using NullSink = spdlog::sinks::null_sink_mt;

@@ -46,7 +46,7 @@ TEST_CASE("spdlog::set_level(): New level should override levels in pre-existing
 
     spdlog::set_level(DESIRED_LEVEL);
     REQUIRE_EQ(logger->level(), DESIRED_LEVEL);
-    spdlog::apply_all([&](LoggerPtr log) {
+    spdlog::apply_all([&](LoggerPtr const &log) {
         CHECK_EQ(log->level(), DESIRED_LEVEL);
     });
 }

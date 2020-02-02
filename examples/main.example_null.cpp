@@ -12,7 +12,7 @@
 // ==========================================================================
 // EXAMPLE
 // ==========================================================================
-void example_useLogging(void)
+void example_useLogging()
 {
     SIMPLELOG_DEFINE_DEFAULT_MODULE("foo.bar");
     // spdlog_setLevelToAll(SIMPLELOG_BACKEND_LEVEL_INFO);
@@ -23,7 +23,7 @@ void example_useLogging(void)
     SLOG_INFO("Hello type {0}, int:{1} and bool:{2}", "Alice", 42, true);
 }
 
-void example_useTwoLoggers(void)
+void example_useTwoLoggers()
 {
     SIMPLELOG_DEFINE_MODULE(log1, "foo.one");
     SIMPLELOG_DEFINE_MODULE(log2, "foo.two");
@@ -32,7 +32,7 @@ void example_useTwoLoggers(void)
     SLOGM_WARN0(log2, "Logger_2");
 }
 
-void example_useTwoLoggersWithSameName(void)
+void example_useTwoLoggersWithSameName()
 {
     SIMPLELOG_DEFINE_MODULE(log1, "foo.same");
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
@@ -42,14 +42,14 @@ void example_useTwoLoggersWithSameName(void)
 }
 
 // HINT: C++11 needs trailing-return-type specification, C++14 not.
-auto getStaticLogger(void) -> simplelog::backend_null::LoggerPtr
+auto getStaticLogger() -> simplelog::backend_null::LoggerPtr
 {
     SIMPLELOG_DEFINE_STATIC_MODULE(theLog, "foo.static");
     // -- SAME AS: static SIMPLELOG_DEFINE_MODULE(theLog, "foo.static");
     return theLog;
 }
 
-void example_useStaticLogger(void)
+void example_useStaticLogger()
 {
     auto log = getStaticLogger();
     SLOGM_ERROR0(log, "Hello Alice");
@@ -61,7 +61,7 @@ SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 // ==========================================================================
 // EXAMPLE: Use logging subsystem (see above)
 // ==========================================================================
-void use_simplelog(void)
+void use_simplelog()
 {
     std::cout << "NULL-EXAMPLE: No output expected."<< std::endl;
  
@@ -76,12 +76,12 @@ void use_simplelog(void)
 // ==========================================================================
 // MAIN-FUNCTION
 // ==========================================================================
-void process_setupLogging(void)
+void process_setupLogging()
 {
     // -- HINT: NOTHING TO DO (here) => NULL pattern
 }
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char ** /*argv*/)
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.

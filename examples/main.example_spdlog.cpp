@@ -19,7 +19,7 @@
 // ==========================================================================
 // EXAMPLE: Logging sources/users
 // ==========================================================================
-void example_useLoggingWithDefaultModule(void)
+void example_useLoggingWithDefaultModule()
 {
     SIMPLELOG_DEFINE_DEFAULT_MODULE("foo.bar");
 
@@ -36,7 +36,7 @@ void example_useLoggingWithDefaultModule(void)
     SLOG_WARN("Hello {}", "Bob");
 }
 
-void example_useLoggingWithOverriddenDefaultModule(void)
+void example_useLoggingWithOverriddenDefaultModule()
 {
     SIMPLELOG_DEFINE_DEFAULT_MODULE("OUTER");
     SLOG_WARN("Use module=OUTER");
@@ -60,7 +60,7 @@ void example_useDefaultLoggerWithoutDefiningOne_does_not_compile(void)
 }
 #endif
 
-void example_useTwoLoggers(void)
+void example_useTwoLoggers()
 {
     SIMPLELOG_DEFINE_MODULE(log1, "foo.one");
     SIMPLELOG_DEFINE_MODULE(log2, "foo.two");
@@ -69,7 +69,7 @@ void example_useTwoLoggers(void)
     SLOGM_WARN(log2, "Logger_2");
 }
 
-void example_useTwoLoggersWithSameName(void)
+void example_useTwoLoggersWithSameName()
 {
     SIMPLELOG_DEFINE_MODULE(log1, "foo.same");
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
@@ -80,14 +80,14 @@ void example_useTwoLoggersWithSameName(void)
 
 // std::shared_ptr<spdlog::logger>
 // HINT: C++11 needs trailing-return-type specification, C++14 not.
-auto getLogger(void) -> simplelog::backend_spdlog::LoggerPtr
+auto getLogger() -> simplelog::backend_spdlog::LoggerPtr
 {
     // static SIMPLELOG_DEFINE_MODULE(theLog, "foo.static");
     SIMPLELOG_DEFINE_STATIC_MODULE(theLog, "foo.static");
     return theLog;
 }
 
-void example_useStaticLogger(void)
+void example_useStaticLogger()
 {
     auto log = getLogger();
     SLOGM_ERROR(log, "Hello Alice");
@@ -101,7 +101,7 @@ void example_useStaticLogger(void)
 
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
-void use_simplelog(void)
+void use_simplelog()
 {
     SIMPLELOG_DEFINE_MODULE(console, "console");
     console->warn("MAIN: Logging started.");
@@ -132,7 +132,7 @@ void use_simplelog(void)
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <iostream>
 
-void process_setupLogging(void)
+void process_setupLogging()
 {
     // -- HERE is the LOGGING-BACKEND-SPECIFIC part.
     auto console = spdlog::stdout_color_mt("console");
@@ -157,7 +157,7 @@ void process_setupLogging(void)
     simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
 }
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char ** /*argv*/)
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.
