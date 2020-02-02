@@ -117,6 +117,21 @@ endif()
 if(BUILD_TESTING)
     enable_testing()
     add_subdirectory(tests)
+
+    # test coverage option => custom target will be lcov
+    if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+        include(CodeCoverage)
+
+        set(COVERAGE_EXCLUDES
+            '/usr/*' '/opt/*'
+            '${CMAKE_SOURCE_DIR}/lib/*'
+            '/Applications/Xcode.app/*'
+        )
+        setup_target_for_coverage(
+            NAME lcov   # custom target.
+            EXECUTABLE ctest    # the test driver executable that runs the tests.
+        )
+    endif()
 endif()
 
 # ----------------------------------------------------------------------------
