@@ -12,15 +12,17 @@
 #include "doctest/doctest.h"
 
 // -- MORE-INCLUDES:
+#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
-#include <spdlog/spdlog.h>
+
+#include <spdlog/details/os.h>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/ostream_sink.h>
-#include <spdlog/details/os.h>
-#include <memory>   //< USE: std::shared_ptr<T>
-#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
+#include <spdlog/spdlog.h>
+
+#include <memory> //< USE: std::shared_ptr<T>
 #include <sstream>
 
 // -- LOCAL-INCLUDES:
@@ -72,7 +74,7 @@ unsigned count(const std::string& subject, const std::string& part)
     size_t pos = subject.find(part);
     while (pos != std::string::npos) {
         ++counter;
-        pos = subject.find(part, pos+1);
+        pos = subject.find(part, pos + 1);
     }
     return counter;
 }
@@ -89,30 +91,30 @@ TEST_CASE("LogMacros: can use all macros")
     simplelog::backend_spdlog::setLevel(spdlog::level::debug);
     spdlog::set_pattern("*** %v");
     // PATTERN: "%10n::%-7l  %v"
-    
+
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default_1");
     SIMPLELOG_FATAL("USE_LEVEL: FATAL");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: FATAL"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: FATAL" + DEFAULT_EOL);
     oss.str("");
 
     SIMPLELOG_CRITICAL("USE_LEVEL: CRITICAL");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: CRITICAL"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: CRITICAL" + DEFAULT_EOL);
     oss.str("");
 
     SIMPLELOG_ERROR("USE_LEVEL: ERROR");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: ERROR"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: ERROR" + DEFAULT_EOL);
     oss.str("");
 
-    SIMPLELOG_WARN( "USE_LEVEL: WARN");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: WARN"+ DEFAULT_EOL);
+    SIMPLELOG_WARN("USE_LEVEL: WARN");
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: WARN" + DEFAULT_EOL);
     oss.str("");
 
-    SIMPLELOG_INFO( "USE_LEVEL: INFO");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: INFO"+ DEFAULT_EOL);
+    SIMPLELOG_INFO("USE_LEVEL: INFO");
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: INFO" + DEFAULT_EOL);
     oss.str("");
 
     SIMPLELOG_DEBUG("USE_LEVEL: DEBUG");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: DEBUG"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: DEBUG" + DEFAULT_EOL);
     oss.str("");
 }
 
@@ -122,14 +124,14 @@ TEST_CASE("LogMacros: can use all macros with placeholders")
     std::ostringstream oss;
     setupLoggingToStreamSink(oss);
     spdlog::set_pattern("*** %v");
-    
+
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default_1");
     SIMPLELOG_ERROR("Hello {}", std::string("Alice"));
-    CHECK_EQ(oss.str(), "*** Hello Alice"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** Hello Alice" + DEFAULT_EOL);
     oss.str("");
 
     SIMPLELOG_WARN("Hello {} and {}", std::string("Alice"), "BOB");
-    CHECK_EQ(oss.str(), "*** Hello Alice and BOB"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** Hello Alice and BOB" + DEFAULT_EOL);
     oss.str("");
 }
 
@@ -139,7 +141,7 @@ TEST_CASE("LogMacros: LogLevel below threshold is filtered-out")
     std::ostringstream oss;
     setupLoggingToStreamSink(oss);
     spdlog::set_pattern("*** %v");
-    
+
     SIMPLELOG_DEFINE_STATIC_MODULE(logger, "default_1");
     {
         logger->set_level(SIMPLELOG_BACKEND_LEVEL_ERROR);
@@ -175,7 +177,7 @@ TEST_CASE("LogMacros: LogLevel >= threshold emits log-record")
     std::ostringstream oss;
     setupLoggingToStreamSink(oss);
     spdlog::set_pattern("%v");
-    
+
     SIMPLELOG_DEFINE_STATIC_MODULE(logger, "default_1");
     logger->set_level(SIMPLELOG_BACKEND_LEVEL_ERROR);
     SIMPLELOGM_ERROR(logger, "__EMITS_RECORD:1");
@@ -186,9 +188,7 @@ TEST_CASE("LogMacros: LogLevel >= threshold emits log-record")
     oss.str("");
 }
 
-
-TEST_CASE("LogMacros: can use short macros" 
-    * doctest::skip(NO_SHORT_MACROS))
+TEST_CASE("LogMacros: can use short macros" * doctest::skip(NO_SHORT_MACROS))
 {
     CleanupLoggingFixture cleanupGuard;
     std::ostringstream oss;
@@ -196,33 +196,33 @@ TEST_CASE("LogMacros: can use short macros"
     simplelog::backend_spdlog::setLevel(spdlog::level::debug);
     spdlog::set_pattern("*** %v");
     // PATTERN: "%10n::%-7l  %v"
-    
+
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default_1");
     SLOG_FATAL("USE_LEVEL: FATAL");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: FATAL"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: FATAL" + DEFAULT_EOL);
     oss.str("");
 
     SLOG_CRITICAL("USE_LEVEL: CRITICAL");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: CRITICAL"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: CRITICAL" + DEFAULT_EOL);
     oss.str("");
 
     SLOG_ERROR("USE_LEVEL: ERROR");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: ERROR"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: ERROR" + DEFAULT_EOL);
     oss.str("");
 
-    SLOG_WARN( "USE_LEVEL: WARN");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: WARN"+ DEFAULT_EOL);
+    SLOG_WARN("USE_LEVEL: WARN");
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: WARN" + DEFAULT_EOL);
     oss.str("");
 
-    SLOG_INFO( "USE_LEVEL: INFO");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: INFO"+ DEFAULT_EOL);
+    SLOG_INFO("USE_LEVEL: INFO");
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: INFO" + DEFAULT_EOL);
     oss.str("");
 
     SLOG_DEBUG("USE_LEVEL: DEBUG");
-    CHECK_EQ(oss.str(), "*** USE_LEVEL: DEBUG"+ DEFAULT_EOL);
+    CHECK_EQ(oss.str(), "*** USE_LEVEL: DEBUG" + DEFAULT_EOL);
     oss.str("");
 }
 
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

@@ -6,8 +6,8 @@
 // -- INCLUDES:
 #define SIMPLELOG_USE_BACKEND_NULL 1
 #include "simplelog/LogMacros.hpp"
-#include <iostream>
 
+#include <iostream>
 
 // ==========================================================================
 // EXAMPLE
@@ -38,7 +38,7 @@ void example_useTwoLoggersWithSameName()
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
 
     SLOGM_ERROR0(log1, "Logger_1");
-    SLOGM_WARN0(log2,  "Logger_2");
+    SLOGM_WARN0(log2, "Logger_2");
 }
 
 // HINT: C++11 needs trailing-return-type specification, C++14 not.
@@ -55,7 +55,6 @@ void example_useStaticLogger()
     SLOGM_ERROR0(log, "Hello Alice");
 }
 
-
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
 // ==========================================================================
@@ -63,13 +62,13 @@ SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 // ==========================================================================
 void use_simplelog()
 {
-    std::cout << "NULL-EXAMPLE: No output expected."<< std::endl;
- 
+    std::cout << "NULL-EXAMPLE: No output expected." << std::endl;
+
     example_useLogging();
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
     example_useStaticLogger();
- 
+
     std::cout << "NULL-EXAMPLE: Finished." << std::endl;
 }
 
@@ -81,7 +80,7 @@ void process_setupLogging()
     // -- HINT: NOTHING TO DO (here) => NULL pattern
 }
 
-int main(int /*argc*/, char ** /*argv*/)
+int main(int /*argc*/, char** /*argv*/)
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.

@@ -11,8 +11,10 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
+
 #include <spdlog/spdlog.h>
-#include <memory>   //< USE: std::shared_ptr<T>
+
+#include <memory> //< USE: std::shared_ptr<T>
 
 // -- LOCAL-INCLUDES:
 // PREPARED: #include "CleanupLoggingFixture.hpp"
@@ -26,10 +28,7 @@ using Level = ::spdlog::level::level_enum;
 // ============================================================================
 // TEST SUPPORT:
 // ============================================================================
-auto makeLogger(const std::string& name) -> LoggerPtr
-{
-    return std::make_shared<spdlog::logger>(name);
-}
+auto makeLogger(const std::string& name) -> LoggerPtr { return std::make_shared<spdlog::logger>(name); }
 
 // ============================================================================
 // TEST SUITE:
@@ -42,5 +41,5 @@ TEST_CASE("xxx: ..." * doctest::skip())
 }
 
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

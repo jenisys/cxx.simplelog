@@ -1,9 +1,9 @@
 /**
  * @file example_spdlog_main.cpp
- * 
- * Simple example how a generic logging framework w/ different logging 
+ *
+ * Simple example how a generic logging framework w/ different logging
  * subsystems could look like.
- * 
+ *
  * @see https://github.com/gabime/spdlog
  * @see https://github.com/fmtlib/fmt
  **/
@@ -14,7 +14,6 @@
 
 // -- SPECIAL CASE:
 // PREPARED: #include "fmt/format.h" // -- USE: fmt::format()
-
 
 // ==========================================================================
 // EXAMPLE: Logging sources/users
@@ -75,7 +74,7 @@ void example_useTwoLoggersWithSameName()
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
 
     SLOGM_ERROR(log1, "Use Logger_1");
-    SLOGM_WARN( log2, "Use Logger_2");
+    SLOGM_WARN(log2, "Use Logger_2");
 }
 
 // std::shared_ptr<spdlog::logger>
@@ -93,11 +92,10 @@ void example_useStaticLogger()
     SLOGM_ERROR(log, "Hello Alice");
 }
 
-
 // ==========================================================================
 // EXAMPLE: Use logging subsystem (see above)
 // ==========================================================================
-#include "simplelog/backend/spdlog/SetupUtil.hpp"  //< USE: setMinLevel()
+#include "simplelog/backend/spdlog/SetupUtil.hpp" //< USE: setMinLevel()
 
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
@@ -113,7 +111,7 @@ void use_simplelog()
     // OR: SIMPLELOG_BACKEND_LEVEL_WARN
     SLOGM_WARN(console, "MAIN: SETUP_LOGGING with setMinLevel=warn");
     simplelog::backend_spdlog::setMinLevel(spdlog::level::warn);
-    
+
     // -- SPECIAL CASE END.
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
@@ -126,11 +124,12 @@ void use_simplelog()
 // ==========================================================================
 // MAIN-FUNCTION: Setup logging subsystem
 // ==========================================================================
-#include <simplelog/backend/spdlog/SetupUtil.hpp>   //< USE: assignSink(), ...
-#include <simplelog/backend/spdlog/ModuleUtil.hpp>  //< USE: useOrCreateLogger()
-#include <spdlog/sinks/stdout_sinks.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/stdout_sinks.h>
+
 #include <iostream>
+#include <simplelog/backend/spdlog/ModuleUtil.hpp> //< USE: useOrCreateLogger()
+#include <simplelog/backend/spdlog/SetupUtil.hpp>  //< USE: assignSink(), ...
 
 void process_setupLogging()
 {
@@ -138,9 +137,11 @@ void process_setupLogging()
     auto console = spdlog::stdout_color_mt("console");
     auto theSink = console->sinks().front();
 
-    // -- GLOBAL SETUP: Define log-sink(s), formatter pattern and DEFAULT log-level.
-    // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
-    // PATTERN SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>  <message>
+    // -- GLOBAL SETUP: Define log-sink(s), formatter pattern and DEFAULT
+    // log-level. SEE:
+    // https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
+    // PATTERN SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>
+    // <message>
     simplelog::backend_spdlog::assignSink(theSink);
     spdlog::set_pattern("%Y-%m-%d_%T.%f  %^%10n::%-7l%$  %v");
     spdlog::set_level(spdlog::level::warn);
@@ -157,7 +158,7 @@ void process_setupLogging()
     simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
 }
 
-int main(int /*argc*/, char ** /*argv*/)
+int main(int /*argc*/, char** /*argv*/)
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.

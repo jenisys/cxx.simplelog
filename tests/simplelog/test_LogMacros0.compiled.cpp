@@ -11,13 +11,15 @@
 #include "doctest/doctest.h"
 
 // -- MORE-INCLUDES:
+#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
-#include <spdlog/spdlog.h>
+
 #include <spdlog/sinks/null_sink.h>
-#include <memory>   //< USE: std::shared_ptr<T>
-#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
+#include <spdlog/spdlog.h>
+
+#include <memory> //< USE: std::shared_ptr<T>
 
 // -- LOCAL-INCLUDES:
 // PREPARED: #include "CleanupLoggingFixture.hpp"
@@ -67,26 +69,26 @@ TEST_CASE("LogMacros0: can use all macros (compile-time check)")
     SIMPLELOG_FATAL0("USE-LEVEL: FATAL");
     SIMPLELOG_CRITICAL0("USE-LEVEL: CRITICAL");
     SIMPLELOG_ERROR0("USE_LEVEL: ERROR");
-    SIMPLELOG_WARN0( "USE_LEVEL: WARN");
-    SIMPLELOG_INFO0( "USE_LEVEL:  INFO");
+    SIMPLELOG_WARN0("USE_LEVEL: WARN");
+    SIMPLELOG_INFO0("USE_LEVEL:  INFO");
     SIMPLELOG_DEBUG0("USE_LEVEL: DEBUG");
 
     {
         SIMPLELOG_DEFINE_DEFAULT_MODULE("default.normal_2");
 
-        SIMPLELOG_FATAL0_IF(   true, "USE-LEVEL: FATAL");
+        SIMPLELOG_FATAL0_IF(true, "USE-LEVEL: FATAL");
         SIMPLELOG_CRITICAL0_IF(true, "USE-LEVEL: CRITICAL");
-        SIMPLELOG_ERROR0_IF(   true, "USE_LEVEL: ERROR");
-        SIMPLELOG_WARN0_IF(    true, "USE_LEVEL: WARN");
-        SIMPLELOG_INFO0_IF(    true, "USE_LEVEL:  INFO");
-        SIMPLELOG_DEBUG0_IF(   true, "USE_LEVEL: DEBUG");
+        SIMPLELOG_ERROR0_IF(true, "USE_LEVEL: ERROR");
+        SIMPLELOG_WARN0_IF(true, "USE_LEVEL: WARN");
+        SIMPLELOG_INFO0_IF(true, "USE_LEVEL:  INFO");
+        SIMPLELOG_DEBUG0_IF(true, "USE_LEVEL: DEBUG");
 
-        SIMPLELOG_FATAL0_IF(   false, "USE-LEVEL: FATAL");
+        SIMPLELOG_FATAL0_IF(false, "USE-LEVEL: FATAL");
         SIMPLELOG_CRITICAL0_IF(false, "USE-LEVEL: CRITICAL");
-        SIMPLELOG_ERROR0_IF(   false, "USE_LEVEL: ERROR");
-        SIMPLELOG_WARN0_IF(    false, "USE_LEVEL: WARN");
-        SIMPLELOG_INFO0_IF(    false, "USE_LEVEL:  INFO");
-        SIMPLELOG_DEBUG0_IF(   false, "USE_LEVEL: DEBUG");
+        SIMPLELOG_ERROR0_IF(false, "USE_LEVEL: ERROR");
+        SIMPLELOG_WARN0_IF(false, "USE_LEVEL: WARN");
+        SIMPLELOG_INFO0_IF(false, "USE_LEVEL:  INFO");
+        SIMPLELOG_DEBUG0_IF(false, "USE_LEVEL: DEBUG");
     }
     {
         SIMPLELOG_DEFINE_STATIC_MODULE(logger1, "static_1");
@@ -101,19 +103,19 @@ TEST_CASE("LogMacros0: can use all macros (compile-time check)")
     {
         SIMPLELOG_DEFINE_MODULE(logger2, "normal_2");
 
-        SIMPLELOGM_FATAL0_IF(   true, logger2, "USE-LEVEL: FATAL");
+        SIMPLELOGM_FATAL0_IF(true, logger2, "USE-LEVEL: FATAL");
         SIMPLELOGM_CRITICAL0_IF(true, logger2, "USE-LEVEL: CRITICAL");
-        SIMPLELOGM_ERROR0_IF(   true, logger2, "USE_LEVEL: ERROR");
-        SIMPLELOGM_WARN0_IF(    true, logger2, "USE_LEVEL: WARN");
-        SIMPLELOGM_INFO0_IF(    true, logger2, "USE_LEVEL:  INFO");
-        SIMPLELOGM_DEBUG0_IF(   true, logger2, "USE_LEVEL: DEBUG");
+        SIMPLELOGM_ERROR0_IF(true, logger2, "USE_LEVEL: ERROR");
+        SIMPLELOGM_WARN0_IF(true, logger2, "USE_LEVEL: WARN");
+        SIMPLELOGM_INFO0_IF(true, logger2, "USE_LEVEL:  INFO");
+        SIMPLELOGM_DEBUG0_IF(true, logger2, "USE_LEVEL: DEBUG");
 
-        SIMPLELOGM_FATAL0_IF(   false, logger2, "USE-LEVEL: FATAL");
+        SIMPLELOGM_FATAL0_IF(false, logger2, "USE-LEVEL: FATAL");
         SIMPLELOGM_CRITICAL0_IF(false, logger2, "USE-LEVEL: CRITICAL");
-        SIMPLELOGM_ERROR0_IF(   false, logger2, "USE_LEVEL: ERROR");
-        SIMPLELOGM_WARN0_IF(    false, logger2, "USE_LEVEL: WARN");
-        SIMPLELOGM_INFO0_IF(    false, logger2, "USE_LEVEL:  INFO");
-        SIMPLELOGM_DEBUG0_IF(   false, logger2, "USE_LEVEL: DEBUG");
+        SIMPLELOGM_ERROR0_IF(false, logger2, "USE_LEVEL: ERROR");
+        SIMPLELOGM_WARN0_IF(false, logger2, "USE_LEVEL: WARN");
+        SIMPLELOGM_INFO0_IF(false, logger2, "USE_LEVEL:  INFO");
+        SIMPLELOGM_DEBUG0_IF(false, logger2, "USE_LEVEL: DEBUG");
     }
 }
 
@@ -127,25 +129,25 @@ TEST_CASE("LogMacros0: can use short macros (compile-time check)" * doctest::ski
     SLOG_FATAL0("USE-LEVEL: FATAL");
     SLOG_CRITICAL0("USE-LEVEL: CRITICAL");
     SLOG_ERROR0("USE_LEVEL: ERROR");
-    SLOG_WARN0( "USE_LEVEL: WARN");
-    SLOG_INFO0( "USE_LEVEL:  INFO");
+    SLOG_WARN0("USE_LEVEL: WARN");
+    SLOG_INFO0("USE_LEVEL:  INFO");
     SLOG_DEBUG0("USE_LEVEL: DEBUG");
 
     {
         SIMPLELOG_DEFINE_DEFAULT_MODULE("default.normal_2");
-        SLOG_FATAL0_IF(   true, "USE-LEVEL: FATAL");
+        SLOG_FATAL0_IF(true, "USE-LEVEL: FATAL");
         SLOG_CRITICAL0_IF(true, "USE-LEVEL: CRITICAL");
-        SLOG_ERROR0_IF(   true, "USE_LEVEL: ERROR");
-        SLOG_WARN0_IF(    true, "USE_LEVEL: WARN");
-        SLOG_INFO0_IF(    true, "USE_LEVEL:  INFO");
-        SLOG_DEBUG0_IF(   true, "USE_LEVEL: DEBUG");
+        SLOG_ERROR0_IF(true, "USE_LEVEL: ERROR");
+        SLOG_WARN0_IF(true, "USE_LEVEL: WARN");
+        SLOG_INFO0_IF(true, "USE_LEVEL:  INFO");
+        SLOG_DEBUG0_IF(true, "USE_LEVEL: DEBUG");
 
-        SLOG_FATAL0_IF(   false, "USE-LEVEL: FATAL");
+        SLOG_FATAL0_IF(false, "USE-LEVEL: FATAL");
         SLOG_CRITICAL0_IF(false, "USE-LEVEL: CRITICAL");
-        SLOG_ERROR0_IF(   false, "USE_LEVEL: ERROR");
-        SLOG_WARN0_IF(    false, "USE_LEVEL: WARN");
-        SLOG_INFO0_IF(    false, "USE_LEVEL:  INFO");
-        SLOG_DEBUG0_IF(   false, "USE_LEVEL: DEBUG");
+        SLOG_ERROR0_IF(false, "USE_LEVEL: ERROR");
+        SLOG_WARN0_IF(false, "USE_LEVEL: WARN");
+        SLOG_INFO0_IF(false, "USE_LEVEL:  INFO");
+        SLOG_DEBUG0_IF(false, "USE_LEVEL: DEBUG");
     }
     {
         SIMPLELOG_DEFINE_STATIC_MODULE(logger1, "static_1");
@@ -160,23 +162,23 @@ TEST_CASE("LogMacros0: can use short macros (compile-time check)" * doctest::ski
     {
         SIMPLELOG_DEFINE_MODULE(logger2, "normal_2");
 
-        SLOGM_FATAL0_IF(   true, logger2, "USE-LEVEL: FATAL");
+        SLOGM_FATAL0_IF(true, logger2, "USE-LEVEL: FATAL");
         SLOGM_CRITICAL0_IF(true, logger2, "USE-LEVEL: CRITICAL");
-        SLOGM_ERROR0_IF(   true, logger2, "USE_LEVEL: ERROR");
-        SLOGM_WARN0_IF(    true, logger2, "USE_LEVEL: WARN");
-        SLOGM_INFO0_IF(    true, logger2, "USE_LEVEL:  INFO");
-        SLOGM_DEBUG0_IF(   true, logger2, "USE_LEVEL: DEBUG");
+        SLOGM_ERROR0_IF(true, logger2, "USE_LEVEL: ERROR");
+        SLOGM_WARN0_IF(true, logger2, "USE_LEVEL: WARN");
+        SLOGM_INFO0_IF(true, logger2, "USE_LEVEL:  INFO");
+        SLOGM_DEBUG0_IF(true, logger2, "USE_LEVEL: DEBUG");
 
-        SLOGM_FATAL0_IF(   false, logger2, "USE-LEVEL: FATAL");
+        SLOGM_FATAL0_IF(false, logger2, "USE-LEVEL: FATAL");
         SLOGM_CRITICAL0_IF(false, logger2, "USE-LEVEL: CRITICAL");
-        SLOGM_ERROR0_IF(   false, logger2, "USE_LEVEL: ERROR");
-        SLOGM_WARN0_IF(    false, logger2, "USE_LEVEL: WARN");
-        SLOGM_INFO0_IF(    false, logger2, "USE_LEVEL:  INFO");
-        SLOGM_DEBUG0_IF(   false, logger2, "USE_LEVEL: DEBUG");
+        SLOGM_ERROR0_IF(false, logger2, "USE_LEVEL: ERROR");
+        SLOGM_WARN0_IF(false, logger2, "USE_LEVEL: WARN");
+        SLOGM_INFO0_IF(false, logger2, "USE_LEVEL:  INFO");
+        SLOGM_DEBUG0_IF(false, logger2, "USE_LEVEL: DEBUG");
     }
 #endif
 }
 
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

@@ -11,8 +11,10 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
+
 #include <spdlog/spdlog.h>
-#include <memory>   //< USE: std::shared_ptr<T>
+
+#include <memory> //< USE: std::shared_ptr<T>
 
 // -- LOCAL-INCLUDES:
 #include "CleanupLoggingFixture.hpp"
@@ -33,20 +35,11 @@ auto& spdlog_registry(void)
 }
 #endif
 
-auto makeLogger(const std::string& name) -> LoggerPtr
-{
-    return std::make_shared<spdlog::logger>(name);
-}
+auto makeLogger(const std::string& name) -> LoggerPtr { return std::make_shared<spdlog::logger>(name); }
 
-void require_logger_is_unknown(const std::string& name)
-{
-    REQUIRE_EQ(spdlog::get(name), nullptr);
-}
+void require_logger_is_unknown(const std::string& name) { REQUIRE_EQ(spdlog::get(name), nullptr); }
 
-void require_logger_is_known(const std::string& name)
-{
-    REQUIRE_NE(spdlog::get(name), nullptr);
-}
+void require_logger_is_known(const std::string& name) { REQUIRE_NE(spdlog::get(name), nullptr); }
 
 // ============================================================================
 // TEST SUITE:
@@ -62,7 +55,8 @@ TEST_CASE("useOrCreateLogger: Should create, init and register an unknown logger
     require_logger_is_known("foo");
 }
 
-TEST_CASE("useOrCreateLogger: Created logger should inherit current config (log-level, ...)")
+TEST_CASE("useOrCreateLogger: Created logger should inherit current config "
+          "(log-level, ...)")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;
@@ -86,14 +80,13 @@ TEST_CASE("useOrCreateLogger: Should return a known logger")
     CleanupLoggingFixture cleanupGuard;
     auto logger1 = makeLogger("foo");
     spdlog::register_logger(logger1);
-    
+
     require_logger_is_known("foo");
     REQUIRE_EQ(logger1, spdlog::get("foo"));
     auto logger2 = useOrCreateLogger("foo");
     CHECK_EQ(logger1, logger2);
 }
 
-
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

@@ -1,7 +1,7 @@
 /**
  * @file simplelog/backend/systemd_journal/Module.hpp
  * Simplelog backend for systemd journald logging service.
- * 
+ *
  * @see https://www.freedesktop.org/software/systemd
  * @see https://www.freedesktop.org/software/systemd/man/sd_journal_print.html#
  **/
@@ -11,11 +11,11 @@
 // -- INCLUDES:
 #include <systemd/sd-journal.h>
 
-
 // --------------------------------------------------------------------------
 // LOGGING MODULE
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_systemd_journal {
+namespace simplelog {
+namespace backend_systemd_journal {
 
 class Module
 {
@@ -24,9 +24,7 @@ private:
     int m_level;
 
 public:
-    explicit Module(const char* name="")
-        : m_name((name != nullptr) ? name : ""), m_level(LOG_ERROR) 
-    {}
+    explicit Module(const char* name = "") : m_name((name != nullptr) ? name : ""), m_level(LOG_ERROR) {}
 
     const std::string& getName(void) const { return m_name; }
     int getLevel(void) const { return m_level; }
@@ -50,4 +48,5 @@ public:
     }
 };
 
-}} //< NAMESPACE-END: simplelog::backend_systemd_journal
+} // namespace backend_systemd_journal
+} // namespace simplelog

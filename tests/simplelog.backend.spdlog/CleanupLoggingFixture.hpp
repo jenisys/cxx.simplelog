@@ -7,7 +7,9 @@
 // -- MORE-INCLUDES:
 #include <spdlog/spdlog.h>
 
-namespace tests { namespace simplelog { namespace backend_spdlog {
+namespace tests {
+namespace simplelog {
+namespace backend_spdlog {
 
 inline void cleanupLogging(void)
 {
@@ -18,14 +20,14 @@ inline void cleanupLogging(void)
 class CleanupLoggingFixture
 {
 public:
-    CleanupLoggingFixture(void)  { cleanupLogging(); }
+    CleanupLoggingFixture(void) { cleanupLogging(); }
     ~CleanupLoggingFixture(void) { cleanupLogging(); }
 };
 
 class CleanupLoggingBeforeFixture
 {
 public:
-    CleanupLoggingBeforeFixture(void)  { cleanupLogging(); }
+    CleanupLoggingBeforeFixture(void) { cleanupLogging(); }
 };
 
 class CleanupLoggingAfterFixture
@@ -34,5 +36,7 @@ public:
     ~CleanupLoggingAfterFixture(void) { cleanupLogging(); }
 };
 
-}}}
+} // namespace backend_spdlog
+} // namespace simplelog
+} // namespace tests
 //< ENDOF(__TEST_HEADER_FILE__)
