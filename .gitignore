@@ -1,6 +1,8 @@
 *.o
 *.log
 *.lib
+compile_commands.json
+/lcov/
 /build/
 /build.*/
 /bin/

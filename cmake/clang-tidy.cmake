@@ -1,6 +1,6 @@
 option(ENABLE_CLANG_TIDY "Add run-clang-tidy automatically to builds" OFF)
 find_program(CLANG_TIDY_EXE
-        NAMES run-clang-tidy.py run-clang-tidy
+        NAMES run-clang-tidy.py run-clang-tidy run-clang-tidy-7
         DOC "Path to clang-tidy executable")
 if(CLANG_TIDY_EXE)
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
@@ -22,8 +22,10 @@ if(CLANG_TIDY_EXE)
     endif()
 
     add_custom_command(TARGET check PRE_BUILD
-        COMMAND ${CLANG_TIDY_EXE}   # use defaults checks and filter
-        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"   # location of compile_commands.json
+        # -p BUILD_PATH Path used to read a compile command database (compile_commands.json).
+        # NOTE: we use defaults checks from .clang-tidy
+        COMMAND ${CLANG_TIDY_EXE} -p ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"   # location of compile_commands.json
         COMMENT "Running check on targets at ${CMAKE_SOURCE_DIR} ..."
         VERBATIM
     )
