@@ -81,7 +81,7 @@ set(EXAMPLE_PROGRAMS
     simplelog_example_null
 )
 
-#FIXME NO! list(APPEND EXAMPLE_PROGRAMS example_variadic_args)
+list(APPEND EXAMPLE_PROGRAMS example_variadic_args)
 
 add_custom_target(examples
     DEPENDS ${EXAMPLE_PROGRAMS}
@@ -115,6 +115,8 @@ add_custom_target(test_examples ${test_examples_TARGET_MODE_ALL}
 
 # -- TESTS:
 if(BUILD_TESTING)
+    enable_testing()
+
     add_test(NAME example_simplelog.spdlog COMMAND simplelog_example_spdlog)
     set_tests_properties(example_simplelog.spdlog PROPERTIES
         PASS_REGULAR_EXPRESSION ".*foo.bar::info.*  Hello Alice and Bob")

@@ -123,7 +123,8 @@ if(BUILD_TESTING)
         include(CodeCoverage)
 
         set(COVERAGE_EXCLUDES
-            '/usr/*' '/opt/*'
+            '/tmp/*' '/usr/*' '/opt/*'
+            '${CMAKE_BINARY_DIR}/_deps/*'
             '${CMAKE_SOURCE_DIR}/lib/*'
             '/Applications/Xcode.app/*'
         )
