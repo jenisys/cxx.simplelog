@@ -8,22 +8,31 @@
 # REQUIRES-FILE: $HERE/.gitmodules
 # ===========================================================================
 
-# -- TARGET: wstool-update, manually trigger update of subprojects in build-script.
-set(GIT_SUBPROJECT_DIRS  lib/spdlog lib/fmt lib/doctest)
+set(GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
+set(GIT_SUBPROJECT_DIRS
+    lib/spdlog
+    lib/fmt
+    lib/doctest
+)
+
+# -----------------------------------------------------------------------------
+# TARGETS:
+# -----------------------------------------------------------------------------
+# HINT: manually trigger update of subprojects in build-script.
 add_custom_target(git-submodule-update
-    COMMAND wstool update
+    COMMAND git submodule update --init --recursive
     BYPRODUCTS ${GIT_SUBPROJECT_DIRS}
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     COMMENT "GIT-SUBMODULE-UPDATE: Update/checkout git.submodules ..."
 )
 
-# -- ENFORCE-INIT: If lib/spdlog/, ... are missing
+# -----------------------------------------------------------------------------
+# ENFORCE-INIT: If lib/spdlog/, ... are missing
+# -----------------------------------------------------------------------------
 # HINT: Must be executed immediatly before other CMake parts (that depend on it).
-set(GIT_SUBMODULE_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
-if(NOT EXISTS "${GIT_SUBMODULE_UPDATE_DONE_MARKER_FILE}")
+if(NOT EXISTS "${GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE}")
     message(STATUS "REQUIRES-GIT-SUBMODULE-UPDATE: Checkout subprojects => lib/spdlog, ...")
-    execute_process(COMMAND git submodule update --init
+    execute_process(COMMAND git submodule update --init --recursive
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        # DISABLED: TIMEOUT 600  # ABORT-AFTER: 10*60 seconds in OFFLINE mode
     )
 endif()
