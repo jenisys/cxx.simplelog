@@ -6,9 +6,10 @@
 # Disable the built-in implicit rules.
 MAKEFLAGS+= --no-builtin-rules
 
-.PHONY: setup show all test lcov install check format clean distclean
+.PHONY: setup show all test lcov install run-clang-tidy check format clean distclean
 
-PROJECT_NAME:=$(shell basename $${PWD})
+#XXX PROJECT_NAME:=$(shell basename $${PWD})
+PROJECT_NAME:=cxx.simplelog
 
 ##################################################
 # begin of config part
@@ -82,7 +83,7 @@ run-clang-tidy: setup .configure-$(BUILD_TYPE) compile_commands.json
 setup: $(BUILD_DIR) .clang-tidy compile_commands.json
 
 .configure-$(BUILD_TYPE): CMakeLists.txt
-	cd $(BUILD_DIR) && cmake -G $(GENERATOR) -Wdeprecated -Wdev \
+	cd $(BUILD_DIR) && cmake --trace -G $(GENERATOR) -Wdeprecated -Wdev \
       -DUSE_LCOV=$(USE_LOCV) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
       -DCMAKE_PREFIX_PATH=$(CMAKE_PREFIX_PATH) \
       -DCMAKE_STAGING_PREFIX=$(CMAKE_STAGING_PREFIX) \

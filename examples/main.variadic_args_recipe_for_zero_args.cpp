@@ -25,8 +25,6 @@
  **/
 
 // -- INCLUDES:
-// #define SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB  0
-// #include <fmt/format.h>
 #ifndef SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
 #    define SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB 0
 #endif
@@ -106,7 +104,7 @@ void example_useMacros3(void)
 // ==========================================================================
 // MAIN-FUNCTION:
 // ==========================================================================
-int main(int argc, char** argv)
+int main()
 {
     example_useMacros1();
     example_useMacros2();

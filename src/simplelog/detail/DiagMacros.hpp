@@ -10,13 +10,10 @@
 
 #if SIMPLELOG_DIAG
 #    include <iostream>
-#    ifndef SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
-#        define SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB 1
-#    endif
 #    if SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
 #        include <spdlog/fmt/fmt.h>
 #    else
-#        include <fmt/fmt.h>
+#        include <fmt/format.h>
 #    endif
 // XXX #  define SIMPLELOG_DIAG_TRACE0(message)     fmt::print("SIMPLELOG_DIAG: " message "\n")
 // XXX #  define SIMPLELOG_DIAG_TRACE(format, ...)  fmt::print("SIMPLELOG_DIAG: " format  "\n", __VA_ARGS__)

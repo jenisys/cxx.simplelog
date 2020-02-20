@@ -1,7 +1,17 @@
 # ===========================================================================
 # CMAKE: cxx.simplelog/examples
 # ===========================================================================
+cmake_minimum_required(VERSION 3.13)
 
+project(cxx.simplelog.example VERSION 0.1.8 LANGUAGES CXX)
+
+#FIXME cxx_simplelog-config.cmake, version: unknown
+#TODO: find_package(cxx_simplelog 0.1.8 REQUIRED)
+find_package(cxx_simplelog REQUIRED)
+
+#FIXME does not work with external fmt lib! CK
+# /usr/local/include/spdlog/fmt/fmt.h:22:10: fatal error: spdlog/fmt/bundled/core.h: No such file or directory
+unset(SPDLOG_FMT_EXTERNAL_HO PARENT_SCOPE)
 
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
@@ -54,24 +64,24 @@ if(SPDLOG_FMT_EXTERNAL_HO)
     set(CXX_FMTLIB "fmt::fmt-header-only")
 endif()
 
-# TODO: link erros and a lot of warnings? CK
+# TODO: a lot of warnings! CK
 # -- EXECUTABLE:
-# add_executable(example_variadic_args)
-# target_sources(example_variadic_args PRIVATE
-#     main.variadic_args_recipe_for_zero_args.cpp
-# )
-# target_link_libraries(example_variadic_args
-#     # fmt::fmt
-#     ${CXX_FMTLIB}
-# )
-# target_compile_options(example_variadic_args
-#     PRIVATE -Wall -Wextra -Wpedantic
-# )
-# if(NOT SPDLOG_FMT_EXTERNAL_HO)
-#     target_compile_definitions(example_variadic_args
-#         PRIVATE SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB=1
-#     )
-# endif()
+add_executable(example_variadic_args)
+target_sources(example_variadic_args PRIVATE
+    main.variadic_args_recipe_for_zero_args.cpp
+)
+target_link_libraries(example_variadic_args
+    # PREPARED: fmt::fmt
+    ${CXX_FMTLIB}
+)
+target_compile_options(example_variadic_args
+    PRIVATE -Wall -Wextra -Wpedantic
+)
+if(SPDLOG_FMT_EXTERNAL_HO)
+    target_compile_definitions(example_variadic_args
+        PRIVATE SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB=1
+    )
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: AUTO-RUN PROGRAMS
@@ -100,7 +110,8 @@ endforeach()
 # ---------------------------------------------------------------------------
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
-set(SIMPLELOG_AUTO_RUN_EXAMPLES OFF)
+set(SIMPLELOG_AUTO_RUN_EXAMPLES ON)
+set(BUILD_TESTING ${SIMPLELOG_AUTO_RUN_EXAMPLES})
 
 # -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
 set(test_examples_TARGET_MODE_ALL "")

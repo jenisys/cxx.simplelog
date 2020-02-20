@@ -2,27 +2,34 @@
 # CMAKE: cxx.simplelog
 # ===========================================================================
 
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(ccache)
 
 # MAYBE:
-include(GenerateExportHeader)
-include(WriteCompilerDetectionHeader)
+# include(GenerateExportHeader)
+# include(WriteCompilerDetectionHeader)
 
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
 project(cxx.simplelog VERSION 0.1.8 LANGUAGES CXX)
 
+option(SIMPLELOG_USE_CPACK "Use cpack" OFF)
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
+
+# fmt related options, only used if bundled fmt is used!
 option(FMT_INSTALL "Generate the install target." ON)
-option(SPDLOG_FMT_EXTERNAL_HO "Use external fmt library instead of bundled" ON)
+
+# spdlog related options, only used if bundled spdlog is used!
+option(SPDLOG_FMT_EXTERNAL "Use external fmt library instead of bundled" ON)
 option(SPDLOG_INSTALL "Generate the install target" ON)
 
-option(BUILD_EXAMPLES "Enable simplelog examples" ON)
+option(BUILD_EXAMPLES "Enable simplelog examples" off)
 option(BUILD_TESTING "Enable tests (and examples)" ON)
+
+# doctest related options, only used for intern test!
 set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
 
 include(cxx.setup_project)
@@ -45,9 +52,9 @@ if(CMAKE_VERSION VERSION_LESS "3.14")
     endfunction()
 endif()
 
-if(SPDLOG_FMT_EXTERNAL_HO)
+if(SPDLOG_FMT_EXTERNAL)
     set(FMT_MIN_VERSION 6.1.2)
-    find_package(fmt ${FMT_MIN_VERSION})
+    find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
     if(NOT TARGET fmt::fmt)
         message(WARNING "Try to get fmt with FetchContent ...")
         fetchcontent_declare(
@@ -60,7 +67,7 @@ if(SPDLOG_FMT_EXTERNAL_HO)
 endif()
 
 set(SPDLOG_MIN_VERSION 1.5.0)
-find_package(spdlog ${SPDLOG_MIN_VERSION})
+find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 if(NOT TARGET spdlog::spdlog)
     message(WARNING "Try to get spdlog with FetchContent ...")
     fetchcontent_declare(
@@ -73,7 +80,7 @@ endif()
 
 if(BUILD_TESTING)
     set(DOCTEST_MIN_VERSION 2.3.6)
-    find_package(doctest ${DOCTEST_MIN_VERSION})
+    find_package(doctest ${DOCTEST_MIN_VERSION} REQUIRED)
     if(NOT TARGET doctest::doctest)
         message(WARNING "Try to get doctest with FetchContent ...")
         fetchcontent_declare(
@@ -159,17 +166,19 @@ configure_package_config_file(
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
         DESTINATION "lib/cmake/${PROJECT_NAMESPACE}")
 
-# -- MAYBE:
-# export(EXPORT cpp_compat NAMESPACE CppCompat)
-# ----------------------------------------------------------------------------
-# SECTION: Pack
-# ----------------------------------------------------------------------------
-# HINT: Source-pack includes CMAKE_CURRENT_BUILDIR, ...
-# set(CPACK_SOURCE_GENERATOR "ZIP")
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
-set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;__;\.DS_Store")
-# set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+if(SIMPLELOG_USE_CPACK)
+    # -- MAYBE:
+    # export(EXPORT cpp_compat NAMESPACE CppCompat)
+    # ----------------------------------------------------------------------------
+    # SECTION: Pack
+    # ----------------------------------------------------------------------------
+    # HINT: Source-pack includes CMAKE_CURRENT_BUILDIR, ...
+    # set(CPACK_SOURCE_GENERATOR "ZIP")
+    set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+    set(CPACK_SOURCE_IGNORE_FILES "build/;.build-*;build.*/;.attic/;.git/;.vscode/;__;\.DS_Store")
+    # set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 
-include(CPack)
+    include(CPack)
+endif()
