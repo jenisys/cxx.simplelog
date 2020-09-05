@@ -32,16 +32,15 @@ from invoke.util import cd
 from path import Path
 from contextlib import contextmanager
 
-# -- TASK-LIBRARY:
-from . import _tasklet_cleanup as cleanup
-from cmake_build import tasks as cmake_tasks
-# DISABLED: from . import docs
-# DISABLED: from . import test
-# DISABLED: from . import release
-
 # -----------------------------------------------------------------------------
 # TASKS:
 # -----------------------------------------------------------------------------
+# -- TASK-LIBRARY:
+from cmake_build import tasks as cmake_tasks
+from . import invoke_cleanup as cleanup
+# DISABLED: from . import docs
+# DISABLED: from . import test
+# DISABLED: from . import release
 
 
 # -----------------------------------------------------------------------------
