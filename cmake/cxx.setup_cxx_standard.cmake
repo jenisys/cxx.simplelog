@@ -21,13 +21,16 @@
 # ===========================================================================
 
 # -- OPTIONAL: Provide own project-specific C++ compiler setup file.
-include("${PROJECT_SOURCE_DIR}/.cmake_project.cxx_standard" OPTIONAL)
+# SUPPORT OVERRIDE: As -DCMAKE_CXX_STANDARD=... on command-line (or "CMakeLists.txt" file).
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    include("${PROJECT_SOURCE_DIR}/.cmake_project.cxx_standard" OPTIONAL)
+endif()
 
 # ---------------------------------------------------------------------------
 # SANE DEFAULTS: If ".cmake_project.cxx_standard" is missing
 # ---------------------------------------------------------------------------
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)  # Enable C++14 standard
+    set(CMAKE_CXX_STANDARD 17)  # Enable C++17 standard
 endif()
 if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
