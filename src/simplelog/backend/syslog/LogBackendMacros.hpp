@@ -1,9 +1,9 @@
 /**
  * @file simplelog/backend/spdlog/LogBackendMacros.hpp
- * 
- * Simple example how a generic logging framework w/ different logging 
+ *
+ * Simple example how a generic logging framework w/ different logging
  * subsystems could look like.
- * 
+ *
  * @see https://github.com/gabime/spdlog
  * @see https://github.com/fmtlib/fmt
  **/
@@ -43,4 +43,4 @@
 // --------------------------------------------------------------------------
 // REUSE: LOGGING BACKEND DERIVED MACROS
 // --------------------------------------------------------------------------
-#include "simplelog/backend/detail/LogBackendDerivedMacros.hpp"
+#include "simplelog/detail/LogBackendDerivedMacros.hpp"

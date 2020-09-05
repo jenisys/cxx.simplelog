@@ -1,7 +1,7 @@
 /**
  * @file simplelog/backend/systemd_journal/LogBackendMacros.hpp
  * Simplelog backend for systemd journald logging service.
- * 
+ *
  * @see https://www.freedesktop.org/software/systemd
  * @see https://www.freedesktop.org/software/systemd/man/sd_journal_print.html#
  **/
@@ -41,4 +41,4 @@
 // --------------------------------------------------------------------------
 // REUSE: LOGGING BACKEND DERIVED MACROS
 // --------------------------------------------------------------------------
-#include "simplelog/backend/detail/LogBackendDerivedMacros.hpp"
+#include "simplelog/detail/LogBackendDerivedMacros.hpp"
