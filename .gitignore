@@ -6,6 +6,7 @@
 /bin/
 /.cproject
 /.vscode/
+/.installed/
 
 # -- WORKSPACE ONLY DIRECTORY AND FILES:
 .cmake_project.cxx_standard

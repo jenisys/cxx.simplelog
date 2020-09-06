@@ -39,5 +39,6 @@ cleanup:
 cleanup_all:
     extra_directories:
       - .pytest_cache
+      - .installed
     extra_files:
       - "__*.diff"
