@@ -51,7 +51,7 @@ auto getStaticLogger(void) -> simplelog::backend_null::LoggerPtr
 
 void example_useStaticLogger(void)
 {
-    auto log = getStaticLogger();
+    auto log = getStaticLogger();   // cppcheck-suppress: [unreadVariable]
     SLOGM_ERROR0(log, "Hello Alice");
 }
 
@@ -64,12 +64,12 @@ SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 void use_simplelog(void)
 {
     std::cout << "NULL-EXAMPLE: No output expected."<< std::endl;
- 
+
     example_useLogging();
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();
     example_useStaticLogger();
- 
+
     std::cout << "NULL-EXAMPLE: Finished." << std::endl;
 }
 

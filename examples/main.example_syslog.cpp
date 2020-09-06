@@ -69,7 +69,7 @@ void use_simplelog(void)
     example_useLoggingWithOverriddenDefaultModule();
 
     // -- FINALLY:
-    // DISABLED: console->log(LOG_WARNING, "MAIN: Ends here.");
+    console->log(LOG_WARNING, "MAIN: Ends here.");
 }
 
 // ==========================================================================
