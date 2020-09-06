@@ -33,7 +33,7 @@ private:
 
 protected:
     // -- INTERNAL METHODS: Assume multi-threading locked state.
-    inline bool hasModule_(const std::string& name)
+    inline bool hasModule_(const std::string& name) const
     {
         return m_moduleMap.find(name) != m_moduleMap.end();
     }
