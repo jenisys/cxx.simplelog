@@ -14,6 +14,9 @@
 # ===========================================================================
 
 cmake_generator: ninja
+cmake_defines:
+  - CMAKE_EXPORT_COMPILE_COMMANDS: ON
+
 build_dir_schema: "build.{BUILD_CONFIG}"
 build_config: host_debug
 build_configs:

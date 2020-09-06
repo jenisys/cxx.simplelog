@@ -59,7 +59,7 @@ void setupLoggingToNullSink(void)
 // ============================================================================
 // TEST SUITE:
 // ============================================================================
-TEST_SUITE_BEGIN("simplelog");
+TEST_SUITE_BEGIN("simplelog.backend_spdlog.compilable_TraceMacros");
 TEST_CASE("TraceMacros: can use all macros (compile-time check)"
     * doctest::skip(TRACE_MACROS_DISABLED))
 {
@@ -122,7 +122,7 @@ TEST_CASE("TraceMacros: can use all macros (compile-time check)"
     }
 }
 
-TEST_CASE("TraceMacros: can use short macros (compile-time check)" 
+TEST_CASE("TraceMacros: can use short macros (compile-time check)"
     * doctest::skip(TRACE_MACROS_DISABLED))
 {
 #if SIMPLELOG_HAVE_SHORT_MACROS
@@ -130,28 +130,28 @@ TEST_CASE("TraceMacros: can use short macros (compile-time check)"
     setupLoggingToNullSink();
 
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default.static_1");
-    SLOG_FATAL("USE-LEVEL: FATAL");
-    SLOG_CRITICAL("USE-LEVEL: CRITICAL");
-    SLOG_ERROR("USE_LEVEL: ERROR");
-    SLOG_WARN( "USE_LEVEL: WARN");
-    SLOG_INFO( "USE_LEVEL:  INFO");
-    SLOG_DEBUG("USE_LEVEL: DEBUG");
+    STRACE_FATAL("USE-LEVEL: FATAL");
+    STRACE_CRITICAL("USE-LEVEL: CRITICAL");
+    STRACE_ERROR("USE_LEVEL: ERROR");
+    STRACE_WARN( "USE_LEVEL: WARN");
+    STRACE_INFO( "USE_LEVEL:  INFO");
+    STRACE_DEBUG("USE_LEVEL: DEBUG");
 
     {
         SIMPLELOG_DEFINE_DEFAULT_MODULE("default.normal_2");
-        SLOG_FATAL_IF(   true, "USE-LEVEL: FATAL");
-        SLOG_CRITICAL_IF(true, "USE-LEVEL: CRITICAL");
-        SLOG_ERROR_IF(   true, "USE_LEVEL: ERROR");
-        SLOG_WARN_IF(    true, "USE_LEVEL: WARN");
-        SLOG_INFO_IF(    true, "USE_LEVEL:  INFO");
-        SLOG_DEBUG_IF(   true, "USE_LEVEL: DEBUG");
+        STRACE_FATAL_IF(   true, "USE-LEVEL: FATAL");
+        STRACE_CRITICAL_IF(true, "USE-LEVEL: CRITICAL");
+        STRACE_ERROR_IF(   true, "USE_LEVEL: ERROR");
+        STRACE_WARN_IF(    true, "USE_LEVEL: WARN");
+        STRACE_INFO_IF(    true, "USE_LEVEL:  INFO");
+        STRACE_DEBUG_IF(   true, "USE_LEVEL: DEBUG");
 
-        SLOG_FATAL_IF(   false, "USE-LEVEL: FATAL");
-        SLOG_CRITICAL_IF(false, "USE-LEVEL: CRITICAL");
-        SLOG_ERROR_IF(   false, "USE_LEVEL: ERROR");
-        SLOG_WARN_IF(    false, "USE_LEVEL: WARN");
-        SLOG_INFO_IF(    false, "USE_LEVEL:  INFO");
-        SLOG_DEBUG_IF(   false, "USE_LEVEL: DEBUG");
+        STRACE_FATAL_IF(   false, "USE-LEVEL: FATAL");
+        STRACE_CRITICAL_IF(false, "USE-LEVEL: CRITICAL");
+        STRACE_ERROR_IF(   false, "USE_LEVEL: ERROR");
+        STRACE_WARN_IF(    false, "USE_LEVEL: WARN");
+        STRACE_INFO_IF(    false, "USE_LEVEL:  INFO");
+        STRACE_DEBUG_IF(   false, "USE_LEVEL: DEBUG");
     }
     {
         SIMPLELOG_DEFINE_STATIC_MODULE(logger1, "static_1");

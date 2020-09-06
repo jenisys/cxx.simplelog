@@ -1,12 +1,17 @@
 - git:
     local-name: lib/spdlog
     uri: https://github.com/gabime/spdlog.git
-    version: v1.5.0
+    version: v1.x
+    # SUPPORT: version: v1.8.0
 - git:
     local-name: lib/fmt
     uri: https://github.com/fmtlib/fmt.git
-    version: 6.1.2
+    version: master
+    # version: 6.2.0
+    # OLD: version: 6.1.2
 - git:
     local-name: lib/doctest
     uri: https://github.com/onqtam/doctest.git
-    version: 2.3.6
+    version: master
+    # version: 2.3.7
+    # version: 2.3.6

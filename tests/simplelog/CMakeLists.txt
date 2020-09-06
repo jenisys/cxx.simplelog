@@ -14,9 +14,6 @@ target_sources(test_simplelog
         test_main.cpp
         test_backend.cpp
         test_LogMacros.cpp
-        test_LogMacros.compiled.cpp
-        test_LogMacros0.compiled.cpp
-        test_TraceMacros.compiled.cpp
 )
 target_link_libraries(test_simplelog
     cxx_simplelog::simplelog_spdlog

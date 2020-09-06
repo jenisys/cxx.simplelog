@@ -6,9 +6,18 @@
 /bin/
 /.cproject
 /.vscode/
+
+# -- WORKSPACE ONLY DIRECTORY AND FILES:
+.cmake_project.cxx_standard
 __*/
+__*.txt
+__*.diff
 
 # -- DISABLED: GIT-SUBPROJECTS
 /lib/spdlog/
 /lib/fmt/
 /lib/doctest/
+
+# -- MANUAL COPIES: For a specific version.
+/lib/spdlog_v*/
+/lib/fmt_v*/

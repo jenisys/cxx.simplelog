@@ -1,32 +1,31 @@
 /**
- * @file simplelog/backend/systemd_journal/Module.hpp
- * Simplelog backend for systemd journald logging service.
+ * @file simplelog/backend/syslog/Module.hpp
+ * Simplelog backend for syslog logging service.
  *
- * @see https://systemd.io
- * @see https://linuxconfig.org/introduction-to-the-systemd-journal
- * @see https://www.freedesktop.org/software/systemd
- * @see https://www.freedesktop.org/software/systemd/man/sd_journal_print.html#
+ * @see https://linux.die.net/man/3/syslog
  **/
 
 #pragma once
 
 // -- INCLUDES:
 #include "simplelog/backend/common/ModuleBase.hpp"
-#include <systemd/sd-journal.h>
+#include <syslog.h>
 #include <fmt/format.h>
 
 
 // --------------------------------------------------------------------------
 // LOGGING MODULE
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_systemd_journal {
+namespace simplelog { namespace backend_syslog {
 
 /**
  * @class Module
- * Provides a named logging module (logger) to log to systemd-journal.
- * Provides an thin adapter around the systemd-journal API.
+ * Provides a named logging module (logger) to log to syslog.
+ * Provides an thin adapter around the syslog API.
  *
- * @see https://man7.org/linux/man-pages/man3/sd_journal_print.3.html
+ * @see https://linux.die.net/man/3/syslog
+ * @see https://www.man7.org/linux/man-pages/man3/syslog.3.html
+ * @see https://github.com/fmtlib/fmt
  **/
 class Module : public simplelog::backend_common::ModuleBase
 {
@@ -43,6 +42,7 @@ public:
         // LOG_EMERG=0, ..., LOG_DEBUG=7
         return (level <= getLevel());
     }
+
     void setMinLevel(int minLevel)
     {
         if (isLevelEnabled(minLevel)) {
@@ -58,10 +58,9 @@ public:
             // -- HINT: Need format string part and args.
             // OTHERWISE: Compiler will complain with -Wformat-security.
             std::string text = fmt::format(args...);
-            sd_journal_print(level, "%s", text.c_str());
-            // MAYBE: sd_journal_printv(level, "%s", text.c_str());
+            syslog(level, "%s", text.c_str());
         }
     }
 };
 
-}} //< NAMESPACE-END: simplelog::backend_systemd_journal
+}} //< NAMESPACE-END: simplelog::backend_syslog

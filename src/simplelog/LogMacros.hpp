@@ -1,6 +1,6 @@
 /**
- * @file
- * Provide preprocessor macros for users of the logging subsystem.
+ * @file simplelog/LogMacros.hpp
+ * Provides preprocessor macros for users of the logging subsystem.
  *
  * Maps logging macros to logging backend macros to make it easy
  * to replace the logging subsystem/backend with another logging framework.
@@ -8,7 +8,10 @@
 
 #pragma once
 
-#include "simplelog/config.hpp"
+// -- INCLUDES:
+#include "simplelog/detail/SelectLogBackend.hpp"
+#include "simplelog/detail/LogBackendMacros.hpp"
+
 
 // --------------------------------------------------------------------------
 // SIMPLELOG LOGGING MACROS
@@ -17,12 +20,12 @@
  * @par Simplelog Example
  * @code
  *  #include "simplelog/LogMacros.hpp"
- * 
+ *
  *  namespace {
  *      SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("foo");      //< DEFAULT_MODULE_0
  *      SIMPLELOG_DEFINE_STATIC_MODULE(log0, "foo.one");    //< LOG_MODULE_0
  *  };
- * 
+ *
  *  void example_use_predefinedDefaultLogger(void)
  *  {
  *      // -- USE DEFAULT LOGGING-MODULE from outer-scope (DEFAULT_MODULE_0)
@@ -43,7 +46,7 @@
  *      SLOG_WARN("Hello Alice");
  *      SLOG_ERROR("Hello {0} and {1}", "Alice", "Bob"); //< With params
  *  }
- * 
+ *
  *  void example_use_severalLoggers(void)
  *  {
  *      SIMPLELOG_DEFINE_MODULE(log, "foo.two");

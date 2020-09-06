@@ -1,0 +1,5 @@
+# -- cmake-lint:
+# SEE: https://github.com/cmake-lint/cmake-lint
+
+spaces=4
+linelength=140

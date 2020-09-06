@@ -18,6 +18,7 @@
 
 // -- LOCAL-INCLUDES:
 #include "CleanupLoggingFixture.hpp"
+#include "../test_support/doctest.stringify_std.vector.hpp"
 
 namespace {
 
@@ -40,7 +41,7 @@ auto& spdlog_registry(void)
 }
 #endif
 
-void assert_loggerHasSameSink(LoggerPtr logger, SinkPtr sink) 
+void assert_loggerHasSameSink(LoggerPtr logger, SinkPtr sink)
 {
     CHECK_NE(logger, nullptr);
     CHECK_EQ(logger->sinks().size(), 1);
@@ -95,7 +96,7 @@ TEST_CASE("setMinLevel: Keeps logger.level if logger.level >= min_level")
     simplelog::backend_spdlog::setMinLevel(DESIRED_LEVEL);
     // -- VERIFY: logger.level == min_level
     CHECK_GE(logger1->level(), DESIRED_LEVEL);
-    CHECK_EQ(logger1->level(), LOG_LEVEL1);    
+    CHECK_EQ(logger1->level(), LOG_LEVEL1);
     // -- VERIFY: logger.level > min_level
     CHECK_GT(logger2->level(), DESIRED_LEVEL);
     CHECK_EQ(logger2->level(), LOG_LEVEL2);
@@ -153,7 +154,7 @@ TEST_CASE("assignSink: Should assign new sink to all loggers")
 
     // -- ACT:
     simplelog::backend_spdlog::assignSink(theSink);
-    
+
     // -- VERIFY:
     const Sinks EXPECTED_SINKS{ theSink };
     INFO("logger1.sinks: " << logger1->name());
@@ -184,7 +185,7 @@ TEST_CASE("assignSink: Assigned sink should be inherited by new loggers")
     simplelog::backend_spdlog::assignSink(theSink);
     auto logger2 = useOrCreateLogger("new_1");
     // auto logger2  = spdlog::create<DefaultSink>("new_1");
-    
+
     // -- VERIFY:
     const Sinks EXPECTED_SINKS{ theSink };
     INFO("logger1.sinks: " << logger1->name());
@@ -219,7 +220,7 @@ TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
     };
     simplelog::backend_spdlog::assignSink(sink1);
     simplelog::backend_spdlog::assignSinkToAny(sink2, hasLoggerSameName);
-    
+
     // -- VERIFY: Only logger2.sinks == EXPECTED_SINKS2
     const Sinks EXPECTED_SINKS1{ sink1 };
     const Sinks EXPECTED_SINKS2{ sink2 };
@@ -258,7 +259,7 @@ TEST_CASE("assignSinks: Should assign several sinks to all loggers")
     auto logger2 = useOrCreateLogger("foo_2");
     // XXX-BAD-WORKARDOUND: Late assign/override is needed.
     // simplelog::backend_spdlog::assignSinks(EXPECTED_SINKS);
-    
+
     // -- VERIFY:
     INFO("logger1.sinks: " << logger1->name());
     CHECK(logger1->sinks().size() == EXPECTED_SINKS.size());
@@ -277,7 +278,7 @@ TEST_CASE("assignSinks: Should assign several sinks to all loggers")
 
 TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
 {
-#if 0    
+#if 0
     using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;
     auto sink1 = std::make_shared<spdlog::sinks::null_sink_mt>();
@@ -292,7 +293,7 @@ TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
     };
     simplelog::backend_spdlog::assignSink(sink1);
     simplelog::backend_spdlog::assignSinkToAny(sink2, hasLoggerSameName);
-    
+
     // -- VERIFY: Only logger2.sinks == EXPECTED_SINKS2
     const Sinks EXPECTED_SINKS1{ sink1 };
     const Sinks EXPECTED_SINKS2{ sink2 };
