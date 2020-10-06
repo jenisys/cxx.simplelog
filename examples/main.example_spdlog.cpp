@@ -1,19 +1,27 @@
 /**
  * @file example_spdlog_main.cpp
- * 
- * Simple example how a generic logging framework w/ different logging 
+ *
+ * Simple example how a generic logging framework w/ different logging
  * subsystems could look like.
- * 
+ *
  * @see https://github.com/gabime/spdlog
  * @see https://github.com/fmtlib/fmt
  **/
 
 // -- INCLUDES:
-#define SIMPLELOG_USE_BACKEND_SPDLOG 1
+// ALREADY: #define SIMPLELOG_USE_BACKEND_SPDLOG 1
 #include "simplelog/LogMacros.hpp"
-
+#include "simplelog/detail/StringifyMacro.hpp"
 // -- SPECIAL CASE:
 // PREPARED: #include "fmt/format.h" // -- USE: fmt::format()
+
+
+// -- SANITY-CHECK: SIMPLEGEN-SELECT-BACKEND
+#if !(defined(SIMPLELOG_USE_BACKEND_SPDLOG) && (SIMPLELOG_USE_BACKEND == 1))
+#   pragma message("SIMPLELOG_USE_BACKEND_SPDLOG=" STRINGIFY(SIMPLELOG_USE_BACKEND_SPDLOG))
+#   pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
+#   error "NOT-DEFINED: SIMPLELOG_USE_BACKEND_SPDLOG"
+#endif
 
 
 // ==========================================================================
@@ -113,7 +121,7 @@ void use_simplelog(void)
     // OR: SIMPLELOG_BACKEND_LEVEL_WARN
     SLOGM_WARN(console, "MAIN: SETUP_LOGGING with setMinLevel=warn");
     simplelog::backend_spdlog::setMinLevel(spdlog::level::warn);
-    
+
     // -- SPECIAL CASE END.
     example_useTwoLoggers();
     example_useTwoLoggersWithSameName();

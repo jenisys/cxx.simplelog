@@ -33,10 +33,11 @@ from path import Path
 from contextlib import contextmanager
 
 # -----------------------------------------------------------------------------
-# TASK-LIBRARY:
+# TASKS:
 # -----------------------------------------------------------------------------
-from . import invoke_cleanup as cleanup
+# -- TASK-LIBRARY:
 from cmake_build import tasks as cmake_tasks
+from . import invoke_cleanup as cleanup
 
 
 # -----------------------------------------------------------------------------

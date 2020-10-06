@@ -201,6 +201,13 @@ def path_glob(pattern, current_dir=None):
         # -- CASE: string, path.Path (string-like)
         current_dir = pathlib.Path(str(current_dir))
 
+    pattern_path = Path(pattern)
+    if pattern_path.isabs():
+        # -- SPECIAL CASE: Path.glob() only supports relative-path(s) / pattern(s).
+        if pattern_path.isdir():
+            yield pattern_path
+        return
+
     # -- HINT: OSError is no longer raised in pathlib2 or python35.pathlib
     # try:
     for p in current_dir.glob(pattern):

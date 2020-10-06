@@ -2,34 +2,47 @@
 # CMAKE: cxx.simplelog
 # ===========================================================================
 
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(ccache)
+set(MASTER_PROJECT OFF)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(MASTER_PROJECT ON)
+    message(STATUS "cmake.version: ${CMAKE_VERSION} (in MASTER_PROJECT)")
+endif()
 
-# MAYBE:
-include(GenerateExportHeader)
-include(WriteCompilerDetectionHeader)
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+if(MASTER_PROJECT)
+    include(ccache)
+    # MAYBE:
+    include(GenerateExportHeader)
+    include(WriteCompilerDetectionHeader)
+endif()
 
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.10 LANGUAGES CXX)
+project(cxx.simplelog VERSION 0.1.11 LANGUAGES CXX)
+
+option(BUILD_EXAMPLES "Enable simplelog examples" OFF)
+option(BUILD_TESTING  "Enable tests (and examples)" OFF)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
+option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
 option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
 option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" ON)
 option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
-option(BUILD_EXAMPLES "Enable simplelog examples" ON)
-option(BUILD_TESTING "Enable tests (and examples)" ON)
+option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples"   ${MASTER_PROJECT})
+option(SIMPLELOG_BUILD_TESTS    "Enable tests (and examples)" ${MASTER_PROJECT})
 set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
 set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
                     "Normally include spdlog from packages" FORCE)
+set(FMT_INSTALL ${SIMPLELOG_USE_BUNDLED_FMTLIB} CACHE BOOL
+                "Normally include fmt from packages" FORCE)
 
 include(cxx.setup_project)
 
 # ---------------------------------------------------------------------------
-# SECTION: BOOTSTRAP -- Checkout git-subprojects if that is not not done yet
+# SECTION: BOOTSTRAP -- When wstool update was not done yet
 # ---------------------------------------------------------------------------
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_project/bootstrap_subprojects_with_wstool.cmake")
 
@@ -38,7 +51,9 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_project/bootstrap_subprojects_with_ws
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
 # SHORTCUT: Supports spdlog-1.5.0, spdlog-1.4.2 at least
+# CURRENT: SPDLOG_VERSION = 1.8.0
 set(SPDLOG_MIN_VERSION "1.4.2")
+
 # find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 # DISABLED: if(NOT spdlog_FOUND)
 if(TRUE)
@@ -61,6 +76,12 @@ endif()
 message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
 message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
 
+# find_package(Syslog)
+# message(STATUS "Syslog_FOUND=${Syslog_FOUND}")
+# if(NOT Syslog_FOUND)
+#     set(SIMPLELOG_USE_BACKEND_SYSLOG OFF)
+# endif()
+
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
 # ---------------------------------------------------------------------------
@@ -77,21 +98,26 @@ set(SIMPLELOG_LIBRARIES
 # LIBRARY: cxx_simplelog::simplelog_null    -- Use simplelog w/ backend=null
 # LIBRARY: cxx_simplelog::simplelog_spdlog  -- Use simplelog w/ backend=spdlog
 add_subdirectory(src/simplelog simplelog)
-add_subdirectory(src/simplelog/backend/null   simplelog_backend_null)
-add_subdirectory(src/simplelog/backend/spdlog simplelog_backend_spdlog)
+add_subdirectory(src/simplelog/backend)
+# add_subdirectory(src/simplelog/backend/null   simplelog_backend_null)
+# add_subdirectory(src/simplelog/backend/spdlog simplelog_backend_spdlog)
+if(SIMPLELOG_USE_BACKEND_SYSLOG)
+    # add_subdirectory(src/simplelog/backend/syslog simplelog_backend_syslog)
+    list(APPEND SIMPLELOG_LIBRARIES simplelog_syslog)
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
 # ---------------------------------------------------------------------------
-if(BUILD_EXAMPLES)
+if(SIMPLELOG_BUILD_EXAMPLES OR BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: Unittests / Examples
 # ---------------------------------------------------------------------------
-if(BUILD_TESTING)
-    include(CTest)
+if(SIMPLELOG_BUILD_TESTS OR BUILD_TESTING)
+    enable_testing()
     # find_package(doctest REQUIRED)
     add_subdirectory(lib/doctest doctest)
     add_subdirectory(tests)
@@ -102,7 +128,8 @@ endif()
 # ----------------------------------------------------------------------------
 # MORE: https://foonathan.net/2016/03/cmake-install/
 install(TARGETS ${SIMPLELOG_LIBRARIES}
-    EXPORT ${PROJECT_NAMESPACE}-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    EXPORT ${PROJECT_NAMESPACE}-targets
+    DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(EXPORT ${PROJECT_NAMESPACE}-targets
         NAMESPACE   ${PROJECT_NAMESPACE}::
         DESTINATION lib/cmake/${PROJECT_NAMESPACE})
@@ -131,7 +158,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cma
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
-set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;__;\.DS_Store")
+set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;.idea/;\.DS_Store;__.*/")
 if(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY)
     message("CPACK-SOURCE: Ignore bundled third-party libraries.")
     set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};lib/")

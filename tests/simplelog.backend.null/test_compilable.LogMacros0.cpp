@@ -1,66 +1,30 @@
 // -- COMPILE-TIME CHECK ONLY (for now):
-#include "simplelog/detail/LogMacros0.hpp"
-
 /**
- * @file tests/simplelog.backend.spdlog/test_ModuleUtil.cpp
+ * @file tests/simplelog.backend.spdlog/test_LogMacros0.compiled.cpp
  * @note REQUIRES: doctest >= 2.3.5
  * @author Jens Engel
  **/
 
 // -- INCLUDES:
 #include "doctest/doctest.h"
-
-// -- MORE-INCLUDES:
+#include "simplelog/detail/LogMacros0.hpp"
 #include "simplelog/LogMacros.hpp"
-#include "simplelog/backend/spdlog/ModuleUtil.hpp"
-#include "simplelog/backend/spdlog/SetupUtil.hpp"
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/null_sink.h>
-#include <memory>   //< USE: std::shared_ptr<T>
-#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
 
-// -- LOCAL-INCLUDES:
-// PREPARED: #include "CleanupLoggingFixture.hpp"
 
 namespace {
-
-// PREPARED: using tests::simplelog::backend_spdlog::CleanupLoggingFixture;
-using LoggerPtr = std::shared_ptr<spdlog::logger>;
-using Level = ::spdlog::level::level_enum;
-using tests::simplelog::backend_spdlog::CleanupLoggingFixture;
 
 // ============================================================================
 // TEST CONFIG:
 // ============================================================================
 const bool NO_SHORT_MACROS = (SIMPLELOG_HAVE_SHORT_MACROS == 0);
 
-// ============================================================================
-// TEST SUPPORT:
-// ============================================================================
-// auto makeLogger(const std::string& name) -> LoggerPtr
-// {
-//     return std::make_shared<spdlog::logger>(name);
-// }
-
-void setupLoggingToNullSink(void)
-{
-    // OR: using NullSink = spdlog::sinks::null_sink_st;
-    using NullSink = spdlog::sinks::null_sink_mt;
-    auto theSink = std::make_shared<NullSink>();
-    simplelog::backend_spdlog::assignSink(theSink);
-    simplelog::backend_spdlog::setLevel(spdlog::level::info);
-    // MAYBE: auto logger = spdlog::create<NullSink>("");
-}
 
 // ============================================================================
 // TEST SUITE:
 // ============================================================================
-TEST_SUITE_BEGIN("simplelog");
+TEST_SUITE_BEGIN("simplelog.backend_null.compilable_LogMacros0");
 TEST_CASE("LogMacros0: can use all macros (compile-time check)")
 {
-    CleanupLoggingFixture cleanupGuard;
-    setupLoggingToNullSink();
-
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default.static_1");
     SIMPLELOG_DEFINE_MODULE(logger2, "normal_2");
 
@@ -120,9 +84,6 @@ TEST_CASE("LogMacros0: can use all macros (compile-time check)")
 TEST_CASE("LogMacros0: can use short macros (compile-time check)" * doctest::skip(NO_SHORT_MACROS))
 {
 #if SIMPLELOG_HAVE_SHORT_MACROS
-    CleanupLoggingFixture cleanupGuard;
-    setupLoggingToNullSink();
-
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default.static_1");
     SLOG_FATAL0("USE-LEVEL: FATAL");
     SLOG_CRITICAL0("USE-LEVEL: CRITICAL");

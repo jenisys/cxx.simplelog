@@ -2,7 +2,20 @@
 # CMAKE: cxx.simplelog/src/simplelog/backend/spdlog
 # ===========================================================================
 
-# -- BACKEND-SPECIFIC LIBRARY: simplelog_spdlog (HEADER-ONLY)
+# ---------------------------------------------------------------------------
+# DEPENDENCIES
+# ---------------------------------------------------------------------------
+# MAYBE: set(SPDLOG_MIN_VERSION "1.5.2")
+if(NOT TARGET spdlog::spdlog)
+    if(NOT DEFINED SPDLOG_MIN_VERSION)
+        set(SPDLOG_MIN_VERSION "1.4.2")
+    endif()
+    find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
+endif()
+
+# ---------------------------------------------------------------------------
+# BACKEND-SPECIFIC LIBRARY: simplelog_spdlog (HEADER-ONLY, but spdlog is STATIC-LIBRARY)
+# ---------------------------------------------------------------------------
 # USED-FOR: Use simplelog library with configured simplelog.backend.spdlog.
 add_library(simplelog_spdlog INTERFACE)
 add_library(${PROJECT_NAMESPACE}::simplelog_spdlog ALIAS simplelog_spdlog)

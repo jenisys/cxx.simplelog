@@ -10,7 +10,7 @@ add_executable(simplelog_example_spdlog)
 target_sources(simplelog_example_spdlog PRIVATE
     main.example_spdlog.cpp
 )
-target_link_libraries(simplelog_example_spdlog 
+target_link_libraries(simplelog_example_spdlog
     PRIVATE
         cxx_simplelog::simplelog_spdlog
         # PREPARED: fmt::fmt
@@ -33,7 +33,7 @@ add_executable(simplelog_example_null)
 target_sources(simplelog_example_null PRIVATE
     main.example_null.cpp
 )
-target_link_libraries(simplelog_example_null 
+target_link_libraries(simplelog_example_null
     PRIVATE  cxx_simplelog::simplelog_null
 )
 target_include_directories(simplelog_example_null
@@ -44,9 +44,31 @@ target_compile_options(simplelog_example_null
     PRIVATE  -Wpedantic
 )
 target_compile_definitions(simplelog_example_null
-    PRIVATE  
+    PRIVATE
         # NOT-NEEDED: SIMPLELOG_USE_BACKEND_NULL=1
         SIMPLELOG_DIAG=1
+)
+
+add_executable(simplelog_example_syslog)
+target_sources(simplelog_example_syslog PRIVATE
+    main.example_syslog.cpp
+)
+target_link_libraries(simplelog_example_syslog
+    PRIVATE
+        cxx_simplelog::simplelog_syslog
+        # INHERITED: fmt::fmt
+)
+target_include_directories(simplelog_example_syslog
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_compile_options(simplelog_example_syslog
+    PRIVATE  -Wall -Wpedantic
+)
+target_compile_definitions(simplelog_example_syslog
+    PRIVATE
+        SIMPLELOG_DIAG=1
+        # INHERITED: SIMPLELOG_USE_BACKEND_SYSLOG=1
 )
 
 # ---------------------------------------------------------------------------
@@ -82,6 +104,7 @@ set(EXAMPLE_PROGRAMS
     simplelog_example_null
     example_variadic_args
 )
+list(APPEND EXAMPLE_PROGRAMS simplelog_example_syslog)
 
 add_custom_target(examples
     DEPENDS ${EXAMPLE_PROGRAMS}
@@ -101,8 +124,8 @@ endforeach()
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
 set(SIMPLELOG_AUTO_RUN_EXAMPLES OFF)
-include(CTest)
-    
+enable_testing()
+
 # -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
 set(test_examples_TARGET_MODE_ALL "")
 if(SIMPLELOG_AUTO_RUN_EXAMPLES)
@@ -116,10 +139,10 @@ add_custom_target(test_examples ${test_examples_TARGET_MODE_ALL}
 
 # -- TESTS:
 add_test(NAME example_simplelog.spdlog   COMMAND simplelog_example_spdlog)
-set_tests_properties(example_simplelog.spdlog PROPERTIES 
+set_tests_properties(example_simplelog.spdlog PROPERTIES
     PASS_REGULAR_EXPRESSION ".*foo.bar::info.*  Hello Alice and Bob")
 
 add_test(NAME example_simplelog.null   COMMAND simplelog_example_null)
-set_tests_properties(example_simplelog.null PROPERTIES 
+set_tests_properties(example_simplelog.null PROPERTIES
     PASS_REGULAR_EXPRESSION "NULL-EXAMPLE: Finished.")
 

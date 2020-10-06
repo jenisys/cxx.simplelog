@@ -10,14 +10,25 @@
 # MAYBE: tasks: auto_dash_names: false
 
 project:
-    name: cxx_log
+    name: cxx_simplelog
 
 # -- cmake-build configuration
+cmake_generator: ninja
+cmake_defines:
+  - CMAKE_EXPORT_COMPILE_COMMANDS: ON
+
+build_dir_schema: "build.{BUILD_CONFIG}"
 build_config: host_debug
+build_configs:
+  - debug
+  - release
+  - host_debug
+  - host_release
 
 # -- invoke:
 run:
     echo: true
+    # shell: /bin/sh
     # pty:  true
 
 
@@ -25,7 +36,16 @@ cleanup:
     extra_directories:
       - "build"
       - "build.*"
+    extra_files:
+      - "**/*.cpp.dump"
+      - "**/*.cpp.gcda"
 
 cleanup_all:
     extra_directories:
       - .pytest_cache
+      - .installed
+    extra_files:
+      - "**/__*.diff"
+      - "**/cppcheck_report.xml"
+      - "**/report.xml"
+      - "**/*.gcov"

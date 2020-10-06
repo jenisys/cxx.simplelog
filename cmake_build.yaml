@@ -14,6 +14,9 @@
 # ===========================================================================
 
 cmake_generator: ninja
+cmake_defines:
+  - CMAKE_EXPORT_COMPILE_COMMANDS: ON
+
 build_dir_schema: "build.{BUILD_CONFIG}"
 build_config: host_debug
 build_configs:
@@ -31,6 +34,8 @@ build_configs:
       cmake_toolchain: cmake/toolchain/macOS_clang_x86_64.cmake
   - macOS_x86_64_release.clang:
       cmake_toolchain: cmake/toolchain/macOS_clang_x86_64.cmake
+  - host.ninja_multi:
+      cmake_generator: ninja-multi
 
 run:
   echo: true
@@ -40,11 +45,16 @@ cleanup:
   extra_directories:
     - "build"
     - "build.*"
+  extra_files:
+    - "**/*.cpp.dump"
 
 cleanup_all:
   extra_directories:
     - "**/build.*"
     - .hypothesis
+    - .installed
     - .pytest_cache
     - .tox
     - .venv*
+  extra_files:
+    - "**/__*.diff"

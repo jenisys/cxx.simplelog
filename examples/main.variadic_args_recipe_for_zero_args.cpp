@@ -1,7 +1,7 @@
 /**
  * @file main.gcc_variadic_args_recipe_for_zero_args.cpp
  * Proof-of-concept for GNU variadic-macro trick with zero args.
- * 
+ *
  * @par IMPLEMENTATION DETAIL: GNU CPP Preprocessor Variadic-Macro Trick
  * The GNU CPP Preprocessor variadic-macro trick with zero args is used here.
  * The trick eats up (deletes) a preceeding COMMA if zero __VA_ARGS__ are used.
@@ -109,6 +109,25 @@ void example_useMacros3(void)
     CXXLOG_3("TWO_ARGS:  Hello {} and {}", "Alice", "Bob");
 }
 
+// -- PROOF-OF-CONCEPT: Verify that variadic function-template works.
+// HINT: Used for Module::log(level, T&& ... arg)
+template<typename ... T>
+auto my_format(const T& ... arg)
+{
+    auto text = fmt::format(arg...);
+    return text;
+}
+
+void example_use_my_format(void)
+{
+    // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES => PREFERRED.
+    CXXLOG_1("example_use_my_format:");
+    CXXLOG_1(my_format("ZERO_ARGS: Hello"));
+    CXXLOG_1(my_format("ONE_ARG:   Hello {}", "Bob"));
+    CXXLOG_1(my_format("TWO_ARGS:  Hello {} and {}", std::string("Alice"), "Bob"));
+    CXXLOG_1(my_format("Use cstring").c_str());
+}
+
 // ==========================================================================
 // MAIN-FUNCTION:
 // ==========================================================================
@@ -117,5 +136,6 @@ int main(int argc, char **argv)
     example_useMacros1();
     example_useMacros2();
     example_useMacros3();
+    example_use_my_format();
     return EXIT_SUCCESS;
 }

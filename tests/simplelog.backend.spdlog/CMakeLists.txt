@@ -15,6 +15,10 @@ target_sources(test_simplelog_backend_spdlog
         test_ModuleUtil.cpp
         test_SetupUtil.cpp
         test_setup_spdlog.cpp
+        # -- COMPILE-CHECK:
+        test_compilable.LogMacros.cpp
+        test_compilable.LogMacros0.cpp
+        test_compilable.TraceMacros.cpp
 )
 target_link_libraries(test_simplelog_backend_spdlog
     cxx_simplelog::simplelog_spdlog
@@ -24,16 +28,6 @@ target_compile_definitions(test_simplelog_backend_spdlog
     PRIVATE
         ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
 )
-# target_include_directories(test_doctest_basic
-#     PRIVATE
-#         ${CMAKE_CURRENT_SOURCE_DIR}
-#         ${CMAKE_CURRENT_SOURCE_DIR}/../src
-#         ${doctest_INCLUDE_DIR}
-# )
-# target_compile_definitions(test_doctest_basic
-#     PRIVATE
-#         ${test_doctest1_EXTRA_DEFINES}
-# )
 
 # ---------------------------------------------------------------------------
 # -- AUTO-RUN TESTS:
@@ -54,7 +48,7 @@ target_compile_definitions(test_simplelog_backend_spdlog
 # ---------------------------------------------------------------------------
 # SECTION: Tests
 # ---------------------------------------------------------------------------
-add_test(NAME test_simplelog.backend.spdlog   
+add_test(NAME test_simplelog.backend.spdlog
     COMMAND test_simplelog_backend_spdlog -s
 )
 # set_tests_properties(test_all PROPERTIES

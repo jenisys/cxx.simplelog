@@ -9,8 +9,9 @@
 #pragma once
 
 // -- INCLUDES:
-// REUSE: LogMacros
-#include "simplelog/LogMacros.hpp"
+#include "simplelog/detail/SelectLogBackend.hpp"
+#include "simplelog/detail/LogBackendMacros.hpp"
+
 
 // --------------------------------------------------------------------------
 // SIMPLELOG TRACING MACROS
@@ -20,15 +21,15 @@
  * Tracing is only enabled in DEBUG mode.
  * Therefore, trace-macros are removed in non-DEBUG (release) builds.
  * @note Log-macros remain usable in non-DEBUG (release) builds.
- * 
+ *
  * @code
  *  #include "simplelog/TraceMacros.hpp"
- * 
+ *
  *  namespace {
  *      SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("foo");      //< DEFAULT_MODULE_0
  *      SIMPLELOG_DEFINE_STATIC_MODULE(log0, "foo.one");    //< LOG_MODULE_0
  *  };
- * 
+ *
  *  void example_use_predefinedDefaultLogger(void)
  *  {
  *      // -- USE DEFAULT LOGGING-MODULE from outer-scope (DEFAULT_MODULE_0)
@@ -49,7 +50,7 @@
  *      STRACE_WARN("Hello Alice");
  *      STRACE_ERROR("Hello {0} and {1}", "Alice", "Bob"); //< With params
  *  }
- * 
+ *
  *  void example_use_severalLoggers(void)
  *  {
  *      SIMPLELOG_DEFINE_MODULE(log, "foo.two");
