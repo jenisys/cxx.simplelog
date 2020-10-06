@@ -6,6 +6,7 @@
 #pragma once
 
 // -- INCLUDES:
+#include <cassert>
 #include <string>
 #include <map>
 #include <memory>   //< USE: std::shared_ptr<T>, std::make_shared<T>()
@@ -40,7 +41,7 @@ protected:
 
     inline ModulePtr addModule_(const std::string& name)
     {
-        assert(!hasModule_(name));
+        assert(not hasModule_(name));
         auto newModulePtr = std::make_shared<Module>(name, getDefaultLevel());
         m_moduleMap.emplace(std::make_pair(name, newModulePtr));
         return newModulePtr;
