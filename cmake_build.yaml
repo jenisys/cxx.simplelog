@@ -18,10 +18,13 @@ cmake_defines:
   - CMAKE_EXPORT_COMPILE_COMMANDS: ON
 
 build_dir_schema: "build.{BUILD_CONFIG}"
-build_config: host_debug
+build_config: multi
 build_configs:
   - debug
   - release
+  - multi:
+      cmake_generator: ninja.multi
+
   - host_debug.clang:
       cmake_toolchain: cmake/toolchain/host_clang.cmake
   - host_release.clang:
@@ -34,8 +37,8 @@ build_configs:
       cmake_toolchain: cmake/toolchain/macOS_clang_x86_64.cmake
   - macOS_x86_64_release.clang:
       cmake_toolchain: cmake/toolchain/macOS_clang_x86_64.cmake
-  - host.ninja_multi:
-      cmake_generator: ninja-multi
+  - host_multi:
+      cmake_generator: ninja.multi
 
 run:
   echo: true
