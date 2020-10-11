@@ -18,10 +18,12 @@ __*.diff
 *.cpp.dump
 
 # -- DISABLED: GIT-SUBPROJECTS
-/lib/spdlog/
-/lib/fmt/
 /lib/doctest/
+/lib/fmt/
+/lib/spdlog/
+/lib/quill/
 
 # -- MANUAL COPIES: For a specific version.
-/lib/spdlog_v*/
+/lib/doctet_v*/
 /lib/fmt_v*/
+/lib/spdlog_v*/
