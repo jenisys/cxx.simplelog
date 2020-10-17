@@ -1,7 +1,7 @@
 # ===========================================================================
 # PYTHON PACKAGE REQUIREMENTS:
 # ===========================================================================
-# PRECONDITION: python 2.7.11 or newer is installed
+# PRECONDITION: python 2.7.16 or newer is installed
 # DESCRIPTION:
 #    cmake-build: Simplify building CMake projects on command-line.
 #    cmake:       Python package from cmake.org to simplify update of cmake.
@@ -30,7 +30,8 @@
 # MAYBE: git+https://github.com/jenisys/cmake-build@v0.1.13
 
 # git+https://github.com/jenisys/cmake-build
-https://github.com/jenisys/cmake-build/archive/v0.1.20.zip
+# OLDER: https://github.com/jenisys/cmake-build/archive/v0.1.20.zip
+https://github.com/jenisys/cmake-build/archive/v0.2.1.zip
 cmake >= 3.15
 
 # -- wstool: multi-repo tool for git, svn, ...
