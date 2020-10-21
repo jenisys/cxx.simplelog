@@ -40,7 +40,28 @@ set(FMT_INSTALL ${SIMPLELOG_USE_BUNDLED_FMTLIB} CACHE BOOL
                 "Normally include fmt from packages" FORCE)
 
 include(cxx.setup_project)
-include(cxx.use_sanitizer)
+# DISABLED: include(cxx.use_sanitizer)
+# -- WIP: Coverage
+# PROBLEMS:
+#   * Directory seems to be offset by one.
+#   * BASE_DIRECTORY
+#   * EXCLUDE: Does not filter-out things
+if(CODE_COVERAGE)
+    message(STATUS "Coverage: Setup coverage target for LCOV")
+    setup_target_for_coverage_lcov(NAME coverage
+        EXECUTABLE ${CMAKE_CTEST_COMMAND}
+        # BASE_DIRECTORY "./"
+        # BASE_DIRECTORY "../"
+        # BASE_DIRECTORY "../cxx.simplelog"
+        EXCLUDE
+            "tests/*"
+            "lib/*"
+            "${CMAKE_BINARY_DIR}/tests/*"
+            "${CMAKE_BINARY_DIR}/lib/*"
+            # "${CMAKE_CURRENT_SOURCE_DIR}/tests/*"
+            # "${CMAKE_CURRENT_SOURCE_DIR}/lib/*"
+    )
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: BOOTSTRAP -- When wstool update was not done yet

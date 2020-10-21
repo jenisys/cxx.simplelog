@@ -40,6 +40,13 @@ build_configs:
   - host_multi:
       cmake_generator: ninja.multi
 
+  # -- ALPHA:
+  - host_coverage:
+      cmake_build_type: Coverage
+  - coverage:
+      cmake_build_type: Coverage
+
+
 run:
   echo: true
   shell: /bin/sh

@@ -38,7 +38,7 @@ from contextlib import contextmanager
 # -- TASK-LIBRARY:
 from cmake_build import tasks as cmake_tasks
 from . import invoke_cleanup as cleanup
-
+from . import cxx
 
 # -----------------------------------------------------------------------------
 # TASKS:
@@ -51,6 +51,7 @@ from . import invoke_cleanup as cleanup
 namespace = Collection()
 namespace.add_collection(Collection.from_module(cmake_tasks, name="cmake"))
 namespace.add_collection(Collection.from_module(cleanup, name="cleanup"))
+namespace.add_collection(Collection.from_module(cxx))
 
 # -- INJECT: clean configuration into this namespace
 namespace.configure(cleanup.namespace.configuration())
