@@ -9,11 +9,13 @@
 
 namespace simplelog { namespace backend_syslog {
 
+#if 1
 //! Provides access to the ModuleRegistry instance.
 ModuleRegistry& getModuleRegistry()
 {
     static ModuleRegistry theRegistry;
     return theRegistry;
 }
+#endif
 
 }} //< NAMESPACE-END: simplelog::backend::syslog

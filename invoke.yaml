@@ -28,17 +28,23 @@ build_configs:
 # -- invoke:
 run:
     echo: true
-    shell: /bin/sh
-    pty:  true
+    # shell: /bin/sh
+    # pty:  true
 
 cleanup:
     extra_directories:
       - "build"
       - "build.*"
+    extra_files:
+      - "**/*.cpp.dump"
+      - "**/*.cpp.gcda"
 
 cleanup_all:
     extra_directories:
       - .pytest_cache
       - .installed
     extra_files:
-      - "__*.diff"
+      - "**/__*.diff"
+      - "**/cppcheck_report.xml"
+      - "**/report.xml"
+      - "**/*.gcov"

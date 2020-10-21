@@ -124,7 +124,7 @@ endforeach()
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
 set(SIMPLELOG_AUTO_RUN_EXAMPLES OFF)
-include(CTest)
+enable_testing()
 
 # -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
 set(test_examples_TARGET_MODE_ALL "")

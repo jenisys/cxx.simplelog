@@ -6,6 +6,7 @@
 #pragma once
 
 // -- INCLUDES:
+#include <cassert>
 #include <string>
 #include <map>
 #include <memory>   //< USE: std::shared_ptr<T>, std::make_shared<T>()
@@ -29,7 +30,7 @@ private:
     using ModuleMap = std::map<std::string, ModulePtr>;
     ModuleMap m_moduleMap;
     Level m_defaultLevel;
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
 
 protected:
     // -- INTERNAL METHODS: Assume multi-threading locked state.
@@ -40,7 +41,7 @@ protected:
 
     inline ModulePtr addModule_(const std::string& name)
     {
-        assert(!hasModule_(name));
+        assert(not hasModule_(name));
         auto newModulePtr = std::make_shared<Module>(name, getDefaultLevel());
         m_moduleMap.emplace(std::make_pair(name, newModulePtr));
         return newModulePtr;
@@ -69,21 +70,21 @@ public:
     inline void clear()
     {
         // -- CRITICAL-SECTION
-        const std::lock_guard<std::mutex> lock(m_mutex);
+        const std::lock_guard<std::mutex> guard(m_mutex);
         m_moduleMap.clear();
     }
 
     inline bool hasModule(const std::string& name) const
     {
         // -- CRITICAL-SECTION
-        const std::lock_guard<std::mutex> lock(m_mutex);
+        const std::lock_guard<std::mutex> guard(m_mutex);
         return hasModule_(name);
     }
 
     inline ModulePtr useOrCreateModule(const std::string& name)
     {
         // -- CRITICAL-SECTION
-        const std::lock_guard<std::mutex> lock(m_mutex);
+        const std::lock_guard<std::mutex> guard(m_mutex);
         auto moduleIter = m_moduleMap.find(name);
         if (moduleIter != m_moduleMap.end()) {
             return moduleIter->second;
