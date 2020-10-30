@@ -30,16 +30,22 @@
 # SEE ALSO: Multi-repo tools (for git)
 #   * https://github.com/vcstools/wstool
 #   * https://github.com/vcstools/wstool/blob/master/doc/wstool_usage.rst
+#   * https://github.com/dirk-thomas/vcstool
 #   * https://github.com/mateodelnorte/meta
 #   * https://medium.com/@patrickleet/mono-repo-or-multi-repo-why-choose-one-when-you-can-have-both-e9c77bd0c668
 # ===========================================================================
-# OLDER: https://github.com/jenisys/cmake-build/archive/v0.1.20.tar.gz
-# MAYBE: git+https://github.com/jenisys/cmake-build@v0.2.1
-
-# cmake-build >= 0.2.1
+# -- cmake-build >= 0.2.2
 # OR: git+https://github.com/jenisys/cmake-build
-# OR: https://github.com/jenisys/cmake-build/archive/v0.2.1.tar.gz
-git+https://github.com/jenisys/cmake-build@v0.2.1
+# OR: https://github.com/jenisys/cmake-build/archive/v0.2.2.tar.gz
+git+https://github.com/jenisys/cmake-build@v0.2.2
+
+# -- OPTIONAL: Use newer CMake and ninja version(s) with pip.
+# BASED ON:
+#   * https://github.com/scikit-build/cmake-python-distributions
+#   * https://github.com/scikit-build/ninja-python-distributions
+#   * https://cmake-python-distributions.readthedocs.io/en/latest/
+# cmake >= 3.18
+# ninja >= 1.10
 cmake >= 3.18
 
 # -- wstool: multi-repo tool for git, svn, ...
@@ -47,6 +53,7 @@ cmake >= 3.18
 # OR: https://github.com/vcstools/wstool/archive/0.1.18.tar.gz
 git+https://github.com/vcstools/wstool@0.1.18
 
+# MAYBE: vcstool >= 0.2.15
 # -- meta: multi-repo tool which supports to splitup monorepos in meta-repos/multi-repos.
 # INSTALL: npm install -g meta
 
