@@ -44,7 +44,10 @@ include(cxx.setup_project)
 # ---------------------------------------------------------------------------
 # SECTION: BOOTSTRAP -- When wstool update was not done yet
 # ---------------------------------------------------------------------------
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_project/bootstrap_subprojects_with_wstool.cmake")
+if(NOT DEFINED BOOTSTRAP_VARIANT)
+    set(BOOTSTRAP_VARIANT "wstool")
+endif()
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_project/bootstrap_subprojects_with_${BOOTSTRAP_VARIANT}.cmake")
 
 
 # ---------------------------------------------------------------------------
