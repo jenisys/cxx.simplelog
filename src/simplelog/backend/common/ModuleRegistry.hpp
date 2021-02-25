@@ -7,23 +7,22 @@
 
 // -- INCLUDES:
 #include <cassert>
-#include <string>
 #include <map>
-#include <memory>   //< USE: std::shared_ptr<T>, std::make_shared<T>()
+#include <memory> //< USE: std::shared_ptr<T>, std::make_shared<T>()
 #include <mutex>
-
+#include <string>
 
 // --------------------------------------------------------------------------
 // LOGGING MODULE
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_common {
+namespace simplelog {
+namespace backend_common {
 
 /**
  * @class ModuleRegistry
  * Provides a ModuleRegistry usable from the common cases.
  **/
-template<typename Module, typename Level=int>
-class ModuleRegistry
+template <typename Module, typename Level = int> class ModuleRegistry
 {
 private:
     using ModulePtr = std::shared_ptr<Module>;
@@ -34,12 +33,12 @@ private:
 
 protected:
     // -- INTERNAL METHODS: Assume multi-threading locked state.
-    inline bool hasModule_(const std::string& name) const
+    inline bool hasModule_(const std::string &name) const
     {
         return m_moduleMap.find(name) != m_moduleMap.end();
     }
 
-    inline ModulePtr addModule_(const std::string& name)
+    inline ModulePtr addModule_(const std::string &name)
     {
         assert(not hasModule_(name));
         auto newModulePtr = std::make_shared<Module>(name, getDefaultLevel());
@@ -48,18 +47,17 @@ protected:
     }
 
 public:
-    ModuleRegistry()
-        : m_moduleMap(), m_defaultLevel(), m_mutex()
+    ModuleRegistry() : m_moduleMap(), m_defaultLevel(), m_mutex()
     {
         // -- CRITICAL-SECTION
         const std::lock_guard<std::mutex> lock(m_mutex);
         addModule_("");
     }
     ~ModuleRegistry() = default;
-    ModuleRegistry(const ModuleRegistry& other) = delete;
-    ModuleRegistry(const ModuleRegistry&& other) = delete;
-    ModuleRegistry& operator=(const ModuleRegistry& other) = delete;
-    ModuleRegistry& operator=(const ModuleRegistry&& other) = delete;
+    ModuleRegistry(const ModuleRegistry &other) = delete;
+    ModuleRegistry(const ModuleRegistry &&other) = delete;
+    ModuleRegistry &operator=(const ModuleRegistry &other) = delete;
+    ModuleRegistry &operator=(const ModuleRegistry &&other) = delete;
 
     inline Level getDefaultLevel() const { return m_defaultLevel; }
     inline void setDefaultLevel(Level value) { m_defaultLevel = value; }
@@ -74,14 +72,14 @@ public:
         m_moduleMap.clear();
     }
 
-    inline bool hasModule(const std::string& name) const
+    inline bool hasModule(const std::string &name) const
     {
         // -- CRITICAL-SECTION
         const std::lock_guard<std::mutex> guard(m_mutex);
         return hasModule_(name);
     }
 
-    inline ModulePtr useOrCreateModule(const std::string& name)
+    inline ModulePtr useOrCreateModule(const std::string &name)
     {
         // -- CRITICAL-SECTION
         const std::lock_guard<std::mutex> guard(m_mutex);
@@ -92,24 +90,23 @@ public:
         return addModule_(name);
     }
 
-    template<typename Callable>
-    inline void applyToModules(Callable func)
+    template <typename Callable> inline void applyToModules(Callable func)
     {
         // -- CRITICAL-SECTION
         const std::lock_guard<std::mutex> lock(m_mutex);
-        for (auto& moduleItem : m_moduleMap) {
+        for (auto &moduleItem : m_moduleMap) {
             auto modulePtr = moduleItem.second;
             func(modulePtr);
         }
     }
 
-    template<typename Callable, typename Predicate>
-    inline void applyToModuleIf(Predicate&& predicate, Callable&& func)
+    template <typename Callable, typename Predicate>
+    inline void applyToModuleIf(Predicate &&predicate, Callable &&func)
     {
         // -- CRITICAL-SECTION
         const std::lock_guard<std::mutex> lock(m_mutex);
-        for (auto& moduleItem : m_moduleMap) {
-            auto& modulePtr = moduleItem.second;
+        for (auto &moduleItem : m_moduleMap) {
+            auto &modulePtr = moduleItem.second;
             if (predicate(modulePtr)) {
                 func(modulePtr);
             }
@@ -117,4 +114,5 @@ public:
     }
 };
 
-}} //< NAMESPACE-END: simplelog::backend_common
+} // namespace backend_common
+} // namespace simplelog

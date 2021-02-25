@@ -11,14 +11,14 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/sink.h>
 #include <spdlog/sinks/null_sink.h>
 
+#include <spdlog/sinks/sink.h>
+#include <spdlog/spdlog.h>
 
 // -- LOCAL-INCLUDES:
-#include "CleanupLoggingFixture.hpp"
 #include "../test_support/doctest.stringify_std.vector.hpp"
+#include "CleanupLoggingFixture.hpp"
 
 namespace {
 
@@ -48,12 +48,14 @@ void assert_loggerHasSameSink(LoggerPtr logger, SinkPtr sink)
     CHECK_EQ(logger->sinks().front(), sink);
 }
 
-void assert_loggerHasSameSinks(LoggerPtr logger, const Sinks& sinks)
+#if 0
+void assert_loggerHasSameSinks(LoggerPtr logger, const Sinks &sinks)
 {
     CHECK_NE(logger, nullptr);
     CHECK_EQ(logger->sinks(), sinks);
     CHECK_EQ(logger->sinks().size(), sinks.size());
 }
+#endif
 
 // ============================================================================
 // TEST SUITE:
@@ -104,8 +106,8 @@ TEST_CASE("setMinLevel: Keeps logger.level if logger.level >= min_level")
 
 TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
 {
-    using simplelog::backend_spdlog::useOrCreateLogger;
     using simplelog::backend_spdlog::LoggerPtr;
+    using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;
     const auto DESIRED_LEVEL = SIMPLELOG_BACKEND_LEVEL_WARN;
     const auto LOG_LEVEL = SIMPLELOG_BACKEND_LEVEL_ERROR;
@@ -114,9 +116,7 @@ TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
 
     // -- PERFORM-TEST: logger.level == min_level
     // C++14: auto hasSameName = [](auto log) {
-    auto hasSameName = [](LoggerPtr log) {
-        return log->name() == "foo";
-    };
+    auto hasSameName = [](LoggerPtr log) { return log->name() == "foo"; };
     simplelog::backend_spdlog::setLevelToAny(DESIRED_LEVEL, hasSameName);
     CHECK_EQ(hasSameName(logger), true);
     CHECK_EQ(logger->level(), DESIRED_LEVEL);
@@ -125,8 +125,8 @@ TEST_CASE("setLevelToAny: Should assigns level if predicate is true")
 
 TEST_CASE("setLevelToAny: Should keep level if predicate is false")
 {
-    using simplelog::backend_spdlog::useOrCreateLogger;
     using simplelog::backend_spdlog::LoggerPtr;
+    using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;
     const auto DESIRED_LEVEL = SIMPLELOG_BACKEND_LEVEL_WARN;
     const auto LOG_LEVEL = SIMPLELOG_BACKEND_LEVEL_ERROR;
@@ -135,9 +135,7 @@ TEST_CASE("setLevelToAny: Should keep level if predicate is false")
 
     // -- PERFORM-TEST: logger.level == min_level
     // C++14: auto hasOthergName = [](auto log) {
-    auto hasOthergName = [](LoggerPtr log) {
-        return log->name() == "other";
-    };
+    auto hasOthergName = [](LoggerPtr log) { return log->name() == "other"; };
     simplelog::backend_spdlog::setLevelToAny(DESIRED_LEVEL, hasOthergName);
     CHECK_EQ(hasOthergName(logger), false);
     CHECK_EQ(logger->level(), LOG_LEVEL);
@@ -156,17 +154,17 @@ TEST_CASE("assignSink: Should assign new sink to all loggers")
     simplelog::backend_spdlog::assignSink(theSink);
 
     // -- VERIFY:
-    const Sinks EXPECTED_SINKS{ theSink };
+    const Sinks EXPECTED_SINKS{theSink};
     INFO("logger1.sinks: " << logger1->name());
     CHECK_EQ(logger1->sinks(), EXPECTED_SINKS);
     CHECK_EQ(logger1->sinks().front(), theSink);
-    INFO("logger2.sinks: "<< logger2->name());
+    INFO("logger2.sinks: " << logger2->name());
     CHECK_EQ(logger2->sinks(), EXPECTED_SINKS);
     CHECK_EQ(logger2->sinks().front(), theSink);
 
     INFO("ENSURE: All logger.sinks are same.");
     ::spdlog::apply_all([&](LoggerPtr log) {
-        INFO("ALL_LOGGERS.sinks: log="<< log->name());
+        INFO("ALL_LOGGERS.sinks: log=" << log->name());
         CHECK_EQ(log->sinks(), EXPECTED_SINKS);
         assert_loggerHasSameSink(log, theSink);
         // assert_loggerHasSameSinks(log, EXPECTED_SINKS);
@@ -176,7 +174,7 @@ TEST_CASE("assignSink: Should assign new sink to all loggers")
 TEST_CASE("assignSink: Assigned sink should be inherited by new loggers")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
-    using DefaultSink = spdlog::sinks::null_sink_mt;
+    // XXX using DefaultSink = spdlog::sinks::null_sink_mt;
     CleanupLoggingFixture cleanupGuard;
     auto theSink = std::make_shared<spdlog::sinks::null_sink_mt>();
     auto logger1 = useOrCreateLogger("foo_1");
@@ -184,20 +182,20 @@ TEST_CASE("assignSink: Assigned sink should be inherited by new loggers")
     // -- ACT:
     simplelog::backend_spdlog::assignSink(theSink);
     auto logger2 = useOrCreateLogger("new_1");
-    // auto logger2  = spdlog::create<DefaultSink>("new_1");
+    // XXX auto logger2  = spdlog::create<DefaultSink>("new_1");
 
     // -- VERIFY:
-    const Sinks EXPECTED_SINKS{ theSink };
+    const Sinks EXPECTED_SINKS{theSink};
     INFO("logger1.sinks: " << logger1->name());
     CHECK_EQ(logger1->sinks(), EXPECTED_SINKS);
     CHECK_EQ(logger1->sinks().front(), theSink);
-    INFO("logger2.sinks: "<< logger2->name());
+    INFO("logger2.sinks: " << logger2->name());
     CHECK_EQ(logger2->sinks(), EXPECTED_SINKS);
     CHECK_EQ(logger2->sinks().front(), theSink);
 
     INFO("ENSURE: All logger.sinks are same.");
     ::spdlog::apply_all([&](LoggerPtr log) {
-        INFO("ALL_LOGGERS.sinks: log="<< log->name());
+        INFO("ALL_LOGGERS.sinks: log=" << log->name());
         CHECK_EQ(log->sinks(), EXPECTED_SINKS);
         assert_loggerHasSameSink(log, theSink);
         // assert_loggerHasSameSinks(log, EXPECTED_SINKS);
@@ -215,27 +213,27 @@ TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
     auto logger3 = useOrCreateLogger("foo_3");
 
     // -- ACT:
-    const auto& hasLoggerSameName = [](LoggerPtr log) {
+    const auto &hasLoggerSameName = [](LoggerPtr log) {
         return log->name() == "foo_2";
     };
     simplelog::backend_spdlog::assignSink(sink1);
     simplelog::backend_spdlog::assignSinkToAny(sink2, hasLoggerSameName);
 
     // -- VERIFY: Only logger2.sinks == EXPECTED_SINKS2
-    const Sinks EXPECTED_SINKS1{ sink1 };
-    const Sinks EXPECTED_SINKS2{ sink2 };
+    const Sinks EXPECTED_SINKS1{sink1};
+    const Sinks EXPECTED_SINKS2{sink2};
     INFO("logger1.sinks: " << logger1->name());
     CHECK(logger1->sinks() == EXPECTED_SINKS1);
-    INFO("logger2.sinks: "<< logger2->name());
+    INFO("logger2.sinks: " << logger2->name());
     CHECK(logger2->sinks() == EXPECTED_SINKS2);
-    INFO("logger3.sinks: "<< logger3->name());
+    INFO("logger3.sinks: " << logger3->name());
     CHECK(logger3->sinks() == EXPECTED_SINKS1);
 
     INFO("OTHER_LOGGERS use sink=sink1");
     ::spdlog::apply_all([&](LoggerPtr log) {
         // if (log->name() != "foo_2") {
         if (!hasLoggerSameName(log)) {
-            INFO("OTHER_LOGGERS.sinks: log="<< log->name());
+            INFO("OTHER_LOGGERS.sinks: log=" << log->name());
             CHECK(log->sinks() == EXPECTED_SINKS1);
         }
     });
@@ -247,13 +245,13 @@ TEST_CASE("assignSinks: Should assign several sinks to all loggers")
     CleanupLoggingFixture cleanupGuard;
     auto sink1 = std::make_shared<spdlog::sinks::stdout_sink_mt>();
     auto sink2 = std::make_shared<spdlog::sinks::null_sink_mt>();
-    const Sinks EXPECTED_SINKS{ sink1, sink2 };
-
+    const Sinks EXPECTED_SINKS{sink1, sink2};
 
     // -- ACT:
     auto console = spdlog::stdout_color_mt("console");
     auto logger0 = spdlog::default_logger();
-    // NOT-WORKING YET: Sinks are not inherited by loggers when sinks are assigned EARLY.
+    // NOT-WORKING YET: Sinks are not inherited by loggers when sinks are
+    // assigned EARLY.
     simplelog::backend_spdlog::assignSinks(EXPECTED_SINKS);
     auto logger1 = useOrCreateLogger("foo_1");
     auto logger2 = useOrCreateLogger("foo_2");
@@ -266,12 +264,12 @@ TEST_CASE("assignSinks: Should assign several sinks to all loggers")
     CHECK(logger1->sinks() == EXPECTED_SINKS);
     // CHECK(logger1->sinks().front() == sink1);
     // CHECK(logger1->sinks().back()  == sink2);
-    INFO("logger2.sinks: "<< logger2->name());
+    INFO("logger2.sinks: " << logger2->name());
     CHECK_EQ(logger2->sinks(), EXPECTED_SINKS);
 
     INFO("ENSURE: ALL_LOGGERS.sinks are same.");
     ::spdlog::apply_all([&](LoggerPtr log) {
-        INFO("ALL_LOGGERS.sinks: log="<< log->name());
+        INFO("ALL_LOGGERS.sinks: log=" << log->name());
         CHECK_EQ(log->sinks(), EXPECTED_SINKS);
     });
 }
@@ -315,5 +313,5 @@ TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
 }
 
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

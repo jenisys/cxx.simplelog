@@ -11,21 +11,22 @@
 #pragma once
 
 // -- INCLUDES:
-#include "simplelog/backend/syslog/Module.hpp"
 #include "simplelog/backend/common/ModuleRegistry.hpp"
-#include <memory>
+#include "simplelog/backend/syslog/Module.hpp"
 
+#include <memory>
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND ADAPTER HELPERS
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_syslog {
+namespace simplelog {
+namespace backend_syslog {
 
 using ModulePtr = std::shared_ptr<simplelog::backend_syslog::Module>;
 using ModuleRegistry = simplelog::backend_common::ModuleRegistry<Module>;
 
 // -- FORWARD-DECLARATION:
-ModuleRegistry& getModuleRegistry();
+ModuleRegistry &getModuleRegistry();
 #if 0
 ModuleRegistry& getModuleRegistry()
 {
@@ -34,9 +35,10 @@ ModuleRegistry& getModuleRegistry()
 }
 #endif
 
-inline ModulePtr useOrCreateModule(const std::string& name)
+inline ModulePtr useOrCreateModule(const std::string &name)
 {
     return getModuleRegistry().useOrCreateModule(name);
 }
 
-}} //< NAMESPACE-END: simplelog::backend::spdlog
+} // namespace backend_syslog
+} // namespace simplelog

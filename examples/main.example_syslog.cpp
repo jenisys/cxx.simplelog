@@ -12,16 +12,18 @@
 // #include "simplelog/config.hpp"
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/detail/StringifyMacro.hpp"
-#include <syslog.h>
+
 #include <fmt/format.h> // -- USE: fmt::format()
+
+#include <syslog.h>
 
 // -- SANITY-CHECK: SIMPLEGEN-SELECT-BACKEND
 #if !(defined(SIMPLELOG_USE_BACKEND_SYSLOG) && (SIMPLELOG_USE_BACKEND == 2))
-#   pragma message("SIMPLELOG_USE_BACKEND_SYSLOG=" STRINGIFY(SIMPLELOG_USE_BACKEND_SYSLOG))
-#   pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
-#   error "NOT-DEFINED: SIMPLELOG_USE_BACKEND_SYSLOG"
+#    pragma message("SIMPLELOG_USE_BACKEND_SYSLOG=" STRINGIFY(                 \
+        SIMPLELOG_USE_BACKEND_SYSLOG))
+#    pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
+#    error "NOT-DEFINED: SIMPLELOG_USE_BACKEND_SYSLOG"
 #endif
-
 
 // ==========================================================================
 // EXAMPLE: Logging sources/users
@@ -56,7 +58,6 @@ void example_useLoggingWithOverriddenDefaultModule(void)
     SLOG_WARN("Use module=OUTER (again, after scope-exit)");
 }
 
-
 // ==========================================================================
 // EXAMPLE: Use logging subsystem (see above)
 // ==========================================================================
@@ -75,20 +76,18 @@ void use_simplelog(void)
 // ==========================================================================
 // MAIN-FUNCTION: Setup logging subsystem
 // ==========================================================================
-#include <simplelog/backend/syslog/ModuleRegistry.hpp>
 #include <simplelog/backend/syslog/Module.hpp>
+#include <simplelog/backend/syslog/ModuleRegistry.hpp>
 
 void process_setupLogging(void)
 {
     // using namespace simplelog::backend_syslog;
-    using simplelog::backend_syslog::useOrCreateModule;
     using simplelog::backend_syslog::getModuleRegistry;
-    auto& registry = getModuleRegistry();
+    using simplelog::backend_syslog::useOrCreateModule;
+    auto &registry = getModuleRegistry();
 
     registry.setDefaultLevel(LOG_INFO);
-    registry.applyToModules([](auto module) {
-        module->setLevel(LOG_INFO);
-    });
+    registry.applyToModules([](auto module) { module->setLevel(LOG_INFO); });
 
     // -- SPECIFIC SETUP: OVERRIDE CONFIG FOR SPECIFIC MODULES: log-level, ...
     auto module1 = useOrCreateModule("foo.bar");

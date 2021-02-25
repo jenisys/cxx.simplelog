@@ -10,19 +10,18 @@
 
 // -- INCLUDES:
 // ALREADY: #define SIMPLELOG_USE_BACKEND_SPDLOG 1
-#include "simplelog/LogMacros.hpp"
-#include "simplelog/detail/StringifyMacro.hpp"
+#include <simplelog/LogMacros.hpp>
+// FIXME #include <simplelog/detail/StringifyMacro.hpp>
 // -- SPECIAL CASE:
 // PREPARED: #include "fmt/format.h" // -- USE: fmt::format()
 
-
 // -- SANITY-CHECK: SIMPLEGEN-SELECT-BACKEND
 #if !(defined(SIMPLELOG_USE_BACKEND_SPDLOG) && (SIMPLELOG_USE_BACKEND == 1))
-#   pragma message("SIMPLELOG_USE_BACKEND_SPDLOG=" STRINGIFY(SIMPLELOG_USE_BACKEND_SPDLOG))
-#   pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
-#   error "NOT-DEFINED: SIMPLELOG_USE_BACKEND_SPDLOG"
+#    pragma message("SIMPLELOG_USE_BACKEND_SPDLOG=" STRINGIFY(                 \
+        SIMPLELOG_USE_BACKEND_SPDLOG))
+#    pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
+#    error "NOT-DEFINED: SIMPLELOG_USE_BACKEND_SPDLOG"
 #endif
-
 
 // ==========================================================================
 // EXAMPLE: Logging sources/users
@@ -83,7 +82,7 @@ void example_useTwoLoggersWithSameName(void)
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
 
     SLOGM_ERROR(log1, "Use Logger_1");
-    SLOGM_WARN( log2, "Use Logger_2");
+    SLOGM_WARN(log2, "Use Logger_2");
 }
 
 // std::shared_ptr<spdlog::logger>
@@ -101,11 +100,10 @@ void example_useStaticLogger(void)
     SLOGM_ERROR(log, "Hello Alice");
 }
 
-
 // ==========================================================================
 // EXAMPLE: Use logging subsystem (see above)
 // ==========================================================================
-#include "simplelog/backend/spdlog/SetupUtil.hpp"  //< USE: setMinLevel()
+#include "simplelog/backend/spdlog/SetupUtil.hpp" //< USE: setMinLevel()
 
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
@@ -134,11 +132,12 @@ void use_simplelog(void)
 // ==========================================================================
 // MAIN-FUNCTION: Setup logging subsystem
 // ==========================================================================
-#include <simplelog/backend/spdlog/SetupUtil.hpp>   //< USE: assignSink(), ...
-#include <simplelog/backend/spdlog/ModuleUtil.hpp>  //< USE: useOrCreateLogger()
-#include <spdlog/sinks/stdout_sinks.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/stdout_sinks.h>
+
 #include <iostream>
+#include <simplelog/backend/spdlog/ModuleUtil.hpp> //< USE: useOrCreateLogger()
+#include <simplelog/backend/spdlog/SetupUtil.hpp>  //< USE: assignSink(), ...
 
 void process_setupLogging(void)
 {
@@ -146,9 +145,11 @@ void process_setupLogging(void)
     auto console = spdlog::stdout_color_mt("console");
     auto theSink = console->sinks().front();
 
-    // -- GLOBAL SETUP: Define log-sink(s), formatter pattern and DEFAULT log-level.
-    // SEE: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
-    // PATTERN SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>  <message>
+    // -- GLOBAL SETUP: Define log-sink(s), formatter pattern and DEFAULT
+    // log-level. SEE:
+    // https://github.com/gabime/spdlog/wiki/3.-Custom-formatting#pattern-flags
+    // PATTERN SCHEMA: <ISO_DATE>_<ISO_TIME>.<microseconds> <name>::<level>
+    // <message>
     simplelog::backend_spdlog::assignSink(theSink);
     spdlog::set_pattern("%Y-%m-%d_%T.%f  %^%10n::%-7l%$  %v");
     spdlog::set_level(spdlog::level::warn);

@@ -10,14 +10,13 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 
-
 // ==========================================================================
 // DOCTEST EXTENSION: XML REPORTER (Blueprint only)
 // ==========================================================================
 // SEE: https://github.com/onqtam/doctest/blob/master/doc/markdown/reporters.md
 namespace doctest_ext {
 
-    using namespace doctest;
+using namespace doctest;
 
 #if 0
     struct XmlReporter : public IReporter
@@ -48,14 +47,13 @@ namespace doctest_ext {
     };
 #endif
 
-} //< NAMESPACE-END: doctest_ext
+} // namespace doctest_ext
 
 namespace {
-    using namespace doctest;
+using namespace doctest;
 
 #if 0
     doctest_ext::XmlReporter xmlReporter4Doctest(std::cout);
     DOCTEST_REGISTER_REPORTER("xml", 1, xmlReporter4Doctest);
 #endif
-}
-
+} // namespace

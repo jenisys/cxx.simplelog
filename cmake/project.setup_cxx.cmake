@@ -33,7 +33,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/cxx.setup_cxx_standard.cmake")
 # DISABLED: include("${CMAKE_CURRENT_LIST_DIR}/project.build_config.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/build_config.cmake")
 
-
 # ----------------------------------------------------------------------------
 # CMAKE PROJECT-SPECIFIC SETUP:
 # ----------------------------------------------------------------------------

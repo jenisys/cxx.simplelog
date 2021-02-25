@@ -13,13 +13,14 @@
 // -- INCLUDES:
 #include "simplelog/backend/common/ModuleBase.hpp"
 #include <systemd/sd-journal.h>
-#include <fmt/format.h>
 
+#include <fmt/format.h>
 
 // --------------------------------------------------------------------------
 // LOGGING MODULE
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_systemd_journal {
+namespace simplelog {
+namespace backend_systemd_journal {
 
 /**
  * @class Module
@@ -31,10 +32,10 @@ namespace simplelog { namespace backend_systemd_journal {
 class Module : public simplelog::backend_common::ModuleBase
 {
 public:
-    explicit Module(const std::string& name="")
+    explicit Module(const std::string &name = "")
         : simplelog::backend_common::ModuleBase(name, LOG_WARNING)
     {}
-    explicit Module(const std::string& name, int level)
+    explicit Module(const std::string &name, int level)
         : simplelog::backend_common::ModuleBase(name, level)
     {}
 
@@ -51,8 +52,7 @@ public:
         }
     }
 
-    template<typename... Args>
-    void log(int level, const Args& ... args)
+    template <typename... Args> void log(int level, const Args &...args)
     {
         if (isLevelEnabled(level)) {
             // -- HINT: Need format string part and args.
@@ -64,4 +64,5 @@ public:
     }
 };
 
-}} //< NAMESPACE-END: simplelog::backend_systemd_journal
+} // namespace backend_systemd_journal
+} // namespace simplelog

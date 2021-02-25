@@ -32,17 +32,18 @@ set(CMAKE_REQUIRED_QUIET_SAVE ${CMAKE_REQUIRED_QUIET})
 set(CMAKE_REQUIRED_QUIET ${Syslog_FIND_QUIETLY})
 
 if(CMAKE_C_COMPILER_LOADED)
-  include(CheckIncludeFile)
-  include(CheckCSourceCompiles)
+    include(CheckIncludeFile)
+    include(CheckCSourceCompiles)
 elseif(CMAKE_CXX_COMPILER_LOADED)
-  include(CheckIncludeFileCXX)
-  include(CheckCXXSourceCompiles)
+    include(CheckIncludeFileCXX)
+    include(CheckCXXSourceCompiles)
 else()
-  message(FATAL_ERROR "FindSystemd: Only works if either C or CXX language is enabled")
+    message(FATAL_ERROR "FindSystemd: Only works if either C or CXX language is enabled")
 endif()
 
 # simple pthread test code
-set(SYSTEMD_C_CXX_TEST_SOURCE [====[
+set(SYSTEMD_C_CXX_TEST_SOURCE
+    [====[
 #include <systemd/sd-journal.h>
 
 int main(void)
@@ -50,12 +51,13 @@ int main(void)
     sd_journal_print(LOG_INFO, "Hello systemd");
     return 0;
 }
-]====])
+]====]
+)
 
 if(CMAKE_C_COMPILER_LOADED)
-    CHECK_INCLUDE_FILE("systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
+    check_include_file("systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
 else()
-    CHECK_INCLUDE_FILE_CXX("systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
+    check_include_file_cxx("systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
 endif()
 
 if(CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)

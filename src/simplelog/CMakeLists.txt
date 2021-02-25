@@ -8,10 +8,8 @@
 # -- HEADER-ONLY LIBRARY:
 add_library(simplelog INTERFACE)
 add_library(${PROJECT_NAMESPACE}::simplelog ALIAS simplelog)
-target_include_directories(simplelog
-    INTERFACE
-        $<BUILD_INTERFACE:${SIMPLELOG_INCLUDE_DIR}>
-        $<INSTALL_INTERFACE:include>
+target_include_directories(
+    simplelog INTERFACE $<BUILD_INTERFACE:${SIMPLELOG_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>
 )
 # -- SIMPLELOG DEFAULT-BACKEND:
 # if(SIMPLELOG_USE_BACKEND_SPDLOG)

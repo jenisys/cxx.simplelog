@@ -9,14 +9,16 @@
 
 // -- INCLUDES:
 #include "simplelog/backend/common/ModuleBase.hpp"
-#include <syslog.h>
+
 #include <fmt/format.h>
 
+#include <syslog.h>
 
 // --------------------------------------------------------------------------
 // LOGGING MODULE
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_syslog {
+namespace simplelog {
+namespace backend_syslog {
 
 /**
  * @class Module
@@ -30,10 +32,10 @@ namespace simplelog { namespace backend_syslog {
 class Module : public simplelog::backend_common::ModuleBase
 {
 public:
-    explicit Module(const std::string& name="")
+    explicit Module(const std::string &name = "")
         : simplelog::backend_common::ModuleBase(name, LOG_WARNING)
     {}
-    explicit Module(const std::string& name, int level)
+    explicit Module(const std::string &name, int level)
         : simplelog::backend_common::ModuleBase(name, level)
     {}
 
@@ -51,8 +53,7 @@ public:
         }
     }
 
-    template<typename... Args>
-    void log(int level, const Args& ... args)
+    template <typename... Args> void log(int level, const Args &...args)
     {
         if (isLevelEnabled(level)) {
             // -- HINT: Need format string part and args.
@@ -63,4 +64,5 @@ public:
     }
 };
 
-}} //< NAMESPACE-END: simplelog::backend_syslog
+} // namespace backend_syslog
+} // namespace simplelog

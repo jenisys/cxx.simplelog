@@ -9,16 +9,19 @@
 #pragma once
 
 // --------------------------------------------------------------------------
-// SIMPLELOG BACKEND SELECTED: Include "simplelog/backend/.../LogBackendMacros.hpp"
+// SIMPLELOG BACKEND SELECTED: Include
+// "simplelog/backend/.../LogBackendMacros.hpp"
 // --------------------------------------------------------------------------
-// EXAMPLE: SIMPLELOG_BACKEND_MACROS_HEADER_FILE = "simplelog/backend/null/LogBackendMacros.hpp"
+// EXAMPLE: SIMPLELOG_BACKEND_MACROS_HEADER_FILE =
+// "simplelog/backend/null/LogBackendMacros.hpp"
 #include "simplelog/detail/SelectLogBackend.hpp"
 #include SIMPLELOG_BACKEND_MACROS_HEADER_FILE
 
 #if SIMPLELOG_VERBOSE
-#include "simplelog/detail/StringifyMacro.hpp"
-#pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
-#pragma message("SIMPLELOG_BACKEND_MACROS_HEADER_FILE=" STRINGIFY(SIMPLELOG_BACKEND_MACROS_HEADER_FILE))
+#    include "simplelog/detail/StringifyMacro.hpp"
+#    pragma message("SIMPLELOG_USE_BACKEND=" STRINGIFY(SIMPLELOG_USE_BACKEND))
+#    pragma message("SIMPLELOG_BACKEND_MACROS_HEADER_FILE=" STRINGIFY(         \
+        SIMPLELOG_BACKEND_MACROS_HEADER_FILE))
 #endif
 
 // -- OLD IMPLEMEMENTATION:

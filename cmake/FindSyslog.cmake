@@ -31,17 +31,18 @@ set(CMAKE_REQUIRED_QUIET_SAVE ${CMAKE_REQUIRED_QUIET})
 set(CMAKE_REQUIRED_QUIET ${Syslog_FIND_QUIETLY})
 
 if(CMAKE_C_COMPILER_LOADED)
-  include(CheckIncludeFile)
-  include(CheckCSourceCompiles)
+    include(CheckIncludeFile)
+    include(CheckCSourceCompiles)
 elseif(CMAKE_CXX_COMPILER_LOADED)
-  include(CheckIncludeFileCXX)
-  include(CheckCXXSourceCompiles)
+    include(CheckIncludeFileCXX)
+    include(CheckCXXSourceCompiles)
 else()
-  message(FATAL_ERROR "FindSyslog: Only works if either C or CXX language is enabled")
+    message(FATAL_ERROR "FindSyslog: Only works if either C or CXX language is enabled")
 endif()
 
 # simple pthread test code
-set(SYSLOG_C_CXX_TEST_SOURCE [====[
+set(SYSLOG_C_CXX_TEST_SOURCE
+    [====[
 #include <syslog.h>
 
 int main(void)
@@ -51,12 +52,13 @@ int main(void)
     closelog();
     return 0;
 }
-]====])
+]====]
+)
 
 if(CMAKE_C_COMPILER_LOADED)
-    CHECK_INCLUDE_FILE("syslog.h" CMAKE_HAVE_SYSLOG_H)
+    check_include_file("syslog.h" CMAKE_HAVE_SYSLOG_H)
 else()
-    CHECK_INCLUDE_FILE_CXX("syslog.h" CMAKE_HAVE_SYSLOG_H)
+    check_include_file_cxx("syslog.h" CMAKE_HAVE_SYSLOG_H)
 endif()
 
 if(CMAKE_HAVE_SYSLOG_H)

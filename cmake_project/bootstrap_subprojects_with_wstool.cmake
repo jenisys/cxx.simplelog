@@ -15,11 +15,7 @@
 # ===========================================================================
 
 set(GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
-set(GIT_SUBPROJECT_DIRS
-    lib/spdlog
-    lib/fmt
-    lib/doctest
-)
+set(GIT_SUBPROJECT_DIRS lib/spdlog lib/fmt lib/doctest)
 
 # -----------------------------------------------------------------------------
 # PRECONDITIONS:
@@ -31,12 +27,12 @@ if(WSTOOL STREQUAL "WSTOOL-NOTFOUND")
     message(FATAL_ERROR "PROGRAM-NOT-FOUND: wstool; USE: sudo pip install -r py.requirements.txt")
 endif()
 
-
 # -----------------------------------------------------------------------------
 # TARGETS:
 # -----------------------------------------------------------------------------
 # HINT: Manually trigger update of subprojects in build-script.
-add_custom_target(wstool-update
+add_custom_target(
+    wstool-update
     COMMAND wstool update
     BYPRODUCTS ${GIT_SUBPROJECT_DIRS}
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -49,8 +45,8 @@ add_custom_target(wstool-update
 # HINT: Must be executed immediatly before other CMake parts (that depend on it).
 if(NOT EXISTS "${GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE}")
     message(STATUS "REQUIRES-WSTOOL-UPDATE: Checkout subprojects => lib/spdlog, ...")
-    execute_process(COMMAND wstool update
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    execute_process(
+        COMMAND wstool update WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         # DISABLED: TIMEOUT 600  # ABORT-AFTER: 10*60 seconds in OFFLINE mode
     )
 endif()

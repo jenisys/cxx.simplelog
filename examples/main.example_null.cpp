@@ -6,8 +6,8 @@
 // -- INCLUDES:
 #define SIMPLELOG_USE_BACKEND_NULL 1
 #include "simplelog/LogMacros.hpp"
-#include <iostream>
 
+#include <iostream>
 
 // ==========================================================================
 // EXAMPLE
@@ -38,7 +38,7 @@ void example_useTwoLoggersWithSameName(void)
     SIMPLELOG_DEFINE_MODULE(log2, "foo.same");
 
     SLOGM_ERROR0(log1, "Logger_1");
-    SLOGM_WARN0(log2,  "Logger_2");
+    SLOGM_WARN0(log2, "Logger_2");
 }
 
 // HINT: C++11 needs trailing-return-type specification, C++14 not.
@@ -51,10 +51,9 @@ auto getStaticLogger(void) -> simplelog::backend_null::LoggerPtr
 
 void example_useStaticLogger(void)
 {
-    auto log = getStaticLogger();   // cppcheck-suppress: [unreadVariable]
+    auto log = getStaticLogger(); // cppcheck-suppress: [unreadVariable]
     SLOGM_ERROR0(log, "Hello Alice");
 }
-
 
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
@@ -63,7 +62,7 @@ SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 // ==========================================================================
 void use_simplelog(void)
 {
-    std::cout << "NULL-EXAMPLE: No output expected."<< std::endl;
+    std::cout << "NULL-EXAMPLE: No output expected." << std::endl;
 
     example_useLogging();
     example_useTwoLoggers();

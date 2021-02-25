@@ -27,7 +27,7 @@ set(CMAKE_SYSTEM_PROCESSOR ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
 set(CMAKE_CXX_COMPILER "${__TOOLCHAIN_PREFIX}/bin/clang++")
 if(EXISTS "${__TOOLCHAIN_PREFIX}/bin/clang")
-    set(CMAKE_C_COMPILER   "${__TOOLCHAIN_PREFIX}/bin/clang")
+    set(CMAKE_C_COMPILER "${__TOOLCHAIN_PREFIX}/bin/clang")
 endif()
 include_directories(BEFORE SYSTEM ${__TOOLCHAIN_PREFIX}/include)
 # set(CMAKE_SYSROOT "${__TOOLCHAIN_PREFIX}")

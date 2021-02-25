@@ -4,14 +4,13 @@
  * @author Jens Engel
  **/
 
-
 // -- INCLUDES:
-#include "simplelog/LogMacros.hpp"
-#include "doctest/doctest.h"
 #include "../test_support/CaptureOutputStream.hpp"
+#include "doctest/doctest.h"
+#include "simplelog/LogMacros.hpp"
 
 // -- MORE-INCLUDES:
-#include <memory>   //< USE: std::shared_ptr<T>
+#include <memory> //< USE: std::shared_ptr<T>
 #include <sstream>
 
 namespace {
@@ -22,11 +21,9 @@ namespace {
 const bool NO_SHORT_MACROS = (SIMPLELOG_HAVE_SHORT_MACROS == 0);
 const std::string EMPTY_STRING{};
 
-
 // ============================================================================
 // TEST SUPPORT:
 // ============================================================================
-
 
 // ============================================================================
 // TEST SUITE:
@@ -56,13 +53,13 @@ TEST_CASE("LogMacros: can use all macros")
     captured.clear();
 
     captured.enable();
-    SIMPLELOG_WARN( "USE_LEVEL: WARN");
+    SIMPLELOG_WARN("USE_LEVEL: WARN");
     captured.disable();
     CHECK_EQ(captured.str(), EMPTY_STRING);
     captured.clear();
 
     captured.enable();
-    SIMPLELOG_INFO( "USE_LEVEL: INFO");
+    SIMPLELOG_INFO("USE_LEVEL: INFO");
     captured.disable();
     CHECK_EQ(captured.str(), EMPTY_STRING);
     captured.clear();
@@ -92,8 +89,7 @@ TEST_CASE("LogMacros: can use all macros with placeholders")
     captured.clear();
 }
 
-TEST_CASE("LogMacros: can use short macros"
-    * doctest::skip(NO_SHORT_MACROS))
+TEST_CASE("LogMacros: can use short macros" * doctest::skip(NO_SHORT_MACROS))
 {
     CaptureOutputStream captured;
 
@@ -117,13 +113,13 @@ TEST_CASE("LogMacros: can use short macros"
     captured.clear();
 
     captured.enable();
-    SLOG_WARN( "USE_LEVEL: WARN");
+    SLOG_WARN("USE_LEVEL: WARN");
     captured.disable();
     CHECK_EQ(captured.str(), EMPTY_STRING);
     captured.clear();
 
     captured.enable();
-    SLOG_INFO( "USE_LEVEL: INFO");
+    SLOG_INFO("USE_LEVEL: INFO");
     captured.disable();
     CHECK_EQ(captured.str(), EMPTY_STRING);
     captured.clear();
@@ -136,5 +132,5 @@ TEST_CASE("LogMacros: can use short macros"
 }
 
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

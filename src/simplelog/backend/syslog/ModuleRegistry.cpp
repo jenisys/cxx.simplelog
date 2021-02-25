@@ -6,16 +6,17 @@
 // -- INCLUDES:
 #include "simplelog/backend/syslog/ModuleRegistry.hpp"
 
-
-namespace simplelog { namespace backend_syslog {
+namespace simplelog {
+namespace backend_syslog {
 
 #if 1
 //! Provides access to the ModuleRegistry instance.
-ModuleRegistry& getModuleRegistry()
+ModuleRegistry &getModuleRegistry()
 {
     static ModuleRegistry theRegistry;
     return theRegistry;
 }
 #endif
 
-}} //< NAMESPACE-END: simplelog::backend::syslog
+} // namespace backend_syslog
+} // namespace simplelog

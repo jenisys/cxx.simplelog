@@ -11,6 +11,7 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
+
 #include <spdlog/spdlog.h>
 
 // -- LOCAL-INCLUDES:
@@ -36,7 +37,8 @@ auto& spdlog_registry(void)
 // TEST SUITE:
 // ============================================================================
 TEST_SUITE_BEGIN("simplelog.spdlog.setup");
-TEST_CASE("spdlog::set_level(): New level should override levels in pre-existing logger")
+TEST_CASE("spdlog::set_level(): New level should override levels in "
+          "pre-existing logger")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;
@@ -46,12 +48,12 @@ TEST_CASE("spdlog::set_level(): New level should override levels in pre-existing
 
     spdlog::set_level(DESIRED_LEVEL);
     REQUIRE_EQ(logger->level(), DESIRED_LEVEL);
-    spdlog::apply_all([&](LoggerPtr log) {
-        CHECK_EQ(log->level(), DESIRED_LEVEL);
-    });
+    spdlog::apply_all(
+        [&](LoggerPtr log) { CHECK_EQ(log->level(), DESIRED_LEVEL); });
 }
 
-TEST_CASE("spdlog::set_level(): Assigned level should be used for newly created loggers")
+TEST_CASE("spdlog::set_level(): Assigned level should be used for newly "
+          "created loggers")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;
@@ -71,7 +73,6 @@ TEST_CASE("spdlog::set_level(): Assigned level should be used for newly created 
     CHECK_EQ(log1->level(), DESIRED_LEVEL2);
 }
 
-
 TEST_SUITE_END();
-} // < NAMESPACE-END.
+} // namespace
 //< ENDOF(__TEST_SOURCE_FILE__)

@@ -2,7 +2,7 @@
 # CMAKE: cxx.simplelog
 # ===========================================================================
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.14...3.20)
 
 set(MASTER_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
@@ -10,73 +10,66 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(STATUS "cmake.version: ${CMAKE_VERSION} (in MASTER_PROJECT)")
 endif()
 
-list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 if(MASTER_PROJECT)
-    include(ccache)
+    #XXX include(ccache)
     # MAYBE:
-    include(GenerateExportHeader)
-    include(WriteCompilerDetectionHeader)
+    # include(GenerateExportHeader)
+    # include(WriteCompilerDetectionHeader)
 endif()
 
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.11 LANGUAGES CXX)
+project(
+    cxx.simplelog
+    VERSION 0.2.0
+    LANGUAGES CXX
+)
 
-option(BUILD_EXAMPLES "Enable simplelog examples" OFF)
-option(BUILD_TESTING  "Enable tests (and examples)" OFF)
+option(BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
+option(BUILD_TESTING "Enable tests (and examples)" ${MASTER_PROJECT})
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
-option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
-option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" ON)
+option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" OFF)
+option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
+option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" OFF)
 option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
-option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples"   ${MASTER_PROJECT})
-option(SIMPLELOG_BUILD_TESTS    "Enable tests (and examples)" ${MASTER_PROJECT})
-set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
-set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
-                    "Normally include spdlog from packages" FORCE)
-set(FMT_INSTALL ${SIMPLELOG_USE_BUNDLED_FMTLIB} CACHE BOOL
-                "Normally include fmt from packages" FORCE)
+option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
+option(SIMPLELOG_BUILD_TESTS "Enable tests (and examples)" ${MASTER_PROJECT})
 
-include(cxx.setup_project)
+set(DOCTEST_NO_INSTALL
+    ON
+    CACHE BOOL "Normally exclude doctest from packages" FORCE
+)
+set(SPDLOG_INSTALL
+    ${SIMPLELOG_USE_BUNDLED_SPDLOG}
+    CACHE BOOL "Normally include spdlog from packages" FORCE
+)
+set(FMT_INSTALL
+    ${SIMPLELOG_USE_BUNDLED_FMTLIB}
+    CACHE BOOL "Normally include fmt from packages" FORCE
+)
 
-# ---------------------------------------------------------------------------
-# SECTION: BOOTSTRAP -- When wstool update was not done yet
-# ---------------------------------------------------------------------------
-if(NOT DEFINED BOOTSTRAP_VARIANT)
-    set(BOOTSTRAP_VARIANT "wstool")
-endif()
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_project/bootstrap_subprojects_with_${BOOTSTRAP_VARIANT}.cmake")
-
+#XXX include(cxx.setup_project)
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
 # SHORTCUT: Supports spdlog-1.5.0, spdlog-1.4.2 at least
 # CURRENT: SPDLOG_VERSION = 1.8.0
-set(SPDLOG_MIN_VERSION "1.4.2")
+set(SPDLOG_MIN_VERSION "1.8.0")
 
-# find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-# DISABLED: if(NOT spdlog_FOUND)
-if(TRUE)
-    set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
-    # set(spdlog_FOUND ON)
-endif()
+# TODO:
+find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
+find_package(fmt REQUIRED)
 
 # -- THIRD-PARTY PARTS:
-# set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
-if(SIMPLELOG_USE_BUNDLED_SPDLOG)
-    message(STATUS "USING: spdlog (bundled, as subproject)")
-    set(SPDLOG_INSTALL ON)
-    add_subdirectory(lib/spdlog spdlog)
-endif()
-if(SIMPLELOG_USE_BUNDLED_FMTLIB)
-    message(STATUS "USING: fmt (bundled, as subproject)")
-    add_subdirectory(lib/fmt fmt)
-endif()
 # TODO: SPDLOG_VERSION, FMT_VERSION is EMPTY or UNDEFINED
-message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
+message(
+    STATUS
+        "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})"
+)
 message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
 
 # find_package(Syslog)
@@ -88,22 +81,19 @@ message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUND
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
 # ---------------------------------------------------------------------------
-set(PROJECT_NAMESPACE "cxx_simplelog")
-set(SIMPLELOG_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
-set(SIMPLELOG_LIBRARIES
-    simplelog
-    simplelog_null
-    simplelog_spdlog
-)
+set(PROJECT_NAMESPACE cxx_simplelog)
+set(SIMPLELOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(SIMPLELOG_LIBRARIES simplelog simplelog_null simplelog_spdlog)
 
 # -- HEADER-ONLY LIBS:
 # LIBRARY: cxx_simplelog::simplelog         -- To reference generic library.
 # LIBRARY: cxx_simplelog::simplelog_null    -- Use simplelog w/ backend=null
 # LIBRARY: cxx_simplelog::simplelog_spdlog  -- Use simplelog w/ backend=spdlog
-add_subdirectory(src/simplelog simplelog)
+add_subdirectory(src/simplelog)
 add_subdirectory(src/simplelog/backend)
 # add_subdirectory(src/simplelog/backend/null   simplelog_backend_null)
 # add_subdirectory(src/simplelog/backend/spdlog simplelog_backend_spdlog)
+
 if(SIMPLELOG_USE_BACKEND_SYSLOG)
     # add_subdirectory(src/simplelog/backend/syslog simplelog_backend_syslog)
     list(APPEND SIMPLELOG_LIBRARIES simplelog_syslog)
@@ -121,38 +111,14 @@ endif()
 # ---------------------------------------------------------------------------
 if(SIMPLELOG_BUILD_TESTS OR BUILD_TESTING)
     enable_testing()
-    # find_package(doctest REQUIRED)
-    add_subdirectory(lib/doctest doctest)
+    find_package(doctest REQUIRED)
     add_subdirectory(tests)
 endif()
 
 # ----------------------------------------------------------------------------
 # SECTION: Install
 # ----------------------------------------------------------------------------
-# MORE: https://foonathan.net/2016/03/cmake-install/
-install(TARGETS ${SIMPLELOG_LIBRARIES}
-    EXPORT ${PROJECT_NAMESPACE}-targets
-    DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(EXPORT ${PROJECT_NAMESPACE}-targets
-        NAMESPACE   ${PROJECT_NAMESPACE}::
-        DESTINATION lib/cmake/${PROJECT_NAMESPACE})
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/simplelog
-        DESTINATION include
-        FILES_MATCHING PATTERN "*.hpp"
-        PATTERN ".cmake" EXCLUDE
-)
 
-include(CMakePackageConfigHelpers)
-configure_package_config_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/.cmake/project-config.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
-    INSTALL_DESTINATION "lib/cmake/${PROJECT_NAMESPACE}"
-)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}-config.cmake"
-        DESTINATION "lib/cmake/${PROJECT_NAMESPACE}")
-
-# -- MAYBE:
-# export(EXPORT cpp_compat NAMESPACE CppCompat)
 # ----------------------------------------------------------------------------
 # SECTION: Pack
 # ----------------------------------------------------------------------------

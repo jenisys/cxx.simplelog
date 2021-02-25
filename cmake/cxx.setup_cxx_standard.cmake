@@ -30,7 +30,7 @@ endif()
 # SANE DEFAULTS: If ".cmake_project.cxx_standard" is missing
 # ---------------------------------------------------------------------------
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17)  # Enable C++17 standard
+    set(CMAKE_CXX_STANDARD 17) # Enable C++17 standard
 endif()
 if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -43,4 +43,7 @@ endif()
 # SHOW CONFIG RESULT:
 # ---------------------------------------------------------------------------
 message(STATUS "USING: CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
-message(STATUS "USING: CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} (REQUIRED: ${CMAKE_CXX_STANDARD_REQUIRED}, EXTENSIONS: ${CMAKE_CXX_EXTENSIONS})")
+message(
+    STATUS
+        "USING: CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} (REQUIRED: ${CMAKE_CXX_STANDARD_REQUIRED}, EXTENSIONS: ${CMAKE_CXX_EXTENSIONS})"
+)

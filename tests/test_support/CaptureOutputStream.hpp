@@ -6,8 +6,8 @@
 #pragma once
 
 // -- INCLUDES:
-#include <sstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 //! ScopeGuard to capture an output-stream
@@ -15,8 +15,8 @@ class CaptureOutputStream
 {
 private:
     std::stringstream m_captured;
-    std::ostream& m_outputStream;
-    std::streambuf* m_outputBufferPtr;
+    std::ostream &m_outputStream;
+    std::streambuf *m_outputBufferPtr;
 
     void captureOutput(void)
     {
@@ -27,23 +27,14 @@ private:
     }
 
 public:
-    CaptureOutputStream(std::ostream& outputStream = std::cout)
-        : m_captured(),
-          m_outputStream(outputStream),
-          m_outputBufferPtr(nullptr)
+    CaptureOutputStream(std::ostream &outputStream = std::cout)
+        : m_captured(), m_outputStream(outputStream), m_outputBufferPtr(nullptr)
     {
         captureOutput();
     }
-    ~CaptureOutputStream(void)
-    {
-        restoreOutputStream();
-    }
+    ~CaptureOutputStream(void) { restoreOutputStream(); }
 
-
-    bool isEnabled() const
-    {
-        return (m_outputBufferPtr != nullptr);
-    }
+    bool isEnabled() const { return (m_outputBufferPtr != nullptr); }
 
     void restoreOutputStream(void)
     {
@@ -53,29 +44,14 @@ public:
         }
     }
 
-    void enable()
-    {
-        captureOutput();
-    }
+    void enable() { captureOutput(); }
 
-    void disable()
-    {
-        restoreOutputStream();
-    }
+    void disable() { restoreOutputStream(); }
 
     //! Clear the captured output.
-    void clear()
-    {
-        m_captured.str("");
-    }
+    void clear() { m_captured.str(""); }
 
-    std::string getOutput() const
-    {
-        return m_captured.str();
-    }
+    std::string getOutput() const { return m_captured.str(); }
 
-    std::string str(void) const
-    {
-        return m_captured.str();
-    }
+    std::string str(void) const { return m_captured.str(); }
 };

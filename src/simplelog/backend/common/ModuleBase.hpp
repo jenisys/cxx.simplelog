@@ -13,11 +13,11 @@
 // -- INCLUDES:
 #include <string>
 
-
 // --------------------------------------------------------------------------
 // LOGGING MODULE
 // --------------------------------------------------------------------------
-namespace simplelog { namespace backend_common {
+namespace simplelog {
+namespace backend_common {
 
 /**
  * @class ModuleBase
@@ -28,19 +28,20 @@ class ModuleBase
 {
 private:
     std::string m_name;
-    int m_level;    //!< Log level as threshold to suppress messages.
+    int m_level; //!< Log level as threshold to suppress messages.
 
 public:
-    explicit ModuleBase(std::string name="")
+    explicit ModuleBase(std::string name = "")
         : m_name(std::move(name)), m_level(0)
     {}
-    explicit ModuleBase(std::string name, int level=0)
+    explicit ModuleBase(std::string name, int level = 0)
         : m_name(std::move(name)), m_level(level)
     {}
 
-    const std::string& getName(void) const { return m_name; }
+    const std::string &getName(void) const { return m_name; }
     int getLevel(void) const { return m_level; }
     void setLevel(int level) { m_level = level; }
 };
 
-}} //< NAMESPACE-END: simplelog::backend_common
+} // namespace backend_common
+} // namespace simplelog

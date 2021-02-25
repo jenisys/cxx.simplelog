@@ -4,9 +4,9 @@
 # USE: include("${PROJECT_SOURCE_DIR}/../cmake/show_system_info.cmake")
 
 cmake_host_system_information(RESULT HOSTNAME QUERY HOSTNAME)
-cmake_host_system_information(RESULT ARCH_PROCESSOR  QUERY PROCESSOR_NAME)
+cmake_host_system_information(RESULT ARCH_PROCESSOR QUERY PROCESSOR_NAME)
 
-cmake_host_system_information(RESULT ARCH_OS_NAME    QUERY OS_NAME)
+cmake_host_system_information(RESULT ARCH_OS_NAME QUERY OS_NAME)
 # SEE: CMAKE_HOST_SYSTEM_NAME
 cmake_host_system_information(RESULT ARCH_OS_RELEASE QUERY OS_RELEASE)
 cmake_host_system_information(RESULT ARCH_OS_VERSION QUERY OS_VERSION)

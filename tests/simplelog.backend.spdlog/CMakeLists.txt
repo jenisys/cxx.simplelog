@@ -9,24 +9,22 @@
 # ---------------------------------------------------------------------------
 # SEE: https://github.com/onqtam/doctest
 add_executable(test_simplelog_backend_spdlog)
-target_sources(test_simplelog_backend_spdlog
-    PRIVATE
-        test_main.cpp
-        test_ModuleUtil.cpp
-        test_SetupUtil.cpp
-        test_setup_spdlog.cpp
-        # -- COMPILE-CHECK:
-        test_compilable.LogMacros.cpp
-        test_compilable.LogMacros0.cpp
-        test_compilable.TraceMacros.cpp
+target_sources(
+    test_simplelog_backend_spdlog
+    PRIVATE test_main.cpp
+            test_ModuleUtil.cpp
+            test_SetupUtil.cpp
+            test_setup_spdlog.cpp
+            # -- COMPILE-CHECK:
+            test_compilable.LogMacros.cpp
+            test_compilable.LogMacros0.cpp
+            test_compilable.TraceMacros.cpp
 )
-target_link_libraries(test_simplelog_backend_spdlog
-    cxx_simplelog::simplelog_spdlog
-    doctest::doctest
+target_link_libraries(
+    test_simplelog_backend_spdlog cxx_simplelog::simplelog_spdlog doctest::doctest
 )
-target_compile_definitions(test_simplelog_backend_spdlog
-    PRIVATE
-        ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
+target_compile_definitions(
+    test_simplelog_backend_spdlog PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
 )
 
 # ---------------------------------------------------------------------------
@@ -48,10 +46,7 @@ target_compile_definitions(test_simplelog_backend_spdlog
 # ---------------------------------------------------------------------------
 # SECTION: Tests
 # ---------------------------------------------------------------------------
-add_test(NAME test_simplelog.backend.spdlog
-    COMMAND test_simplelog_backend_spdlog -s
-)
+add_test(NAME test_simplelog.backend.spdlog COMMAND test_simplelog_backend_spdlog -s)
 # set_tests_properties(test_all PROPERTIES
 #   PASS_REGULAR_EXPRESSION     "1 test cases out of 1 passed")
 # HINT: set_tests_properties() above captures and verifies output against expectations.
-
