@@ -72,8 +72,8 @@ inline auto makeLogger(std::string name) -> LoggerPtr
  * @return Logger pointer to newly created logger (shared_ptr)
  * @see spdlog::create<Sink>(name, sinkArgs...)
  **/
-inline LoggerPtr createAndRegisterLogger(const std::string &name,
-                                         bool inheritSinks = true)
+inline auto createAndRegisterLogger(const std::string &name,
+                                    bool inheritSinks = true) -> LoggerPtr
 {
     auto newLogger = makeLogger(name);
     spdlog::initialize_logger(newLogger);

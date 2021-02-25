@@ -11,7 +11,7 @@ namespace tests {
 namespace simplelog {
 namespace backend_spdlog {
 
-inline void cleanupLogging(void)
+inline void cleanupLogging()
 {
     ::spdlog::drop_all();
     // AVOID: ::spdlog::shutdown();
@@ -20,20 +20,20 @@ inline void cleanupLogging(void)
 class CleanupLoggingFixture
 {
 public:
-    CleanupLoggingFixture(void) { cleanupLogging(); }
-    ~CleanupLoggingFixture(void) { cleanupLogging(); }
+    CleanupLoggingFixture() { cleanupLogging(); }
+    ~CleanupLoggingFixture() { cleanupLogging(); }
 };
 
 class CleanupLoggingBeforeFixture
 {
 public:
-    CleanupLoggingBeforeFixture(void) { cleanupLogging(); }
+    CleanupLoggingBeforeFixture() { cleanupLogging(); }
 };
 
 class CleanupLoggingAfterFixture
 {
 public:
-    ~CleanupLoggingAfterFixture(void) { cleanupLogging(); }
+    ~CleanupLoggingAfterFixture() { cleanupLogging(); }
 };
 
 } // namespace backend_spdlog

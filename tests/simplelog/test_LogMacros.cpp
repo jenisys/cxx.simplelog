@@ -67,7 +67,7 @@ void setupLoggingToStreamSink(std::ostream &outputStream)
     simplelog::backend_spdlog::setLevel(spdlog::level::info);
 }
 
-unsigned count(const std::string &subject, const std::string &part)
+auto count(const std::string &subject, const std::string &part) -> unsigned
 {
     unsigned counter = 0;
     size_t pos = subject.find(part);

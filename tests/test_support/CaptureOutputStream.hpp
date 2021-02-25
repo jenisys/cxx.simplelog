@@ -16,9 +16,9 @@ class CaptureOutputStream
 private:
     std::stringstream m_captured;
     std::ostream &m_outputStream;
-    std::streambuf *m_outputBufferPtr;
+    std::streambuf *m_outputBufferPtr{nullptr};
 
-    void captureOutput(void)
+    void captureOutput()
     {
         if (m_outputBufferPtr == nullptr) {
             m_outputBufferPtr = m_outputStream.rdbuf();
@@ -28,15 +28,15 @@ private:
 
 public:
     CaptureOutputStream(std::ostream &outputStream = std::cout)
-        : m_captured(), m_outputStream(outputStream), m_outputBufferPtr(nullptr)
+        : m_captured(), m_outputStream(outputStream)
     {
         captureOutput();
     }
-    ~CaptureOutputStream(void) { restoreOutputStream(); }
+    ~CaptureOutputStream() { restoreOutputStream(); }
 
-    bool isEnabled() const { return (m_outputBufferPtr != nullptr); }
+    auto isEnabled() const -> bool { return (m_outputBufferPtr != nullptr); }
 
-    void restoreOutputStream(void)
+    void restoreOutputStream()
     {
         if (m_outputBufferPtr != nullptr) {
             m_outputStream.rdbuf(m_outputBufferPtr);
@@ -51,7 +51,7 @@ public:
     //! Clear the captured output.
     void clear() { m_captured.str(""); }
 
-    std::string getOutput() const { return m_captured.str(); }
+    auto getOutput() const -> std::string { return m_captured.str(); }
 
-    std::string str(void) const { return m_captured.str(); }
+    auto str() const -> std::string { return m_captured.str(); }
 };

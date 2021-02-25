@@ -232,7 +232,7 @@ selectLoggersByName(const std::string& pattern)
  *available
  * @see applyToAny(func, predicate)
  **/
-inline std::vector<LoggerPtr> selectLoggers(const Predicate &predicate)
+inline auto selectLoggers(const Predicate &predicate) -> std::vector<LoggerPtr>
 {
     std::vector<LoggerPtr> selected;
     ::spdlog::apply_all([&](LoggerPtr log) {

@@ -11,7 +11,7 @@ namespace backend_null {
 
 struct NullCategory
 {};
-typedef NullCategory *LoggerPtr;
+using LoggerPtr = NullCategory *;
 
 } // namespace backend_null
 } // namespace simplelog
