@@ -28,7 +28,7 @@ private:
 
 public:
     CaptureOutputStream(std::ostream &outputStream = std::cout)
-        : m_captured(), m_outputStream(outputStream)
+        : m_outputStream(outputStream)
     {
         captureOutput();
     }

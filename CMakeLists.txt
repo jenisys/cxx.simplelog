@@ -29,14 +29,17 @@ project(
 
 option(BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
 option(BUILD_TESTING "Enable tests (and examples)" ${MASTER_PROJECT})
-
-option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
-option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" OFF)
-option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" OFF)
-option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
 option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
 option(SIMPLELOG_BUILD_TESTS "Enable tests (and examples)" ${MASTER_PROJECT})
+
+option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
+if(NOT APPLE)
+    option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
+endif()
+
+# FIXME: do no use git submodules! CK
+option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
+option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" OFF)
 
 set(DOCTEST_NO_INSTALL
     ON
@@ -56,27 +59,23 @@ set(FMT_INSTALL
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT: Supports spdlog-1.5.0, spdlog-1.4.2 at least
-# CURRENT: SPDLOG_VERSION = 1.8.0
-set(SPDLOG_MIN_VERSION "1.8.0")
+set(SPDLOG_MIN_VERSION 1.8.0)
+set(FMT_MIN_VERSION 7.1.0)
 
-# TODO:
 find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-find_package(fmt REQUIRED)
+find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
 
 # -- THIRD-PARTY PARTS:
-# TODO: SPDLOG_VERSION, FMT_VERSION is EMPTY or UNDEFINED
-message(
-    STATUS
-        "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})"
-)
-message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
+message(STATUS "USING: spdlog.version=${spdlog_VERSION}")
+message(STATUS "USING: fmt.version=${fmt_VERSION}")
 
-# find_package(Syslog)
-# message(STATUS "Syslog_FOUND=${Syslog_FOUND}")
-# if(NOT Syslog_FOUND)
-#     set(SIMPLELOG_USE_BACKEND_SYSLOG OFF)
-# endif()
+if(SIMPLELOG_USE_BACKEND_SYSLOG)
+    find_package(Syslog)
+    if(NOT Syslog_FOUND)
+        message(WARNING "Syslog_FOUND=${Syslog_FOUND}")
+        set(SIMPLELOG_USE_BACKEND_SYSLOG OFF)
+    endif()
+endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
@@ -128,10 +127,6 @@ set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;.idea/;\.DS_Store;__.*/")
-if(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY)
-    message("CPACK-SOURCE: Ignore bundled third-party libraries.")
-    set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};lib/")
-endif()
 # set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 
 include(CPack)

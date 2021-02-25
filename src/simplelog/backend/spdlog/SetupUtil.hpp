@@ -30,7 +30,7 @@ using Sinks = std::vector<SinkPtr>;
 
 //! Lambda predicate function that matches any logger.
 // DISABLED: constexpr
-const auto matchesEachLogger = [](LoggerPtr) { return true; };
+const auto matchesEachLogger = [](LoggerPtr /*unused*/) { return true; };
 
 /**
  * Assigns a new log-level to the logging subsystem and all existing loggers.
