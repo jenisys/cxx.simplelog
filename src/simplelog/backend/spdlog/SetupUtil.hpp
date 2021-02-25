@@ -243,8 +243,8 @@ inline auto selectLoggers(const Predicate &predicate) -> std::vector<LoggerPtr>
     return selected;
 }
 
-#define SIMPLELOG_BACKEND_SPDLOG__USE_INCUBATOR_FUNC 1
-#if SIMPLELOG_BACKEND_SPDLOG__USE_INCUBATOR_FUNC
+#define SIMPLELOG_BACKEND_SPDLOG_USE_INCUBATOR_FUNC 1
+#if SIMPLELOG_BACKEND_SPDLOG_USE_INCUBATOR_FUNC
 inline void useLogSinkAsDefaultSink(LoggerPtr theLog)
 {
     auto defaultSink = theLog->sinks().front();

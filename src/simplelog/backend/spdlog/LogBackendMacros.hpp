@@ -18,8 +18,8 @@
 #    error "ALREADY_DEFINED: SIMPLELOG_BACKEND_LOG"
 #endif
 // -- AUTO-CONFIGURE:
-#ifndef SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION
-#    define SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION 1
+#ifndef SIMPLELOG_BACKEND_SPDLOG_USE_SOURCE_LOCATION
+#    define SIMPLELOG_BACKEND_SPDLOG_USE_SOURCE_LOCATION 1
 #endif
 
 // --------------------------------------------------------------------------
@@ -40,7 +40,7 @@
  * CASE 2: SIMPLELOG_BACKEND_LOG(logger, level, format, ...)  -- With
  *placeholders
  **/
-#if SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION
+#if SIMPLELOG_BACKEND_SPDLOG_USE_SOURCE_LOCATION
 #    define SIMPLELOG_BACKEND_LOG(logger, level, ...)                          \
         logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, \
                     level, __VA_ARGS__)

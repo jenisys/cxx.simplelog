@@ -10,10 +10,10 @@
 
 #if SIMPLELOG_DIAG
 #    include <iostream>
-#    ifndef SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
-#        define SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB 1
+#    ifndef SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB
+#        define SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB 1
 #    endif
-#    if SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
+#    if SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB
 #        include <spdlog/fmt/fmt.h>
 #    else
 #        include <fmt/fmt.h>

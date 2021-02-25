@@ -30,7 +30,9 @@ auto printTo(std::ostream &os, const std::vector<T> &container)
 
 } // namespace doctest_ext
 
-namespace std {
+// NOLINTNEXTLINE(cert-dcl58-cpp)
+namespace std { // FIXME: warning: modification of 'std' namespace can result in
+                // undefined behavior [cert-dcl58-cpp]
 
 template <typename T>
 auto operator<<(std::ostream &os, const std::vector<T> &container)
