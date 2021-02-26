@@ -14,10 +14,11 @@
 #    define SIMPLELOG_DEFAULT_BACKEND 1 //< SIMPLELOG_USE_BACKEND_SPDLOG
 #endif
 
-// -- AVOID: See explaination above.
-// #ifndef SIMPLELOG_USE_BACKEND
-// #define SIMPLELOG_BACKEND_MACROS_HEADER_FILE
-// "simplelog/backend/spdlog/LogBackendMacros.hpp" #define
-// SIMPLELOG_USE_BACKEND_SPDLOG 1 #endif
+/*** -- AVOID: See explaination above.
+ * #ifndef SIMPLELOG_USE_BACKEND
+ * #define SIMPLELOG_BACKEND_MACROS_HEADER_FILE
+ *"simplelog/backend/spdlog/LogBackendMacros.hpp" #define
+ *SIMPLELOG_USE_BACKEND_SPDLOG 1 #endif
+ ***/
 
 //< HEADER-FILE-END

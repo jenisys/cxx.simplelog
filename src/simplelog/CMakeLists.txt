@@ -7,9 +7,9 @@
 # ---------------------------------------------------------------------------
 # -- HEADER-ONLY LIBRARY:
 add_library(simplelog INTERFACE)
-add_library(${PROJECT_NAMESPACE}::simplelog ALIAS simplelog)
 target_include_directories(
-    simplelog INTERFACE $<BUILD_INTERFACE:${SIMPLELOG_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>
+    simplelog BEFORE INTERFACE $<BUILD_INTERFACE:${SIMPLELOG_INCLUDE_DIR}>
+                               $<INSTALL_INTERFACE:include>
 )
 # -- SIMPLELOG DEFAULT-BACKEND:
 # if(SIMPLELOG_USE_BACKEND_SPDLOG)
@@ -19,3 +19,15 @@ target_include_directories(
 #             "SIMPLELOG_USE_BACKEND_SPDLOG=1"
 #     )
 # endif()
+
+packageProject(
+    NAME simplelog
+    VERSION ${PROJECT_VERSION}
+    NAMESPACE ${PROJECT_NAMESPACE}
+    BINARY_DIR ${PROJECT_BINARY_DIR}
+    INCLUDE_DIR ${SIMPLELOG_INCLUDE_DIR}
+    INCLUDE_DESTINATION include
+    COMPATIBILITY SameMajorVersion
+    DISABLE_VERSION_SUFFIX YES
+    DEPENDENCIES "fmt ${FMT_MIN_VERSION}; spdlog ${SPDLOG_MIN_VERSION}"
+)

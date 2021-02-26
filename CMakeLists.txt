@@ -12,7 +12,7 @@ endif()
 
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 if(MASTER_PROJECT)
-    #XXX include(ccache)
+    include(ccache)
     # MAYBE:
     # include(GenerateExportHeader)
     # include(WriteCompilerDetectionHeader)
@@ -33,41 +33,55 @@ option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
 option(SIMPLELOG_BUILD_TESTS "Enable tests (and examples)" ${MASTER_PROJECT})
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
-if(NOT APPLE)
-    option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
-endif()
+option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
 
-# FIXME: do no use git submodules! CK
-option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" OFF)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" OFF)
+option(DOCTEST_NO_INSTALL "Normally exclude doctest from packages" YES)
+option(SPDLOG_INSTALL "need to install" YES)
+option(FMT_INSTALL "need to install" YES)
 
-set(DOCTEST_NO_INSTALL
-    ON
-    CACHE BOOL "Normally exclude doctest from packages" FORCE
-)
-set(SPDLOG_INSTALL
-    ${SIMPLELOG_USE_BUNDLED_SPDLOG}
-    CACHE BOOL "Normally include spdlog from packages" FORCE
-)
-set(FMT_INSTALL
-    ${SIMPLELOG_USE_BUNDLED_FMTLIB}
-    CACHE BOOL "Normally include fmt from packages" FORCE
-)
-
-#XXX include(cxx.setup_project)
+include(cxx.setup_project)
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-set(SPDLOG_MIN_VERSION 1.8.0)
-set(FMT_MIN_VERSION 7.1.0)
+set(SPDLOG_MIN_VERSION 1.8.2)
+set(FMT_MIN_VERSION 7.1.3)
 
-find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
+if(FALSE)
+    find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
+    find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
 
-# -- THIRD-PARTY PARTS:
-message(STATUS "USING: spdlog.version=${spdlog_VERSION}")
-message(STATUS "USING: fmt.version=${fmt_VERSION}")
+    # -- THIRD-PARTY PARTS:
+    message(STATUS "USING: spdlog.version=${spdlog_VERSION}")
+    message(STATUS "USING: fmt.version=${fmt_VERSION}")
+else()
+    # ---- Add dependencies via CPM ----
+    # see https://github.com/cpm-cmake/CPM.cmake for more info
+
+    include(cmake/CPM.cmake)
+    CPMUsePackageLock(package-lock.cmake)
+
+    # PackageProject.cmake will be used to make our target installable
+    CPMAddPackage(
+        NAME PackageProject.cmake
+        GITHUB_REPOSITORY TheLartians/PackageProject.cmake
+        VERSION 1.5.1
+    )
+
+    CPMAddPackage(
+        NAME fmt
+        GIT_TAG ${FMT_MIN_VERSION}
+        GITHUB_REPOSITORY fmtlib/fmt # to get an installable target
+        OPTIONS "FMT_INSTALL YES"
+    )
+
+    CPMAddPackage(
+        NAME spdlog
+        GIT_TAG v${SPDLOG_MIN_VERSION}
+        GITHUB_REPOSITORY gabime/spdlog # to use our installed fmt lib
+        OPTIONS "SPDLOG_FMT_EXTERNAL YES"
+    )
+endif()
 
 if(SIMPLELOG_USE_BACKEND_SYSLOG)
     find_package(Syslog)
@@ -82,7 +96,6 @@ endif()
 # ---------------------------------------------------------------------------
 set(PROJECT_NAMESPACE cxx_simplelog)
 set(SIMPLELOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(SIMPLELOG_LIBRARIES simplelog simplelog_null simplelog_spdlog)
 
 # -- HEADER-ONLY LIBS:
 # LIBRARY: cxx_simplelog::simplelog         -- To reference generic library.
@@ -92,11 +105,6 @@ add_subdirectory(src/simplelog)
 add_subdirectory(src/simplelog/backend)
 # add_subdirectory(src/simplelog/backend/null   simplelog_backend_null)
 # add_subdirectory(src/simplelog/backend/spdlog simplelog_backend_spdlog)
-
-if(SIMPLELOG_USE_BACKEND_SYSLOG)
-    # add_subdirectory(src/simplelog/backend/syslog simplelog_backend_syslog)
-    list(APPEND SIMPLELOG_LIBRARIES simplelog_syslog)
-endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
@@ -110,7 +118,12 @@ endif()
 # ---------------------------------------------------------------------------
 if(SIMPLELOG_BUILD_TESTS OR BUILD_TESTING)
     enable_testing()
-    find_package(doctest REQUIRED)
+
+    CPMAddPackage(
+        NAME doctest
+        GITHUB_REPOSITORY onqtam/doctest
+        GIT_TAG 2.4.5
+    )
     add_subdirectory(tests)
 endif()
 
@@ -123,10 +136,10 @@ endif()
 # ----------------------------------------------------------------------------
 # HINT: Source-pack includes CMAKE_CURRENT_BUILDIR, ...
 # set(CPACK_SOURCE_GENERATOR "ZIP")
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
-set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;.idea/;\.DS_Store;__.*/")
-# set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
-
-include(CPack)
+# set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+# set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+# set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+# set(CPACK_SOURCE_IGNORE_FILES "build/;build.*/;.attic/;.git/;.vscode/;.idea/;\.DS_Store;__.*/")
+# # set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+#
+# include(CPack)

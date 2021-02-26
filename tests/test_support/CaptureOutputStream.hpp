@@ -27,7 +27,7 @@ private:
     }
 
 public:
-    CaptureOutputStream(std::ostream &outputStream = std::cout)
+    explicit CaptureOutputStream(std::ostream &outputStream = std::cout)
         : m_outputStream(outputStream)
     {
         captureOutput();

@@ -5,11 +5,7 @@
 # ---------------------------------------------------------------------------
 # DEPENDENCIES
 # ---------------------------------------------------------------------------
-# MAYBE: set(SPDLOG_MIN_VERSION "1.5.2")
 if(NOT TARGET spdlog::spdlog)
-    if(NOT DEFINED SPDLOG_MIN_VERSION)
-        set(SPDLOG_MIN_VERSION "1.4.2")
-    endif()
     find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 endif()
 
@@ -18,11 +14,8 @@ endif()
 # ---------------------------------------------------------------------------
 # USED-FOR: Use simplelog library with configured simplelog.backend.spdlog.
 add_library(simplelog_spdlog INTERFACE)
-add_library(${PROJECT_NAMESPACE}::simplelog_spdlog ALIAS simplelog_spdlog)
-target_link_libraries(simplelog_spdlog INTERFACE simplelog spdlog::spdlog)
-set_target_properties(
-    simplelog_spdlog PROPERTIES INTERFACE_COMPILE_DEFINITIONS "SIMPLELOG_USE_BACKEND_SPDLOG=1"
-)
+target_link_libraries(simplelog_spdlog INTERFACE ${PROJECT_NAMESPACE}::simplelog spdlog::spdlog)
+target_compile_definitions(simplelog_spdlog INTERFACE SIMPLELOG_USE_BACKEND_SPDLOG=1)
 target_compile_features(
     simplelog_spdlog INTERFACE cxx_auto_type cxx_lambdas cxx_trailing_return_types
                                cxx_variadic_macros
@@ -33,3 +26,15 @@ target_compile_features(
 #         $<BUILD_INTERFACE:${SIMPLELOG_INCLUDE_DIR}>
 #         $<INSTALL_INTERFACE:include>
 # )
+
+packageProject(
+    NAME simplelog_spdlog
+    VERSION ${PROJECT_VERSION}
+    NAMESPACE ${PROJECT_NAMESPACE}
+    BINARY_DIR ${PROJECT_BINARY_DIR}
+    INCLUDE_DIR ${SIMPLELOG_INCLUDE_DIR}
+    INCLUDE_DESTINATION include
+    COMPATIBILITY SameMajorVersion
+    DISABLE_VERSION_SUFFIX YES
+    DEPENDENCIES "fmt ${FMT_MIN_VERSION}; spdlog ${SPDLOG_MIN_VERSION}"
+)

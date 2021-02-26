@@ -14,15 +14,16 @@ if(NOT Systemd_FOUND AND NOT TARGET Systemd::systemd)
 endif()
 
 if(NOT TARGET fmt::fmt)
-    find_package(fmt 5.3.0 REQUIRED)
+    find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
 endif()
 
 # ---------------------------------------------------------------------------
 # BACKEND-SPECIFIC LIBRARY: simplelog_systemd_journal
 # ---------------------------------------------------------------------------
 add_library(simplelog_systemd_journal INTERFACE)
-add_library(${PROJECT_NAMESPACE}::simplelog_systemd_journal ALIAS simplelog_systemd_journal)
-target_link_libraries(simplelog_systemd_journal INTERFACE simplelog fmt::fmt Systemd::systemd)
+target_link_libraries(
+    simplelog_systemd_journal INTERFACE ${PROJECT_NAMESPACE}::simplelog fmt::fmt Systemd::systemd
+)
 target_compile_definitions(
     simplelog_systemd_journal INTERFACE SIMPLELOG_USE_BACKEND_SYSTEMD_JOURNAL=1
 )
@@ -30,7 +31,14 @@ target_compile_features(
     simplelog_systemd_journal INTERFACE cxx_auto_type cxx_lambdas cxx_variadic_macros
 )
 
-# set_target_properties(simplelog_systemd_journal
-#     PROPERTIES INTERFACE_COMPILE_DEFINITIONS
-#         "SIMPLELOG_USE_BACKEND_SYSTEMD_JOURNAL=1"
-# )
+packageProject(
+    NAME simplelog_systemd_journal
+    VERSION ${PROJECT_VERSION}
+    NAMESPACE ${PROJECT_NAMESPACE}
+    BINARY_DIR ${PROJECT_BINARY_DIR}
+    INCLUDE_DIR ${SIMPLELOG_INCLUDE_DIR}
+    INCLUDE_DESTINATION include
+    COMPATIBILITY SameMajorVersion
+    DISABLE_VERSION_SUFFIX YES
+    DEPENDENCIES "fmt ${FMT_MIN_VERSION}; Systemd"
+)

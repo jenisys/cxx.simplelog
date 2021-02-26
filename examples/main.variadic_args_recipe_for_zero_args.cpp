@@ -25,12 +25,12 @@
  **/
 
 // -- INCLUDES:
-// #define SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB  0
+// #define SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB  0
 // #include <fmt/format.h>
-#ifndef SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
-#    define SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB 0
+#ifndef SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB
+#    define SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB 0
 #endif
-#if SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB
+#if SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB
 #    include <spdlog/fmt/fmt.h>
 #else
 #    include <fmt/format.h>

@@ -11,9 +11,10 @@
 // -- INCLUDES:
 // ALREADY: #define SIMPLELOG_USE_BACKEND_SPDLOG 1
 #include <simplelog/LogMacros.hpp>
-// FIXME #include <simplelog/detail/StringifyMacro.hpp>
+#include <simplelog/detail/StringifyMacro.hpp>
+
 // -- SPECIAL CASE:
-// PREPARED: #include "fmt/format.h" // -- USE: fmt::format()
+// #include <fmt/format.h> // -- USE: fmt::format()
 
 // -- SANITY-CHECK: SIMPLEGEN-SELECT-BACKEND
 #if !(defined(SIMPLELOG_USE_BACKEND_SPDLOG) && (SIMPLELOG_USE_BACKEND == 1))

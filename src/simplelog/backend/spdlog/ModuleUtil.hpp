@@ -85,7 +85,7 @@ inline auto createAndRegisterLogger(const std::string &name,
     }
     // ALREADY-DONE: spdlog::register_logger(logPtr);
     // POSTCONDITION(spdlog::get(name) == logPtr, "logger is registered");
-    assert(spdlog::get(name) == newLogger);
+    assert(spdlog::get(name) == newLogger); // NOLINT
     return newLogger;
 }
 
@@ -118,7 +118,7 @@ inline auto useOrCreateLogger(const std::string &name) -> LoggerPtr
             logPtr = createAndRegisterLogger(name);
         }
         // POSTCONDITION(spdlog::get(name) == logPtr, "logger is registered");
-        assert(spdlog::get(name) == logPtr);
+        assert(spdlog::get(name) == logPtr); // NOLINT
     }
     return logPtr;
 }

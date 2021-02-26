@@ -30,7 +30,7 @@ endif()
 # SANE DEFAULTS: If ".cmake_project.cxx_standard" is missing
 # ---------------------------------------------------------------------------
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17) # Enable C++17 standard
+    set(CMAKE_CXX_STANDARD 20) # Enable C++20 standard
 endif()
 if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)

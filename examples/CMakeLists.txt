@@ -8,10 +8,9 @@
 add_executable(simplelog_example_spdlog)
 target_sources(simplelog_example_spdlog PRIVATE main.example_spdlog.cpp)
 target_link_libraries(
-    simplelog_example_spdlog PRIVATE spdlog::spdlog
+    simplelog_example_spdlog PRIVATE cxx_simplelog::simplelog_spdlog # INHERITED: spdlog::spdlog
                                      # PREPARED: fmt::fmt
 )
-target_include_directories(simplelog_example_spdlog PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_options(simplelog_example_spdlog PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_definitions(
     simplelog_example_spdlog PRIVATE SIMPLELOG_USE_BACKEND_SPDLOG=1 SIMPLELOG_DIAG=1
@@ -21,7 +20,6 @@ target_compile_definitions(
 add_executable(simplelog_example_null)
 target_sources(simplelog_example_null PRIVATE main.example_null.cpp)
 target_link_libraries(simplelog_example_null PRIVATE cxx_simplelog::simplelog_null)
-target_include_directories(simplelog_example_null PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_options(simplelog_example_null PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_definitions(
     simplelog_example_null PRIVATE # NOT-NEEDED: SIMPLELOG_USE_BACKEND_NULL=1
@@ -35,7 +33,6 @@ if(SIMPLELOG_USE_BACKEND_SYSLOG)
         simplelog_example_syslog PRIVATE cxx_simplelog::simplelog_syslog
                                          # INHERITED: fmt::fmt
     )
-    target_include_directories(simplelog_example_syslog PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_compile_options(simplelog_example_syslog PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_definitions(
         simplelog_example_syslog PRIVATE SIMPLELOG_DIAG=1
@@ -43,42 +40,33 @@ if(SIMPLELOG_USE_BACKEND_SYSLOG)
     )
 endif()
 
-# ---------------------------------------------------------------------------
-# SECTION: Run examples as tests
-# ---------------------------------------------------------------------------
-set(CXX_FMTLIB spdlog::spdlog) # Use embedded FMT library.
-# XXX-MARKER: set(CXX_FMTLIB "spdlog")    # Use embedded FMT library.
-if(SIMPLELOG_USE_BUNDLED_FMTLIB OR FMT_FOUND)
-    set(CXX_FMTLIB fmt::fmt)
-endif()
 # -- EXECUTABLE:
 add_executable(example_variadic_args)
 target_sources(example_variadic_args PRIVATE main.variadic_args_recipe_for_zero_args.cpp)
-target_link_libraries(
-    example_variadic_args
-    # fmt::fmt
-    ${CXX_FMTLIB}
-)
-if(SIMPLELOG_USE_BUNDLED_FMTLIB)
-    target_compile_definitions(example_variadic_args PRIVATE SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB=0)
-endif()
-list(APPEND EXAMPLE_PROGRAMS example_variadic_args)
+target_link_libraries(example_variadic_args fmt::fmt)
+
+### if(SIMPLELOG_USE_BUNDLED_FMTLIB)
+###     target_compile_definitions(example_variadic_args PRIVATE SIMPLELOG_DIAG_USE_SPDLOG_FMTLIB=0)
+### endif()
 
 # ---------------------------------------------------------------------------
 # SECTION: AUTO-RUN PROGRAMS
 # ---------------------------------------------------------------------------
+enable_testing()
+
 set(EXAMPLE_PROGRAMS simplelog_example_spdlog simplelog_example_null example_variadic_args)
-list(APPEND EXAMPLE_PROGRAMS simplelog_example_syslog)
+if(SIMPLELOG_USE_BACKEND_SYSLOG)
+    list(APPEND EXAMPLE_PROGRAMS simplelog_example_syslog)
+endif()
 
 add_custom_target(
     examples
     DEPENDS ${EXAMPLE_PROGRAMS}
-    COMMAND simplelog_example_spdlog
-    COMMAND simplelog_example_null
     COMMENT "RUN: examples"
 )
 
 foreach(_EXAMPLE_PROGRAM ${EXAMPLE_PROGRAMS})
+    add_test(NAME ${_EXAMPLE_PROGRAM} COMMAND ${_EXAMPLE_PROGRAM})
     add_custom_target(
         "run.${_EXAMPLE_PROGRAM}"
         COMMAND ${_EXAMPLE_PROGRAM}
@@ -90,23 +78,16 @@ endforeach()
 # ---------------------------------------------------------------------------
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
-set(SIMPLELOG_AUTO_RUN_EXAMPLES OFF)
-enable_testing()
 
-# -- SOLUTION 1: Builds other programs, libs first. Then auto-runs tests.
-set(test_examples_TARGET_MODE_ALL "")
-if(SIMPLELOG_AUTO_RUN_EXAMPLES)
-    set(test_examples_TARGET_MODE_ALL "ALL")
-endif()
+# -- SOLUTION 1: Builds other programs, libs first
 add_custom_target(
-    test_examples
-    ${test_examples_TARGET_MODE_ALL}
+    test_examples ALL
     COMMAND ctest
     DEPENDS ${EXAMPLE_PROGRAMS}
     COMMENT "AUTO-RUN EXAMPLES with: all"
 )
 
-# -- TESTS:
+# -- more TESTS:
 add_test(NAME example_simplelog.spdlog COMMAND simplelog_example_spdlog)
 set_tests_properties(
     example_simplelog.spdlog PROPERTIES PASS_REGULAR_EXPRESSION

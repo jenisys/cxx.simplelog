@@ -15,7 +15,7 @@ if(NOT Syslog_FOUND)
 endif()
 
 if(NOT TARGET fmt::fmt)
-    find_package(fmt 5.3.0 REQUIRED)
+    find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -30,9 +30,6 @@ message(STATUS "USE LIBRARY: ${PROJECT_NAMESPACE}::simplelog_syslog")
 # target_compile_definitions(simplelog_syslog INTERFACE
 #     SIMPLELOG_USE_BACKEND_SYSLOG=1
 # )
-# set_target_properties(simplelog_syslog
-#     PROPERTIES INTERFACE_COMPILE_DEFINITIONS "SIMPLELOG_USE_BACKEND_SYSLOG=1"
-# )
 
 add_library(
     simplelog_syslog STATIC
@@ -40,7 +37,20 @@ add_library(
     # -- HEADERS:
     LogBackendMacros.hpp Module.hpp ModuleRegistry.hpp
 )
-add_library(${PROJECT_NAMESPACE}::simplelog_syslog ALIAS simplelog_syslog)
-target_link_libraries(simplelog_syslog PUBLIC simplelog fmt::fmt Syslog::syslog)
+target_link_libraries(
+    simplelog_syslog PUBLIC ${PROJECT_NAMESPACE}::simplelog fmt::fmt Syslog::syslog
+)
 target_compile_definitions(simplelog_syslog PUBLIC SIMPLELOG_USE_BACKEND_SYSLOG=1)
 target_compile_features(simplelog_syslog PUBLIC cxx_auto_type cxx_lambdas cxx_variadic_macros)
+
+packageProject(
+    NAME simplelog_syslog
+    VERSION ${PROJECT_VERSION}
+    NAMESPACE ${PROJECT_NAMESPACE}
+    BINARY_DIR ${PROJECT_BINARY_DIR}
+    INCLUDE_DIR ${SIMPLELOG_INCLUDE_DIR}
+    INCLUDE_DESTINATION include
+    COMPATIBILITY SameMajorVersion
+    DISABLE_VERSION_SUFFIX YES
+    DEPENDENCIES "fmt ${FMT_MIN_VERSION}; Syslog"
+)
