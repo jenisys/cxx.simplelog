@@ -37,7 +37,7 @@ jobs:
         run: cmake --install build --config Release --prefix stage
 
       - name: TestInstalledVersion
+        shell: bash
         run: |
-          cmake -S examples -B build/test
-            -D CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/stage
+          cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$PWD/stage
           cmake --build build/test --target test_examples -j 4
