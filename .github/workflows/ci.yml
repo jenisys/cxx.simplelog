@@ -18,15 +18,13 @@ jobs:
       fail-fast: false
 
       matrix:
-        type:
-          - static
-          # TODO: - shared
+        type: [static]  # TODO: shared
 
         os: [macos, ubuntu, windows]
 
         include:
-          - {type: shared, build: YES}
           - {type: static, build: NO}
+          - {type: shared, build: YES}
 
     runs-on: ${{ matrix.os }}-latest
 
