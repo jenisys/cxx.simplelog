@@ -5,18 +5,18 @@
 # ---------------------------------------------------------------------------
 # DEPENDENCIES
 # ---------------------------------------------------------------------------
-if(NOT TARGET Syslog::syslog)
-    find_package(Syslog)
-endif()
-if(NOT Syslog_FOUND)
-    # -- BAIL-OUT-HERE: syslog is not AVAILABLE.
-    message(STATUS "DISABLE LIBRARY: ${PROJECT_NAMESPACE}::simplelog_syslog")
-    return()
-endif()
-
-if(NOT TARGET fmt::fmt)
-    find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
-endif()
+# if(NOT TARGET Syslog::syslog)
+#     find_package(Syslog)
+# endif()
+# if(NOT Syslog_FOUND)
+#     # -- BAIL-OUT-HERE: syslog is not AVAILABLE.
+#     message(STATUS "DISABLE LIBRARY: ${PROJECT_NAMESPACE}::simplelog_syslog")
+#     return()
+# endif()
+#
+# if(NOT TARGET fmt::fmt)
+#     find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
+# endif()
 
 # ---------------------------------------------------------------------------
 # BACKEND-SPECIFIC LIBRARY: simplelog_syslog (HEADER-ONLY, but depends on OTHER_LIBS)
@@ -38,19 +38,38 @@ add_library(
     LogBackendMacros.hpp Module.hpp ModuleRegistry.hpp
 )
 target_link_libraries(
-    simplelog_syslog PUBLIC ${PROJECT_NAMESPACE}::simplelog fmt::fmt Syslog::syslog
+    simplelog_syslog PUBLIC ${PROJECT_NAMESPACE}::simplelog fmt::fmt
+                            Syslog::syslog
 )
-target_compile_definitions(simplelog_syslog PUBLIC SIMPLELOG_USE_BACKEND_SYSLOG=1)
-target_compile_features(simplelog_syslog PUBLIC cxx_auto_type cxx_lambdas cxx_variadic_macros)
+target_compile_definitions(
+    simplelog_syslog PUBLIC SIMPLELOG_USE_BACKEND_SYSLOG=1
+)
+target_compile_features(
+    simplelog_syslog PUBLIC cxx_auto_type cxx_lambdas cxx_variadic_macros
+)
 
-packageProject(
-    NAME simplelog_syslog
-    VERSION ${PROJECT_VERSION}
-    NAMESPACE ${PROJECT_NAMESPACE}
-    BINARY_DIR ${PROJECT_BINARY_DIR}
-    INCLUDE_DIR ${SIMPLELOG_INCLUDE_DIR}
-    INCLUDE_DESTINATION include
-    COMPATIBILITY SameMajorVersion
-    DISABLE_VERSION_SUFFIX YES
-    DEPENDENCIES "fmt ${FMT_MIN_VERSION}; Syslog"
-)
+# install the target and create export-set
+if(ON)
+    add_library(${PROJECT_NAMESPACE}::simplelog_syslog ALIAS simplelog_syslog)
+    install(
+        TARGETS simplelog_syslog
+        EXPORT ${PROJECT_NAMESPACE}Targets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES
+        DESTINATION include
+    )
+else()
+    packageProject(
+        NAME simplelog_syslog
+        VERSION ${PROJECT_VERSION}
+        NAMESPACE ${PROJECT_NAMESPACE}
+        BINARY_DIR ${PROJECT_BINARY_DIR}
+        INCLUDE_DIR ${SIMPLELOG_INCLUDE_DIR}
+        INCLUDE_DESTINATION include
+        COMPATIBILITY SameMajorVersion
+        DISABLE_VERSION_SUFFIX YES
+        DEPENDENCIES "fmt ${FMT_MIN_VERSION}; Syslog"
+    )
+endif()

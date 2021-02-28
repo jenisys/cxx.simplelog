@@ -51,7 +51,7 @@ auto getStaticLogger(void) -> simplelog::backend_null::LoggerPtr
 
 void example_useStaticLogger(void)
 {
-    auto log = getStaticLogger(); // cppcheck-suppress: [unreadVariable]
+    auto* log = getStaticLogger(); // cppcheck-suppress: [unreadVariable]
     SLOGM_ERROR0(log, "Hello Alice");
 }
 

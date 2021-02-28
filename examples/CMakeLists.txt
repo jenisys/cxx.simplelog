@@ -20,13 +20,15 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     include(ccache)
     include(cxx.setup_project)
 
-    # TODO: Quickfix only, should not be necessary! CK
-    find_package(simplelog)
-    # FIXME: The following imported targets are referenced, but are missing: cxx_simplelog::simplelog
+    find_package(simplelog COMPONENTS simplelog null spdlog syslog)
 
-    find_package(simplelog_null)
-    find_package(simplelog_spdlog)
-    find_package(simplelog_syslog)
+    # TODO: Quickfix only, should not be necessary! CK
+    find_package(Syslog)
+    # FIXME: simplelog could not be found because dependency Syslog could not be found.
+
+    ## find_package(simplelog_null)
+    ## find_package(simplelog_spdlog)
+    ## find_package(simplelog_syslog)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -35,7 +37,7 @@ endif()
 add_executable(simplelog_example_spdlog)
 target_sources(simplelog_example_spdlog PRIVATE main.example_spdlog.cpp)
 target_link_libraries(
-    simplelog_example_spdlog PRIVATE cxx_simplelog::simplelog_spdlog # INHERITED: spdlog::spdlog
+    simplelog_example_spdlog PRIVATE simplelog::simplelog_spdlog # INHERITED: spdlog::spdlog
                                      # PREPARED: fmt::fmt
 )
 target_compile_options(simplelog_example_spdlog PRIVATE -Wall -Wextra -Wpedantic)
@@ -45,18 +47,18 @@ target_compile_definitions(
 
 add_executable(simplelog_example_null)
 target_sources(simplelog_example_null PRIVATE main.example_null.cpp)
-target_link_libraries(simplelog_example_null PRIVATE cxx_simplelog::simplelog_null)
+target_link_libraries(simplelog_example_null PRIVATE simplelog::simplelog_null)
 target_compile_options(simplelog_example_null PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_definitions(
     simplelog_example_null PRIVATE # NOT-NEEDED: SIMPLELOG_USE_BACKEND_NULL=1
                                    SIMPLELOG_DIAG=1
 )
 
-if(TARGET cxx_simplelog::simplelog_syslog)
+if(TARGET simplelog::simplelog_syslog)
     add_executable(simplelog_example_syslog)
     target_sources(simplelog_example_syslog PRIVATE main.example_syslog.cpp)
     target_link_libraries(
-        simplelog_example_syslog PRIVATE cxx_simplelog::simplelog_syslog
+        simplelog_example_syslog PRIVATE simplelog::simplelog_syslog
                                          # INHERITED: fmt::fmt
     )
     target_compile_options(simplelog_example_syslog PRIVATE -Wall -Wextra -Wpedantic)
@@ -81,7 +83,7 @@ target_link_libraries(example_variadic_args fmt::fmt)
 enable_testing()
 
 set(EXAMPLE_PROGRAMS simplelog_example_spdlog simplelog_example_null example_variadic_args)
-if(TARGET cxx_simplelog::simplelog_syslog)
+if(TARGET simplelog::simplelog_syslog)
     list(APPEND EXAMPLE_PROGRAMS simplelog_example_syslog)
 endif()
 

@@ -135,7 +135,7 @@ void example_use_my_format(void)
 // ==========================================================================
 // MAIN-FUNCTION:
 // ==========================================================================
-int main(int argc, char **argv)
+int main()
 {
     example_useMacros1();
     example_useMacros2();

@@ -21,7 +21,7 @@ target_sources(
             test_compilable.TraceMacros.cpp
 )
 target_link_libraries(
-    test_simplelog_backend_spdlog cxx_simplelog::simplelog_spdlog doctest::doctest
+    test_simplelog_backend_spdlog simplelog::simplelog_spdlog doctest::doctest
 )
 target_compile_definitions(
     test_simplelog_backend_spdlog PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}

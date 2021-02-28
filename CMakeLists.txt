@@ -27,8 +27,8 @@ project(
     LANGUAGES CXX
 )
 
-option(BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
-option(BUILD_TESTING "Enable tests (and examples)" ${MASTER_PROJECT})
+#XXX option(BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
+#XXX option(BUILD_TESTING "Enable tests (and examples)" ${MASTER_PROJECT})
 option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
 option(SIMPLELOG_BUILD_TESTS "Enable tests (and examples)" ${MASTER_PROJECT})
 
@@ -76,7 +76,6 @@ CPMAddPackage(
 if(SIMPLELOG_USE_BACKEND_SYSLOG)
     find_package(Syslog)
     if(NOT Syslog_FOUND)
-        message(WARNING "Syslog_FOUND=${Syslog_FOUND}")
         set(SIMPLELOG_USE_BACKEND_SYSLOG OFF)
     endif()
 endif()
@@ -84,7 +83,11 @@ endif()
 # ---------------------------------------------------------------------------
 # SECTION: LIBS
 # ---------------------------------------------------------------------------
-set(PROJECT_NAMESPACE cxx_simplelog)
+# Note: same postfix as fmt and spdlog! CK
+set(CMAKE_DEBUG_POSTFIX d)
+
+# Note: set namespace for export cmake config package! CK
+set(PROJECT_NAMESPACE simplelog)
 set(SIMPLELOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # -- HEADER-ONLY LIBS:
@@ -120,7 +123,57 @@ endif()
 # ----------------------------------------------------------------------------
 # SECTION: Install
 # ----------------------------------------------------------------------------
-# done at subdirs! CK
+
+# install header file
+install(
+    DIRECTORY src/simplelog
+    TYPE INCLUDE # OR DESTINATION include/${PROJECT_NAMESPACE}
+    FILES_MATCHING
+    PATTERN "*.hpp"
+)
+
+# generate and install export file
+install(
+    EXPORT ${PROJECT_NAMESPACE}Targets
+    FILE ${PROJECT_NAMESPACE}Targets.cmake
+    NAMESPACE ${PROJECT_NAMESPACE}::
+    DESTINATION lib/cmake/${PROJECT_NAMESPACE}
+)
+
+# include CMakePackageConfigHelpers macro
+include(CMakePackageConfigHelpers)
+
+# generate the version file for the config file
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAMESPACE}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+# Note: create config file without NO_CHECK_REQUIRED_COMPONENTS_MACRO! CK
+configure_package_config_file(
+    .cmake/project-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAMESPACE}Config.cmake
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAMESPACE}
+    #XXX NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+# install config files
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAMESPACE}Config.cmake
+          ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAMESPACE}ConfigVersion.cmake
+    DESTINATION lib/cmake/${PROJECT_NAMESPACE}
+)
+
+# generate the export targets for the entire build tree
+# Note: needs to be after all install(TARGETS ) commands
+export(
+    EXPORT ${PROJECT_NAMESPACE}Targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAMESPACE}Targets.cmake
+    NAMESPACE ${PROJECT_NAMESPACE}::
+)
+
+# MAYBE:
 # ----------------------------------------------------------------------------
 # SECTION: Pack
 # ----------------------------------------------------------------------------
