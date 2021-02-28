@@ -2,6 +2,32 @@
 # CMAKE: cxx.simplelog/examples
 # ===========================================================================
 
+cmake_minimum_required(VERSION 3.14...3.20)
+
+# ---------------------------------------------------------------------------
+# PROJECT:
+# ---------------------------------------------------------------------------
+project(
+    cxx.simplelog.test
+    LANGUAGES CXX
+)
+
+set(MASTER_PROJECT OFF)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(MASTER_PROJECT ON)
+
+    list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
+    include(ccache)
+
+    # TODO: Quickfix only, should not be necessary! CK
+    find_package(simplelog)
+    # FIXME: The following imported targets are referenced, but are missing: cxx_simplelog::simplelog
+
+    find_package(simplelog_null)
+    find_package(simplelog_spdlog)
+    find_package(simplelog_syslog)
+endif()
+
 # ---------------------------------------------------------------------------
 # SECTION: EXECUTABLES
 # ---------------------------------------------------------------------------
@@ -16,7 +42,6 @@ target_compile_definitions(
     simplelog_example_spdlog PRIVATE SIMPLELOG_USE_BACKEND_SPDLOG=1 SIMPLELOG_DIAG=1
 )
 
-# -- EXECUTABLE:
 add_executable(simplelog_example_null)
 target_sources(simplelog_example_null PRIVATE main.example_null.cpp)
 target_link_libraries(simplelog_example_null PRIVATE cxx_simplelog::simplelog_null)
@@ -26,7 +51,7 @@ target_compile_definitions(
                                    SIMPLELOG_DIAG=1
 )
 
-if(SIMPLELOG_USE_BACKEND_SYSLOG)
+if(TARGET cxx_simplelog::simplelog_syslog)
     add_executable(simplelog_example_syslog)
     target_sources(simplelog_example_syslog PRIVATE main.example_syslog.cpp)
     target_link_libraries(
@@ -55,7 +80,7 @@ target_link_libraries(example_variadic_args fmt::fmt)
 enable_testing()
 
 set(EXAMPLE_PROGRAMS simplelog_example_spdlog simplelog_example_null example_variadic_args)
-if(SIMPLELOG_USE_BACKEND_SYSLOG)
+if(TARGET cxx_simplelog::simplelog_syslog)
     list(APPEND EXAMPLE_PROGRAMS simplelog_example_syslog)
 endif()
 

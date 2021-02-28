@@ -80,7 +80,7 @@ void process_setupLogging(void)
     // -- HINT: NOTHING TO DO (here) => NULL pattern
 }
 
-int main(int argc, char **argv)
+int main()
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.

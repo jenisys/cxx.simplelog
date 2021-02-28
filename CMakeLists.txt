@@ -47,41 +47,32 @@ include(cxx.setup_project)
 set(SPDLOG_MIN_VERSION 1.8.2)
 set(FMT_MIN_VERSION 7.1.3)
 
-if(FALSE)
-    find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-    find_package(fmt ${FMT_MIN_VERSION} REQUIRED)
 
-    # -- THIRD-PARTY PARTS:
-    message(STATUS "USING: spdlog.version=${spdlog_VERSION}")
-    message(STATUS "USING: fmt.version=${fmt_VERSION}")
-else()
-    # ---- Add dependencies via CPM ----
-    # see https://github.com/cpm-cmake/CPM.cmake for more info
+# ---- Add dependencies via CPM ----
+# see https://github.com/cpm-cmake/CPM.cmake for more info
 
-    include(cmake/CPM.cmake)
-    CPMUsePackageLock(package-lock.cmake)
+include(cmake/CPM.cmake)
 
-    # PackageProject.cmake will be used to make our target installable
-    CPMAddPackage(
-        NAME PackageProject.cmake
-        GITHUB_REPOSITORY TheLartians/PackageProject.cmake
-        VERSION 1.5.1
-    )
+# PackageProject.cmake will be used to make our target installable
+CPMAddPackage(
+    NAME PackageProject.cmake
+    GITHUB_REPOSITORY TheLartians/PackageProject.cmake
+    VERSION 1.5.1
+)
 
-    CPMAddPackage(
-        NAME fmt
-        GIT_TAG ${FMT_MIN_VERSION}
-        GITHUB_REPOSITORY fmtlib/fmt # to get an installable target
-        OPTIONS "FMT_INSTALL YES"
-    )
+CPMAddPackage(
+    NAME fmt
+    GIT_TAG ${FMT_MIN_VERSION}
+    GITHUB_REPOSITORY fmtlib/fmt # to get an installable target
+    OPTIONS "FMT_INSTALL YES"
+)
 
-    CPMAddPackage(
-        NAME spdlog
-        GIT_TAG v${SPDLOG_MIN_VERSION}
-        GITHUB_REPOSITORY gabime/spdlog # to use our installed fmt lib
-        OPTIONS "SPDLOG_FMT_EXTERNAL YES"
-    )
-endif()
+CPMAddPackage(
+    NAME spdlog
+    GIT_TAG v${SPDLOG_MIN_VERSION}
+    GITHUB_REPOSITORY gabime/spdlog # to use our installed fmt lib
+    OPTIONS "SPDLOG_FMT_EXTERNAL YES"
+)
 
 if(SIMPLELOG_USE_BACKEND_SYSLOG)
     find_package(Syslog)
@@ -130,7 +121,7 @@ endif()
 # ----------------------------------------------------------------------------
 # SECTION: Install
 # ----------------------------------------------------------------------------
-
+# done at subdirs! CK
 # ----------------------------------------------------------------------------
 # SECTION: Pack
 # ----------------------------------------------------------------------------

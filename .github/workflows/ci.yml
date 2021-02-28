@@ -1,0 +1,51 @@
+---
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+
+      matrix:
+        type: [shared, static]
+
+        os: [macos, ubuntu, windows]
+
+        include:
+          # - {type: shared, build: YES}
+          - {type: static, build: NO}
+
+    runs-on: ${{ matrix.os }}-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Configure
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+          -D BUILD_SHARED_LIBS=${{ matrix.build }}
+
+      - name: Build
+        run: cmake --build build --config Release -j 4
+
+      - name: Test
+        working-directory: build
+        run: ctest -C Release --output-on-failure
+
+      - name: Install
+        run: cmake --install build --config Release --prefix stage
+
+      - name: TestInstalledVersion
+        run: |
+          cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/stage
+          cmake --build build/test --target test_examples -j 4

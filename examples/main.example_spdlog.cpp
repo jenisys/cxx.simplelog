@@ -167,7 +167,7 @@ void process_setupLogging(void)
     simplelog::backend_spdlog::setMinLevel(spdlog::level::info);
 }
 
-int main(int argc, char **argv)
+int main()
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.

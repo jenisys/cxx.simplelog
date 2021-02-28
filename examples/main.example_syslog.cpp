@@ -94,7 +94,7 @@ void process_setupLogging(void)
     module1->setLevel(LOG_DEBUG);
 }
 
-int main(int argc, char **argv)
+int main()
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.
