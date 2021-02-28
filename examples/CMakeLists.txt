@@ -18,6 +18,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
     list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
     include(ccache)
+    include(cxx.setup_project)
 
     # TODO: Quickfix only, should not be necessary! CK
     find_package(simplelog)

@@ -47,7 +47,6 @@ include(cxx.setup_project)
 set(SPDLOG_MIN_VERSION 1.8.2)
 set(FMT_MIN_VERSION 7.1.3)
 
-
 # ---- Add dependencies via CPM ----
 # see https://github.com/cpm-cmake/CPM.cmake for more info
 

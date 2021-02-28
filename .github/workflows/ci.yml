@@ -18,12 +18,14 @@ jobs:
       fail-fast: false
 
       matrix:
-        type: [shared, static]
+        type:
+          - static
+          # TODO: - shared
 
         os: [macos, ubuntu, windows]
 
         include:
-          # - {type: shared, build: YES}
+          - {type: shared, build: YES}
           - {type: static, build: NO}
 
     runs-on: ${{ matrix.os }}-latest
@@ -47,5 +49,6 @@ jobs:
 
       - name: TestInstalledVersion
         run: |
-          cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/stage
+          cmake -S examples -B build/test
+            -D CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/stage
           cmake --build build/test --target test_examples -j 4
