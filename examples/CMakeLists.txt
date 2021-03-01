@@ -20,15 +20,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     include(ccache)
     include(cxx.setup_project)
 
-    find_package(simplelog COMPONENTS simplelog null spdlog syslog)
-
-    # TODO: Quickfix only, should not be necessary! CK
-    find_package(Syslog)
-    # FIXME: simplelog could not be found because dependency Syslog could not be found.
-
-    ## find_package(simplelog_null)
-    ## find_package(simplelog_spdlog)
-    ## find_package(simplelog_syslog)
+    find_package(simplelog COMPONENTS null spdlog syslog)
 endif()
 
 # ---------------------------------------------------------------------------

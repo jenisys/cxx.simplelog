@@ -28,7 +28,7 @@
 // ==========================================================================
 // EXAMPLE: Logging sources/users
 // ==========================================================================
-void example_useLoggingWithDefaultModule(void)
+void example_useLoggingWithDefaultModule()
 {
     SIMPLELOG_DEFINE_DEFAULT_MODULE("foo.bar");
 
@@ -45,7 +45,7 @@ void example_useLoggingWithDefaultModule(void)
     SLOG_WARN("Hello {}", "Bob");
 }
 
-void example_useLoggingWithOverriddenDefaultModule(void)
+void example_useLoggingWithOverriddenDefaultModule()
 {
     SIMPLELOG_DEFINE_DEFAULT_MODULE("OUTER");
     SLOG_WARN("Use module=OUTER");
@@ -63,7 +63,7 @@ void example_useLoggingWithOverriddenDefaultModule(void)
 // ==========================================================================
 SIMPLELOG_DEFINE_STATIC_MODULE(rootLog, "root");
 
-void use_simplelog(void)
+void use_simplelog()
 {
     SIMPLELOG_DEFINE_MODULE(console, "console");
     example_useLoggingWithDefaultModule();
@@ -79,7 +79,7 @@ void use_simplelog(void)
 #include <simplelog/backend/syslog/Module.hpp>
 #include <simplelog/backend/syslog/ModuleRegistry.hpp>
 
-void process_setupLogging(void)
+void process_setupLogging()
 {
     // using namespace simplelog::backend_syslog;
     using simplelog::backend_syslog::getModuleRegistry;
@@ -94,7 +94,7 @@ void process_setupLogging(void)
     module1->setLevel(LOG_DEBUG);
 }
 
-int main()
+auto main() -> int
 {
     // -- PHASE 1: SETUP LOGGING SUBSYSTEM
     // NOTE: Specific for each logging-backend / logging-framework.

@@ -32,7 +32,7 @@ project(
 option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples" ${MASTER_PROJECT})
 option(SIMPLELOG_BUILD_TESTS "Enable tests (and examples)" ${MASTER_PROJECT})
 
-option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
+option(SIMPLELOG_USE_BACKEND_SYSTEMD "Use systemd as simplelog-backend" ON)
 option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
 
 option(DOCTEST_NO_INSTALL "Normally exclude doctest from packages" YES)
@@ -77,6 +77,13 @@ if(SIMPLELOG_USE_BACKEND_SYSLOG)
     find_package(Syslog)
     if(NOT Syslog_FOUND)
         set(SIMPLELOG_USE_BACKEND_SYSLOG OFF)
+    endif()
+endif()
+
+if(SIMPLELOG_USE_BACKEND_SYSTEMD)
+    find_package(Systemd)
+    if(NOT Systemd_FOUND)
+        set(SIMPLELOG_USE_BACKEND_SYSTEMD OFF)
     endif()
 endif()
 
@@ -157,6 +164,18 @@ configure_package_config_file(
     INSTALL_DESTINATION lib/cmake/${PROJECT_NAMESPACE}
     #XXX NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
+
+if(SIMPLELOG_USE_BACKEND_SYSLOG)
+    install(FILES .cmake/SyslogTargets.cmake
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAMESPACE}
+    )
+endif()
+
+if(SIMPLELOG_USE_BACKEND_SYSTEMD)
+    install(FILES .cmake/SystemdTargets.cmake
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAMESPACE}
+    )
+endif()
 
 # install config files
 install(

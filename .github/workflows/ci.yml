@@ -31,6 +31,15 @@ jobs:
           path: "**/cpm_modules"
           key: ${{ github.workflow }}-cpm-modules-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
 
+
+      - name: Install llvm-10 Ubuntu Host
+        if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
+        run: |
+          sudo apt-get install \
+            llvm-10 clang-10 libclang-10-dev clang-tidy-10 ||
+              echo IGNORED
+
       - name: Configure
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=${{ matrix.build }}
 
@@ -49,3 +58,20 @@ jobs:
         run: |
           cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$PWD/stage
           cmake --build build/test --target test_examples -j 4
+
+      - name: Run clang-tidy on MacOS Host
+        if: startsWith(matrix.os, 'macos')
+        shell: bash
+        run: |
+          export PATH=/usr/local/opt/llvm/bin/:${PATH}
+          builddriver /usr/local/opt/llvm/share/clang/run-clang-tidy.py \
+            -p ${{runner.workspace}}/build examples ||
+          echo IGNORED
+
+      - name: Run clang-tidy on Ubuntu Host
+        if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
+        run: |
+          /home/runner/.local/bin/builddriver run-clang-tidy-10 \
+            -p ${{runner.workspace}}/build examples ||
+          echo IGNORED

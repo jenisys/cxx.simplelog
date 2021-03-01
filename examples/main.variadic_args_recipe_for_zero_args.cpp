@@ -89,7 +89,7 @@
 // ==========================================================================
 // EXAMPLE: Use CPP Macros
 // ==========================================================================
-void example_useMacros1(void)
+void example_useMacros1()
 {
     // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES => PREFERRED.
     CXXLOG_1("ZERO_ARGS: Hello");
@@ -97,7 +97,7 @@ void example_useMacros1(void)
     CXXLOG_1("TWO_ARGS:  Hello {} and {}", "Alice", "Bob");
 }
 
-void example_useMacros2(void)
+void example_useMacros2()
 {
     // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES => PREFERRED.
     CXXLOG_2("ZERO_ARGS: Hello");
@@ -105,7 +105,7 @@ void example_useMacros2(void)
     CXXLOG_2("TWO_ARGS:  Hello {} and {}", "Alice", "Bob");
 }
 
-void example_useMacros3(void)
+void example_useMacros3()
 {
     // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES => PREFERRED.
     CXXLOG_3("ZERO_ARGS: Hello");
@@ -121,7 +121,7 @@ template <typename... T> auto my_format(const T &...arg)
     return text;
 }
 
-void example_use_my_format(void)
+void example_use_my_format()
 {
     // -- ALTERNATIVE: Use SHORTER-MACRO-NAMES => PREFERRED.
     CXXLOG_1("example_use_my_format:");
@@ -135,7 +135,7 @@ void example_use_my_format(void)
 // ==========================================================================
 // MAIN-FUNCTION:
 // ==========================================================================
-int main()
+auto main() -> int
 {
     example_useMacros1();
     example_useMacros2();
