@@ -31,12 +31,8 @@ private:
     int m_level; //!< Log level as threshold to suppress messages.
 
 public:
-    explicit ModuleBase(std::string name = "")
-        : m_name(std::move(name)), m_level(0)
-    {}
-    explicit ModuleBase(std::string name, int level = 0)
-        : m_name(std::move(name)), m_level(level)
-    {}
+    explicit ModuleBase(std::string name = "") : m_name(std::move(name)), m_level(0) {}
+    explicit ModuleBase(std::string name, int level = 0) : m_name(std::move(name)), m_level(level) {}
 
     const std::string &getName(void) const { return m_name; }
     int getLevel(void) const { return m_level; }

@@ -12,6 +12,7 @@
 
 #include <spdlog/logger.h>
 #include <spdlog/spdlog.h>
+
 #include <vector>
 
 // ==========================================================================
@@ -251,8 +252,7 @@ inline void useLogSinkAsDefaultSink(LoggerPtr theLog)
     ::spdlog::apply_all([&](LoggerPtr logPtr) {
         if (logPtr != theLog) {
             // -- REASSIGN: Log-sink.
-            SIMPLELOG_DIAG_TRACE("UseDefaultSink with reassign for: {0}",
-                                 logPtr->name());
+            SIMPLELOG_DIAG_TRACE("UseDefaultSink with reassign for: {0}", logPtr->name());
             logPtr->sinks().clear();
             logPtr->sinks().push_back(defaultSink);
         }

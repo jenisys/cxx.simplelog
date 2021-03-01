@@ -14,8 +14,7 @@
 #ifdef __has_include
 #    if __has_include("simplelog.user_config.hpp")
 #        include "simplelog.user_config.hpp"
-#    elif defined(SIMPLELOG_USE_USER_CONFIG) &&                                \
-        !(SIMPLELOG_USE_USER_CONFIG == 0)
+#    elif defined(SIMPLELOG_USE_USER_CONFIG) && !(SIMPLELOG_USE_USER_CONFIG == 0)
 #        include "simplelog.user_config.hpp"
 #    endif
 #endif

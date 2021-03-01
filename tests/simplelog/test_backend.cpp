@@ -12,8 +12,9 @@
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
 
-#include <memory> //< USE: std::shared_ptr<T>
 #include <spdlog/spdlog.h>
+
+#include <memory> //< USE: std::shared_ptr<T>
 
 // -- LOCAL-INCLUDES:
 // PREPARED: #include "CleanupLoggingFixture.hpp"

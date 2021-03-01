@@ -79,8 +79,7 @@ TEST_CASE("LogMacros0: can use all macros (compile-time check)")
     }
 }
 
-TEST_CASE("LogMacros0: can use short macros (compile-time check)" *
-          doctest::skip(NO_SHORT_MACROS))
+TEST_CASE("LogMacros0: can use short macros (compile-time check)" * doctest::skip(NO_SHORT_MACROS))
 {
 #if SIMPLELOG_HAVE_SHORT_MACROS
     SIMPLELOG_DEFINE_STATIC_DEFAULT_MODULE("default.static_1");

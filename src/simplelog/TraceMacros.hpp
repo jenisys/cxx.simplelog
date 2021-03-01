@@ -86,128 +86,105 @@
 //  SIMPLELOG_TRACE_xxx(message)        -- Message as string w/o placeholders.
 //  SIMPLELOG_TRACE_xxx(format, ...)    -- Message w/ placeholders; format
 //  describes message schema.
-#    define SIMPLELOG_TRACE_FATAL(...)                                         \
-        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule,                         \
-                              SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_CRITICAL(...)                                      \
-        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule,                         \
-                              SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_ERROR(...)                                         \
-        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule,                         \
-                              SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_WARN(...)                                          \
-        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule,                         \
-                              SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_INFO(...)                                          \
-        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule,                         \
-                              SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_DEBUG(...)                                         \
-        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule,                         \
-                              SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_FATAL(...)                                                                \
+        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_CRITICAL(...)                                                             \
+        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_ERROR(...)                                                                \
+        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_WARN(...)                                                                 \
+        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_INFO(...)                                                                 \
+        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_DEBUG(...)                                                                \
+        SIMPLELOG_BACKEND_LOG(simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
 // MACRO-SIGNATURE:
 //  SIMPLELOG_TRACE_xxx_IF(condition, message)        -- Message as string w/o
 //  placeholders. SIMPLELOG_TRACE_xxx_IF(condition, format, ...)    -- Message
 //  w/ placeholders; format describes message schema.
-#    define SIMPLELOG_TRACE_FATAL_IF(condition, ...)                           \
-        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,           \
-                                 SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_CRITICAL_IF(condition, ...)                        \
-        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,           \
-                                 SIMPLELOG_BACKEND_LEVEL_CRITICAL,             \
+#    define SIMPLELOG_TRACE_FATAL_IF(condition, ...)                                                  \
+        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_FATAL,   \
                                  __VA_ARGS__)
-#    define SIMPLELOG_TRACE_ERROR_IF(condition, ...)                           \
-        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,           \
-                                 SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_WARN_IF(condition, ...)                            \
-        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,           \
-                                 SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_INFO_IF(condition, ...)                            \
-        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,           \
-                                 SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
-#    define SIMPLELOG_TRACE_DEBUG_IF(condition, ...)                           \
-        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,           \
-                                 SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_CRITICAL_IF(condition, ...)                                               \
+        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule,                                  \
+                                 SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#    define SIMPLELOG_TRACE_ERROR_IF(condition, ...)                                                  \
+        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_ERROR,   \
+                                 __VA_ARGS__)
+#    define SIMPLELOG_TRACE_WARN_IF(condition, ...)                                                   \
+        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_WARN,    \
+                                 __VA_ARGS__)
+#    define SIMPLELOG_TRACE_INFO_IF(condition, ...)                                                   \
+        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_INFO,    \
+                                 __VA_ARGS__)
+#    define SIMPLELOG_TRACE_DEBUG_IF(condition, ...)                                                  \
+        SIMPLELOG_BACKEND_LOG_IF(condition, simplelog_defaultModule, SIMPLELOG_BACKEND_LEVEL_DEBUG,   \
+                                 __VA_ARGS__)
 
 // -- USE: SPECIFIC-MODULE (logger)
-#    define SIMPLELOGM_TRACE_FATAL(logger, ...)                                \
-        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_FATAL,           \
-                              __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_CRITICAL(logger, ...)                             \
-        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL,        \
-                              __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_ERROR(logger, ...)                                \
-        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_ERROR,           \
-                              __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_WARN(logger, ...)                                 \
+#    define SIMPLELOGM_TRACE_FATAL(logger, ...)                                                       \
+        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_CRITICAL(logger, ...)                                                    \
+        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_ERROR(logger, ...)                                                       \
+        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_WARN(logger, ...)                                                        \
         SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_INFO(logger, ...)                                 \
+#    define SIMPLELOGM_TRACE_INFO(logger, ...)                                                        \
         SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_DEBUG(logger, ...)                                \
-        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_DEBUG,           \
-                              __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_DEBUG(logger, ...)                                                       \
+        SIMPLELOG_BACKEND_LOG(logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
-#    define SIMPLELOGM_TRACE_FATAL_IF(condition, logger, ...)                  \
-        SIMPLELOG_BACKEND_LOG_IF(condition, logger,                            \
-                                 SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_CRITICAL_IF(condition, logger, ...)               \
-        SIMPLELOG_BACKEND_LOG_IF(                                              \
-            condition, logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_ERROR_IF(condition, logger, ...)                  \
-        SIMPLELOG_BACKEND_LOG_IF(condition, logger,                            \
-                                 SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_WARN_IF(condition, logger, ...)                   \
-        SIMPLELOG_BACKEND_LOG_IF(condition, logger,                            \
-                                 SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_INFO_IF(condition, logger, ...)                   \
-        SIMPLELOG_BACKEND_LOG_IF(condition, logger,                            \
-                                 SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
-#    define SIMPLELOGM_TRACE_DEBUG_IF(condition, logger, ...)                  \
-        SIMPLELOG_BACKEND_LOG_IF(condition, logger,                            \
-                                 SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_FATAL_IF(condition, logger, ...)                                         \
+        SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_FATAL, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_CRITICAL_IF(condition, logger, ...)                                      \
+        SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_CRITICAL, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_ERROR_IF(condition, logger, ...)                                         \
+        SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_ERROR, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_WARN_IF(condition, logger, ...)                                          \
+        SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_WARN, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_INFO_IF(condition, logger, ...)                                          \
+        SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_INFO, __VA_ARGS__)
+#    define SIMPLELOGM_TRACE_DEBUG_IF(condition, logger, ...)                                         \
+        SIMPLELOG_BACKEND_LOG_IF(condition, logger, SIMPLELOG_BACKEND_LEVEL_DEBUG, __VA_ARGS__)
 
 #else
 // ----------------------------------------------------------------------------
 // SIMPLELOG TRACE MACROS: DISABLED in NON-DEBUG mode
 // ----------------------------------------------------------------------------
-#    define SIMPLELOG_TRACE_FATAL(...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_CRITICAL(...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_ERROR(...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_WARN(...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_INFO(...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_DEBUG(...) SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_FATAL(...)                  SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_CRITICAL(...)               SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_ERROR(...)                  SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_WARN(...)                   SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_INFO(...)                   SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_DEBUG(...)                  SIMPLELOG_NULL_STATEMENT
 
 // MACRO-SIGNATURE:
 //  SIMPLELOG_TRACE_xxx_IF(condition, message)        -- Message as string w/o
 //  placeholders. SIMPLELOG_TRACE_xxx_IF(condition, format, ...)    -- Message
 //  w/ placeholders; format describes message schema.
-#    define SIMPLELOG_TRACE_FATAL_IF(condition, ...) SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_FATAL_IF(condition, ...)    SIMPLELOG_NULL_STATEMENT
 #    define SIMPLELOG_TRACE_CRITICAL_IF(condition, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_ERROR_IF(condition, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_WARN_IF(condition, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_INFO_IF(condition, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOG_TRACE_DEBUG_IF(condition, ...) SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_ERROR_IF(condition, ...)    SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_WARN_IF(condition, ...)     SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_INFO_IF(condition, ...)     SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOG_TRACE_DEBUG_IF(condition, ...)    SIMPLELOG_NULL_STATEMENT
 
 // -- USE: SPECIFIC-MODULE (logger)
-#    define SIMPLELOGM_TRACE_FATAL(logger, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_CRITICAL(logger, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_ERROR(logger, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_WARN(logger, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_INFO(logger, ...) SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_DEBUG(logger, ...) SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_FATAL(logger, ...)         SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_CRITICAL(logger, ...)      SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_ERROR(logger, ...)         SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_WARN(logger, ...)          SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_INFO(logger, ...)          SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_DEBUG(logger, ...)         SIMPLELOG_NULL_STATEMENT
 
-#    define SIMPLELOGM_TRACE_FATAL_IF(condition, logger, ...)                  \
-        SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_CRITICAL_IF(condition, logger, ...)               \
-        SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_ERROR_IF(condition, logger, ...)                  \
-        SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_WARN_IF(condition, logger, ...)                   \
-        SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_INFO_IF(condition, logger, ...)                   \
-        SIMPLELOG_NULL_STATEMENT
-#    define SIMPLELOGM_TRACE_DEBUG_IF(condition, logger, ...)                  \
-        SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_FATAL_IF(condition, logger, ...)    SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_CRITICAL_IF(condition, logger, ...) SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_ERROR_IF(condition, logger, ...)    SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_WARN_IF(condition, logger, ...)     SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_INFO_IF(condition, logger, ...)     SIMPLELOG_NULL_STATEMENT
+#    define SIMPLELOGM_TRACE_DEBUG_IF(condition, logger, ...)    SIMPLELOG_NULL_STATEMENT
 #endif
 
 // --------------------------------------------------------------------------
@@ -220,61 +197,51 @@
 //  STRACE_xxx(message)        -- Message as string w/o placeholders.
 //  STRACE_xxx(format, ...)    -- Message w/ placeholders; format describes
 //  message schema.
-#    define STRACE_FATAL(...) SIMPLELOG_TRACE_FATAL(__VA_ARGS__)
+#    define STRACE_FATAL(...)    SIMPLELOG_TRACE_FATAL(__VA_ARGS__)
 #    define STRACE_CRITICAL(...) SIMPLELOG_TRACE_CRITICAL(__VA_ARGS__)
-#    define STRACE_ERROR(...) SIMPLELOG_TRACE_ERROR(__VA_ARGS__)
-#    define STRACE_WARN(...) SIMPLELOG_TRACE_WARN(__VA_ARGS__)
-#    define STRACE_INFO(...) SIMPLELOG_TRACE_INFO(__VA_ARGS__)
-#    define STRACE_DEBUG(...) SIMPLELOG_TRACE_DEBUG(__VA_ARGS__)
+#    define STRACE_ERROR(...)    SIMPLELOG_TRACE_ERROR(__VA_ARGS__)
+#    define STRACE_WARN(...)     SIMPLELOG_TRACE_WARN(__VA_ARGS__)
+#    define STRACE_INFO(...)     SIMPLELOG_TRACE_INFO(__VA_ARGS__)
+#    define STRACE_DEBUG(...)    SIMPLELOG_TRACE_DEBUG(__VA_ARGS__)
 
 // MACRO-SIGNATURE:
 //  STRACE_xxx_IF(condition, message)        -- Message as string w/o
 //  placeholders. STRACE_xxx_IF(condition, format, ...)    -- Message w/
 //  placeholders; format describes message schema.
-#    define STRACE_FATAL_IF(condition, ...)                                    \
-        SIMPLELOG_TRACE_FATAL_IF(condition, __VA_ARGS__)
-#    define STRACE_CRITICAL_IF(condition, ...)                                 \
-        SIMPLELOG_TRACE_CRITICAL_IF(condition, __VA_ARGS__)
-#    define STRACE_ERROR_IF(condition, ...)                                    \
-        SIMPLELOG_TRACE_ERROR_IF(condition, __VA_ARGS__)
-#    define STRACE_WARN_IF(condition, ...)                                     \
-        SIMPLELOG_TRACE_WARN_IF(condition, __VA_ARGS__)
-#    define STRACE_INFO_IF(condition, ...)                                     \
-        SIMPLELOG_TRACE_INFO_IF(condition, __VA_ARGS__)
-#    define STRACE_DEBUG_IF(condition, ...)                                    \
-        SIMPLELOG_TRACE_DEBUG_IF(condition, __VA_ARGS__)
+#    define STRACE_FATAL_IF(condition, ...)    SIMPLELOG_TRACE_FATAL_IF(condition, __VA_ARGS__)
+#    define STRACE_CRITICAL_IF(condition, ...) SIMPLELOG_TRACE_CRITICAL_IF(condition, __VA_ARGS__)
+#    define STRACE_ERROR_IF(condition, ...)    SIMPLELOG_TRACE_ERROR_IF(condition, __VA_ARGS__)
+#    define STRACE_WARN_IF(condition, ...)     SIMPLELOG_TRACE_WARN_IF(condition, __VA_ARGS__)
+#    define STRACE_INFO_IF(condition, ...)     SIMPLELOG_TRACE_INFO_IF(condition, __VA_ARGS__)
+#    define STRACE_DEBUG_IF(condition, ...)    SIMPLELOG_TRACE_DEBUG_IF(condition, __VA_ARGS__)
 
 // -- USE: SPECIFIC-MODULE (logger)
 // MACRO-SIGNATURE:
 //  STRACEM_xxx(logger, message)        -- Message as string w/o placeholders.
 //  STRACEM_xxx(logger, format, ...)    -- Message w/ placeholders; format
 //  describes message schema.
-#    define STRACEM_FATAL(logger, ...)                                         \
-        SIMPLELOGM_TRACE_FATAL(logger, __VA_ARGS__)
-#    define STRACEM_CRITICAL(logger, ...)                                      \
-        SIMPLELOGM_TRACE_CRITICAL(logger, __VA_ARGS__)
-#    define STRACEM_ERROR(logger, ...)                                         \
-        SIMPLELOGM_TRACE_ERROR(logger, __VA_ARGS__)
-#    define STRACEM_WARN(logger, ...) SIMPLELOGM_TRACE_WARN(logger, __VA_ARGS__)
-#    define STRACEM_INFO(logger, ...) SIMPLELOGM_TRACE_INFO(logger, __VA_ARGS__)
-#    define STRACEM_DEBUG(logger, ...)                                         \
-        SIMPLELOGM_TRACE_DEBUG(logger, __VA_ARGS__)
+#    define STRACEM_FATAL(logger, ...)    SIMPLELOGM_TRACE_FATAL(logger, __VA_ARGS__)
+#    define STRACEM_CRITICAL(logger, ...) SIMPLELOGM_TRACE_CRITICAL(logger, __VA_ARGS__)
+#    define STRACEM_ERROR(logger, ...)    SIMPLELOGM_TRACE_ERROR(logger, __VA_ARGS__)
+#    define STRACEM_WARN(logger, ...)     SIMPLELOGM_TRACE_WARN(logger, __VA_ARGS__)
+#    define STRACEM_INFO(logger, ...)     SIMPLELOGM_TRACE_INFO(logger, __VA_ARGS__)
+#    define STRACEM_DEBUG(logger, ...)    SIMPLELOGM_TRACE_DEBUG(logger, __VA_ARGS__)
 
 // MACRO-SIGNATURE:
 //  STRACEM_xxx_IF(condition, logger, message)        -- Message as string w/o
 //  placeholders. STRACEM_xxx_IF(condition, logger, format, ...)    -- Message
 //  w/ placeholders; format describes message schema.
-#    define STRACEM_FATAL_IF(condition, logger, ...)                           \
+#    define STRACEM_FATAL_IF(condition, logger, ...)                                                  \
         SIMPLELOGM_TRACE_FATAL_IF(condition, logger, __VA_ARGS__)
-#    define STRACEM_CRITICAL_IF(condition, logger, ...)                        \
+#    define STRACEM_CRITICAL_IF(condition, logger, ...)                                               \
         SIMPLELOGM_TRACE_CRITICAL_IF(condition, logger, __VA_ARGS__)
-#    define STRACEM_ERROR_IF(condition, logger, ...)                           \
+#    define STRACEM_ERROR_IF(condition, logger, ...)                                                  \
         SIMPLELOGM_TRACE_ERROR_IF(condition, logger, __VA_ARGS__)
-#    define STRACEM_WARN_IF(condition, logger, ...)                            \
+#    define STRACEM_WARN_IF(condition, logger, ...)                                                   \
         SIMPLELOGM_TRACE_WARN_IF(condition, logger, __VA_ARGS__)
-#    define STRACEM_INFO_IF(condition, logger, ...)                            \
+#    define STRACEM_INFO_IF(condition, logger, ...)                                                   \
         SIMPLELOGM_TRACE_INFO_IF(condition, logger, __VA_ARGS__)
-#    define STRACEM_DEBUG_IF(condition, logger, ...)                           \
+#    define STRACEM_DEBUG_IF(condition, logger, ...)                                                  \
         SIMPLELOGM_TRACE_DEBUG_IF(condition, logger, __VA_ARGS__)
 #endif
 

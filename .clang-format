@@ -22,9 +22,8 @@ AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 #
 AlignConsecutiveMacros: true
-###TBD: forced left!
 DerivePointerAlignment: false
-PointerAlignment: Left
+PointerAlignment: Right
 #NO! SpaceBeforeCpp11BracedList: true
 Cpp11BracedListStyle: true
 FixNamespaceComments: true

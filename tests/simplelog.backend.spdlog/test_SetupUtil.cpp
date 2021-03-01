@@ -11,8 +11,8 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
-#include <spdlog/sinks/null_sink.h>
 
+#include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/sink.h>
 #include <spdlog/spdlog.h>
 
@@ -213,9 +213,7 @@ TEST_CASE("assignSinkToAny: Should assign sink to any matching loggers")
     auto logger3 = useOrCreateLogger("foo_3");
 
     // -- ACT:
-    const auto &hasLoggerSameName = [](LoggerPtr log) {
-        return log->name() == "foo_2";
-    };
+    const auto &hasLoggerSameName = [](LoggerPtr log) { return log->name() == "foo_2"; };
     simplelog::backend_spdlog::assignSink(sink1);
     simplelog::backend_spdlog::assignSinkToAny(sink2, hasLoggerSameName);
 

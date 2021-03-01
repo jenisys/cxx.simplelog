@@ -16,12 +16,13 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
+
+#include <spdlog/details/os.h>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/ostream_sink.h>
+#include <spdlog/spdlog.h>
 
 #include <memory> //< USE: std::shared_ptr<T>
-#include <spdlog/details/os.h>
-#include <spdlog/spdlog.h>
 #include <sstream>
 
 // -- LOCAL-INCLUDES:

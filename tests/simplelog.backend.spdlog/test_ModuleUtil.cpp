@@ -12,8 +12,9 @@
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
 
-#include <memory> //< USE: std::shared_ptr<T>
 #include <spdlog/spdlog.h>
+
+#include <memory> //< USE: std::shared_ptr<T>
 
 // -- LOCAL-INCLUDES:
 #include "CleanupLoggingFixture.hpp"
@@ -39,22 +40,15 @@ auto makeLogger(const std::string &name) -> LoggerPtr
     return std::make_shared<spdlog::logger>(name);
 }
 
-void require_logger_is_unknown(const std::string &name)
-{
-    REQUIRE_EQ(spdlog::get(name), nullptr);
-}
+void require_logger_is_unknown(const std::string &name) { REQUIRE_EQ(spdlog::get(name), nullptr); }
 
-void require_logger_is_known(const std::string &name)
-{
-    REQUIRE_NE(spdlog::get(name), nullptr);
-}
+void require_logger_is_known(const std::string &name) { REQUIRE_NE(spdlog::get(name), nullptr); }
 
 // ============================================================================
 // TEST SUITE:
 // ============================================================================
 TEST_SUITE_BEGIN("simplelog.spdlog.ModuleUtil");
-TEST_CASE(
-    "useOrCreateLogger: Should create, init and register an unknown logger")
+TEST_CASE("useOrCreateLogger: Should create, init and register an unknown logger")
 {
     using simplelog::backend_spdlog::useOrCreateLogger;
     CleanupLoggingFixture cleanupGuard;

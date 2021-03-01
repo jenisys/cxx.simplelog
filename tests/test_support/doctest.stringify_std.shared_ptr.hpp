@@ -16,8 +16,7 @@
 
 namespace doctest_ext {
 
-template <typename T>
-std::ostream &printTo(std::ostream &os, const std::vector<T> &container)
+template <typename T> std::ostream &printTo(std::ostream &os, const std::vector<T> &container)
 {
     os << "[";
     for (const auto &item : container) {
@@ -31,8 +30,7 @@ std::ostream &printTo(std::ostream &os, const std::vector<T> &container)
 
 namespace std {
 
-template <typename T>
-std::ostream &operator<<(std::ostream &os, const std::vector<T> &container)
+template <typename T> std::ostream &operator<<(std::ostream &os, const std::vector<T> &container)
 {
     return doctest_ext::printTo(os, container);
 }

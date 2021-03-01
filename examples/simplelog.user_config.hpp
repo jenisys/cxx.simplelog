@@ -9,7 +9,7 @@
 // Otherwise you run into problem if you want to use multiple backends
 // for different programs.
 #ifndef SIMPLELOG_DEFAULT_BACKEND_MACROS_HEADER_FILE
-#    define SIMPLELOG_DEFAULT_BACKEND_MACROS_HEADER_FILE                       \
+#    define SIMPLELOG_DEFAULT_BACKEND_MACROS_HEADER_FILE                                              \
         "simplelog/backend/spdlog/LogBackendMacros.hpp"
 #    define SIMPLELOG_DEFAULT_BACKEND 1 //< SIMPLELOG_USE_BACKEND_SPDLOG
 #endif

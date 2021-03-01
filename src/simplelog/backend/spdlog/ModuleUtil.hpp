@@ -12,12 +12,13 @@
 
 // -- INCLUDES:
 #include "simplelog/detail/DiagMacros.hpp"
+
+#include <spdlog/logger.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/stdout_sinks.h>
+#include <spdlog/spdlog.h>
 
 #include <cassert>
-#include <spdlog/logger.h>
-#include <spdlog/spdlog.h>
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND ADAPTER HELPERS
@@ -46,11 +47,10 @@ inline void inheritSinksFromOther(LoggerPtr &log, const LoggerPtr &other)
         << " inherits "<< defaultSinks.size() << " sink(s) from "
         << (other->name().empty() ? "DEFAULT_LOGGER" : other->name()));
 #endif
-    SIMPLELOG_DIAG_TRACE(
-        "inheritSinksFromOther: {0} inherits {2} sink(s) from {1}",
-        (log->name().empty() ? std::string("DEFAULT_LOGGER") : log->name()),
-        (other->name().empty() ? std::string("DEFAULT_LOGGER") : other->name()),
-        defaultSinks.size());
+    SIMPLELOG_DIAG_TRACE("inheritSinksFromOther: {0} inherits {2} sink(s) from {1}",
+                         (log->name().empty() ? std::string("DEFAULT_LOGGER") : log->name()),
+                         (other->name().empty() ? std::string("DEFAULT_LOGGER") : other->name()),
+                         defaultSinks.size());
 }
 
 /**
@@ -72,14 +72,12 @@ inline auto makeLogger(std::string name) -> LoggerPtr
  * @return Logger pointer to newly created logger (shared_ptr)
  * @see spdlog::create<Sink>(name, sinkArgs...)
  **/
-inline auto createAndRegisterLogger(const std::string &name,
-                                    bool inheritSinks = true) -> LoggerPtr
+inline auto createAndRegisterLogger(const std::string &name, bool inheritSinks = true) -> LoggerPtr
 {
     auto newLogger = makeLogger(name);
     spdlog::initialize_logger(newLogger);
     const auto defaultLogger = spdlog::default_logger();
-    if (inheritSinks &&
-        defaultLogger) { // DISABLED: && newLogger->sinks().empty()) {
+    if (inheritSinks && defaultLogger) { // DISABLED: && newLogger->sinks().empty()) {
         // -- INHERIT SINKS FROM: DEFAULT_LOGGER (used as prototype)
         inheritSinksFromOther(newLogger, defaultLogger);
     }
@@ -106,11 +104,10 @@ inline auto useOrCreateLogger(const std::string &name) -> LoggerPtr
             // -- STRATEGY 1: Clone DEFAULT_LOGGER to inherit configuration.
             logPtr = prototype->clone(name);
             spdlog::register_logger(logPtr);
-            SIMPLELOG_DIAG_TRACE("useOrCreateLogger: Create log={0}  with "
-                                 "config from DEFAULT_LOGGER (cloned)",
-                                 (logPtr->name().empty()
-                                      ? std::string("DEFAULT_LOGGER")
-                                      : logPtr->name()));
+            SIMPLELOG_DIAG_TRACE(
+                "useOrCreateLogger: Create log={0}  with "
+                "config from DEFAULT_LOGGER (cloned)",
+                (logPtr->name().empty() ? std::string("DEFAULT_LOGGER") : logPtr->name()));
         } else {
             // -- STRATEGY 2: REGISTRY and/or DEFAULT_LOGGER
             // Init logger from REGISTRY config and

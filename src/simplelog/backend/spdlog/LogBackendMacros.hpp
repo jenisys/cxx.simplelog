@@ -29,7 +29,7 @@
  * @macro SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)
  * Defines a logging module (logger).
  **/
-#define SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)                        \
+#define SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)                                               \
     auto var_name = ::simplelog::backend_spdlog::useOrCreateLogger(name)
 
 /**
@@ -41,24 +41,22 @@
  *placeholders
  **/
 #if SIMPLELOG_BACKEND_SPDLOG_USE_SOURCE_LOCATION
-#    define SIMPLELOG_BACKEND_LOG(logger, level, ...)                          \
-        logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, \
-                    level, __VA_ARGS__)
+#    define SIMPLELOG_BACKEND_LOG(logger, level, ...)                                                 \
+        logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, __VA_ARGS__)
 #else
-#    define SIMPLELOG_BACKEND_LOG(logger, level, ...)                          \
-        logger->log(level, __VA_ARGS__)
+#    define SIMPLELOG_BACKEND_LOG(logger, level, ...) logger->log(level, __VA_ARGS__)
 #endif
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND: LEVEL DEFINITIONS
 // --------------------------------------------------------------------------
-#define SIMPLELOG_BACKEND_LEVEL_OFF ::spdlog::level::off
-#define SIMPLELOG_BACKEND_LEVEL_FATAL ::spdlog::level::off
+#define SIMPLELOG_BACKEND_LEVEL_OFF      ::spdlog::level::off
+#define SIMPLELOG_BACKEND_LEVEL_FATAL    ::spdlog::level::off
 #define SIMPLELOG_BACKEND_LEVEL_CRITICAL ::spdlog::level::critical
-#define SIMPLELOG_BACKEND_LEVEL_ERROR ::spdlog::level::err
-#define SIMPLELOG_BACKEND_LEVEL_WARN ::spdlog::level::warn
-#define SIMPLELOG_BACKEND_LEVEL_INFO ::spdlog::level::info
-#define SIMPLELOG_BACKEND_LEVEL_DEBUG ::spdlog::level::debug
+#define SIMPLELOG_BACKEND_LEVEL_ERROR    ::spdlog::level::err
+#define SIMPLELOG_BACKEND_LEVEL_WARN     ::spdlog::level::warn
+#define SIMPLELOG_BACKEND_LEVEL_INFO     ::spdlog::level::info
+#define SIMPLELOG_BACKEND_LEVEL_DEBUG    ::spdlog::level::debug
 
 // --------------------------------------------------------------------------
 // REUSE: LOGGING BACKEND DERIVED MACROS

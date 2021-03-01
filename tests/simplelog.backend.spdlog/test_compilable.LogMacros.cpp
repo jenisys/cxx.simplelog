@@ -16,10 +16,11 @@
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
+
 #include <spdlog/sinks/null_sink.h>
+#include <spdlog/spdlog.h>
 
 #include <memory> //< USE: std::shared_ptr<T>
-#include <spdlog/spdlog.h>
 
 // -- LOCAL-INCLUDES:
 // PREPARED: #include "CleanupLoggingFixture.hpp"
@@ -119,8 +120,7 @@ TEST_CASE("LogMacros: can use all macros (compile-time check)")
     }
 }
 
-TEST_CASE("LogMacros: can use short macros (compile-time check)" *
-          doctest::skip(NO_SHORT_MACROS))
+TEST_CASE("LogMacros: can use short macros (compile-time check)" * doctest::skip(NO_SHORT_MACROS))
 {
 #if SIMPLELOG_HAVE_SHORT_MACROS
     CleanupLoggingFixture cleanupGuard;

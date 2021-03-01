@@ -10,6 +10,6 @@
  * Convert preprocessor symbol value into a cstring.
  **/
 #define _STRINGIFY_IMPL(x) #x
-#define STRINGIFY(x) _STRINGIFY_IMPL(x)
+#define STRINGIFY(x)       _STRINGIFY_IMPL(x)
 
 // -- ENDOF-HEADER-FILE
