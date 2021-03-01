@@ -64,14 +64,12 @@ jobs:
         shell: bash
         run: |
           export PATH=/usr/local/opt/llvm/bin/:${PATH}
-          /usr/local/opt/llvm/share/clang/run-clang-tidy.py \
-            -p ${{runner.workspace}}/build/test examples ||
+          /usr/local/opt/llvm/share/clang/run-clang-tidy.py -p build/test examples ||
           echo IGNORED
 
       - name: Run clang-tidy on Ubuntu Host
         if: startsWith(matrix.os, 'ubuntu')
         shell: bash
         run: |
-          run-clang-tidy-10 \
-            -p ${{runner.workspace}}/build/test examples ||
+          run-clang-tidy-10 -p build/test examples ||
           echo IGNORED
