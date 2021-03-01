@@ -56,7 +56,7 @@ jobs:
       - name: TestInstalledVersion
         shell: bash
         run: |
-          cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$PWD/stage
+          cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$PWD/stage -D CMAKE_EXPORT_COMPILE_COMMANDS=1
           cmake --build build/test --target test_examples -j 4
 
       - name: Run clang-tidy on MacOS Host
@@ -65,7 +65,7 @@ jobs:
         run: |
           export PATH=/usr/local/opt/llvm/bin/:${PATH}
           builddriver /usr/local/opt/llvm/share/clang/run-clang-tidy.py \
-            -p ${{runner.workspace}}/build examples ||
+            -p ${{runner.workspace}}/build/test examples ||
           echo IGNORED
 
       - name: Run clang-tidy on Ubuntu Host
@@ -73,5 +73,5 @@ jobs:
         shell: bash
         run: |
           /home/runner/.local/bin/builddriver run-clang-tidy-10 \
-            -p ${{runner.workspace}}/build examples ||
+            -p ${{runner.workspace}}/build/test examples ||
           echo IGNORED
