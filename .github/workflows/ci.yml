@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           export PATH=/usr/local/opt/llvm/bin/:${PATH}
-          builddriver /usr/local/opt/llvm/share/clang/run-clang-tidy.py \
+          /usr/local/opt/llvm/share/clang/run-clang-tidy.py \
             -p ${{runner.workspace}}/build/test examples ||
           echo IGNORED
 
@@ -72,6 +72,6 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         shell: bash
         run: |
-          /home/runner/.local/bin/builddriver run-clang-tidy-10 \
+          run-clang-tidy-10 \
             -p ${{runner.workspace}}/build/test examples ||
           echo IGNORED
