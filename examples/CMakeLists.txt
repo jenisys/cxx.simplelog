@@ -30,9 +30,6 @@ target_link_libraries(
     PRIVATE simplelog::simplelog_spdlog # INHERITED: spdlog::spdlog
             # PREPARED: fmt::fmt
 )
-target_compile_options(
-    simplelog_example_spdlog PRIVATE -Wall -Wextra -Wpedantic
-)
 target_compile_definitions(
     simplelog_example_spdlog PRIVATE SIMPLELOG_USE_BACKEND_SPDLOG=1
                                      SIMPLELOG_DIAG=1
@@ -41,7 +38,6 @@ target_compile_definitions(
 add_executable(simplelog_example_null)
 target_sources(simplelog_example_null PRIVATE main.example_null.cpp)
 target_link_libraries(simplelog_example_null PRIVATE simplelog::simplelog_null)
-target_compile_options(simplelog_example_null PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_definitions(
     simplelog_example_null PRIVATE # NOT-NEEDED: SIMPLELOG_USE_BACKEND_NULL=1
                                    SIMPLELOG_DIAG=1
@@ -53,9 +49,6 @@ if(TARGET simplelog::simplelog_syslog)
     target_link_libraries(
         simplelog_example_syslog PRIVATE simplelog::simplelog_syslog
                                          # INHERITED: fmt::fmt
-    )
-    target_compile_options(
-        simplelog_example_syslog PRIVATE -Wall -Wextra -Wpedantic
     )
     target_compile_definitions(
         simplelog_example_syslog

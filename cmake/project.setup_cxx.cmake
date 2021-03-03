@@ -24,9 +24,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 # ----------------------------------------------------------------------------
 include("${CMAKE_CURRENT_LIST_DIR}/cxx.setup_cxx_standard.cmake")
 
-# set(CMAKE_CXX_EXTRA_FLAGS "-Wall -Wpedantic")
-# set(CMAKE_CXX_EXTRA_FLAGS "")
-
 # ----------------------------------------------------------------------------
 # MORE GENERIC PARTS:
 # ----------------------------------------------------------------------------
