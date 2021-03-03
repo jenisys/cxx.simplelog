@@ -24,7 +24,8 @@ target_link_libraries(
     test_simplelog_backend_spdlog simplelog::simplelog_spdlog doctest::doctest
 )
 target_compile_definitions(
-    test_simplelog_backend_spdlog PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
+    test_simplelog_backend_spdlog
+    PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
 )
 
 # ---------------------------------------------------------------------------
@@ -46,7 +47,9 @@ target_compile_definitions(
 # ---------------------------------------------------------------------------
 # SECTION: Tests
 # ---------------------------------------------------------------------------
-add_test(NAME test_simplelog.backend.spdlog COMMAND test_simplelog_backend_spdlog -s)
+add_test(NAME test_simplelog.backend.spdlog
+         COMMAND test_simplelog_backend_spdlog -s
+)
 # set_tests_properties(test_all PROPERTIES
 #   PASS_REGULAR_EXPRESSION     "1 test cases out of 1 passed")
 # HINT: set_tests_properties() above captures and verifies output against expectations.

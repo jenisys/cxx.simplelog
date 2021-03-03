@@ -11,11 +11,16 @@
 # CHECK TOOLCHAIN ASSUMPTIONS:
 # ---------------------------------------------------------------------------
 if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-    message(FATAL_ERROR "CMAKE_HOST_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME} (expected: Darwin)")
+    message(
+        FATAL_ERROR
+            "CMAKE_HOST_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME} (expected: Darwin)"
+    )
 endif()
 set(__TOOLCHAIN_PREFIX "/usr/local/opt/llvm")
 if(NOT EXISTS "${__TOOLCHAIN_PREFIX}/bin/clang++")
-    message(FATAL_ERROR "clang++ not installed (${__TOOLCHAIN_PREFIX}/bin/clang++)")
+    message(
+        FATAL_ERROR "clang++ not installed (${__TOOLCHAIN_PREFIX}/bin/clang++)"
+    )
 endif()
 
 # ---------------------------------------------------------------------------

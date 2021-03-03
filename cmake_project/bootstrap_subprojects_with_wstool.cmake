@@ -14,7 +14,9 @@
 # BETTER: wstool >= 0.1.18 (but version is not in pypi.org, yet)
 # ===========================================================================
 
-set(GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt")
+set(GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE
+    "${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlog/CMakeLists.txt"
+)
 set(GIT_SUBPROJECT_DIRS lib/spdlog lib/fmt lib/doctest)
 
 # -----------------------------------------------------------------------------
@@ -24,7 +26,10 @@ set(GIT_SUBPROJECT_DIRS lib/spdlog lib/fmt lib/doctest)
 # INSTALL: sudo pip install 'wstool>=0.1.18'
 find_program(WSTOOL NAMES wstool)
 if(WSTOOL STREQUAL "WSTOOL-NOTFOUND")
-    message(FATAL_ERROR "PROGRAM-NOT-FOUND: wstool; USE: sudo pip install -r py.requirements.txt")
+    message(
+        FATAL_ERROR
+            "PROGRAM-NOT-FOUND: wstool; USE: sudo pip install -r py.requirements.txt"
+    )
 endif()
 
 # -----------------------------------------------------------------------------
@@ -44,7 +49,9 @@ add_custom_target(
 # -----------------------------------------------------------------------------
 # HINT: Must be executed immediatly before other CMake parts (that depend on it).
 if(NOT EXISTS "${GIT_SUBPROJECTS_UPDATE_DONE_MARKER_FILE}")
-    message(STATUS "REQUIRES-WSTOOL-UPDATE: Checkout subprojects => lib/spdlog, ...")
+    message(
+        STATUS "REQUIRES-WSTOOL-UPDATE: Checkout subprojects => lib/spdlog, ..."
+    )
     execute_process(
         COMMAND wstool update WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         # DISABLED: TIMEOUT 600  # ABORT-AFTER: 10*60 seconds in OFFLINE mode

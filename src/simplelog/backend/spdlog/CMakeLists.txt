@@ -15,9 +15,10 @@
 # USED-FOR: Use simplelog library with configured simplelog.backend.spdlog.
 add_library(simplelog_spdlog INTERFACE)
 target_link_libraries(
-    simplelog_spdlog INTERFACE ${PROJECT_NAMESPACE}::simplelog
-    # XXX $<BUILD_INTERFACE:spdlog::spdlog_header_only>
-    spdlog::spdlog
+    simplelog_spdlog
+    INTERFACE ${PROJECT_NAMESPACE}::simplelog
+              # XXX $<BUILD_INTERFACE:spdlog::spdlog_header_only>
+              spdlog::spdlog
 )
 target_compile_definitions(
     simplelog_spdlog INTERFACE SIMPLELOG_USE_BACKEND_SPDLOG=1

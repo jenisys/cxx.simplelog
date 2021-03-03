@@ -9,9 +9,15 @@
 # ---------------------------------------------------------------------------
 # SEE: https://github.com/onqtam/doctest
 add_executable(test_simplelog)
-target_sources(test_simplelog PRIVATE test_main.cpp test_backend.cpp test_LogMacros.cpp)
-target_link_libraries(test_simplelog simplelog::simplelog_spdlog doctest::doctest)
-target_compile_definitions(test_simplelog PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS})
+target_sources(
+    test_simplelog PRIVATE test_main.cpp test_backend.cpp test_LogMacros.cpp
+)
+target_link_libraries(
+    test_simplelog simplelog::simplelog_spdlog doctest::doctest
+)
+target_compile_definitions(
+    test_simplelog PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
+)
 
 # ---------------------------------------------------------------------------
 # -- AUTO-RUN TESTS:

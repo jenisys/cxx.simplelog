@@ -38,7 +38,10 @@ elseif(CMAKE_CXX_COMPILER_LOADED)
     include(CheckIncludeFileCXX)
     include(CheckCXXSourceCompiles)
 else()
-    message(FATAL_ERROR "FindSystemd: Only works if either C or CXX language is enabled")
+    message(
+        FATAL_ERROR
+            "FindSystemd: Only works if either C or CXX language is enabled"
+    )
 endif()
 
 # simple pthread test code
@@ -57,13 +60,17 @@ int main(void)
 if(CMAKE_C_COMPILER_LOADED)
     check_include_file("systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
 else()
-    check_include_file_cxx("systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
+    check_include_file_cxx(
+        "systemd/sd-journal.h" CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H
+    )
 endif()
 
 if(CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H)
     set(Systemd_FOUND TRUE)
 endif()
-message(STATUS "CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H=${CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H}")
+message(
+    STATUS "CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H=${CMAKE_HAVE_SYSTEMD_SD_JOURNAL_H}"
+)
 
 set(CMAKE_REQUIRED_QUIET ${CMAKE_REQUIRED_QUIET_SAVE})
 include(FindPackageHandleStandardArgs)
@@ -71,6 +78,8 @@ find_package_handle_standard_args(Systemd DEFAULT_MSG Systemd_FOUND)
 
 if(Systemd_FOUND AND NOT TARGET Systemd::systemd)
     add_library(Systemd::systemd INTERFACE IMPORTED)
-    set_property(TARGET Systemd::systemd PROPERTY INTERFACE_LINK_LIBRARIES "-lsystemd")
+    set_property(
+        TARGET Systemd::systemd PROPERTY INTERFACE_LINK_LIBRARIES "-lsystemd"
+    )
     # -- HINT: Existance of systemd-library is NOT CHECKED.
 endif()

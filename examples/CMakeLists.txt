@@ -7,10 +7,7 @@ cmake_minimum_required(VERSION 3.14...3.20)
 # ---------------------------------------------------------------------------
 # PROJECT:
 # ---------------------------------------------------------------------------
-project(
-    cxx.simplelog.test
-    LANGUAGES CXX
-)
+project(cxx.simplelog.test LANGUAGES CXX)
 
 set(MASTER_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
@@ -29,12 +26,16 @@ endif()
 add_executable(simplelog_example_spdlog)
 target_sources(simplelog_example_spdlog PRIVATE main.example_spdlog.cpp)
 target_link_libraries(
-    simplelog_example_spdlog PRIVATE simplelog::simplelog_spdlog # INHERITED: spdlog::spdlog
-                                     # PREPARED: fmt::fmt
+    simplelog_example_spdlog
+    PRIVATE simplelog::simplelog_spdlog # INHERITED: spdlog::spdlog
+            # PREPARED: fmt::fmt
 )
-target_compile_options(simplelog_example_spdlog PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(
+    simplelog_example_spdlog PRIVATE -Wall -Wextra -Wpedantic
+)
 target_compile_definitions(
-    simplelog_example_spdlog PRIVATE SIMPLELOG_USE_BACKEND_SPDLOG=1 SIMPLELOG_DIAG=1
+    simplelog_example_spdlog PRIVATE SIMPLELOG_USE_BACKEND_SPDLOG=1
+                                     SIMPLELOG_DIAG=1
 )
 
 add_executable(simplelog_example_null)
@@ -53,16 +54,21 @@ if(TARGET simplelog::simplelog_syslog)
         simplelog_example_syslog PRIVATE simplelog::simplelog_syslog
                                          # INHERITED: fmt::fmt
     )
-    target_compile_options(simplelog_example_syslog PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(
+        simplelog_example_syslog PRIVATE -Wall -Wextra -Wpedantic
+    )
     target_compile_definitions(
-        simplelog_example_syslog PRIVATE SIMPLELOG_DIAG=1
-                                         # INHERITED: SIMPLELOG_USE_BACKEND_SYSLOG=1
+        simplelog_example_syslog
+        PRIVATE SIMPLELOG_DIAG=1
+                # INHERITED: SIMPLELOG_USE_BACKEND_SYSLOG=1
     )
 endif()
 
 # -- EXECUTABLE:
 add_executable(example_variadic_args)
-target_sources(example_variadic_args PRIVATE main.variadic_args_recipe_for_zero_args.cpp)
+target_sources(
+    example_variadic_args PRIVATE main.variadic_args_recipe_for_zero_args.cpp
+)
 target_link_libraries(example_variadic_args fmt::fmt)
 
 ### if(SIMPLELOG_USE_BUNDLED_FMTLIB)
@@ -74,7 +80,9 @@ target_link_libraries(example_variadic_args fmt::fmt)
 # ---------------------------------------------------------------------------
 enable_testing()
 
-set(EXAMPLE_PROGRAMS simplelog_example_spdlog simplelog_example_null example_variadic_args)
+set(EXAMPLE_PROGRAMS simplelog_example_spdlog simplelog_example_null
+                     example_variadic_args
+)
 if(TARGET simplelog::simplelog_syslog)
     list(APPEND EXAMPLE_PROGRAMS simplelog_example_syslog)
 endif()
@@ -110,11 +118,12 @@ add_custom_target(
 # -- more TESTS:
 add_test(NAME example_simplelog.spdlog COMMAND simplelog_example_spdlog)
 set_tests_properties(
-    example_simplelog.spdlog PROPERTIES PASS_REGULAR_EXPRESSION
-                                        ".*foo.bar::info.*  Hello Alice and Bob"
+    example_simplelog.spdlog
+    PROPERTIES PASS_REGULAR_EXPRESSION ".*foo.bar::info.*  Hello Alice and Bob"
 )
 
 add_test(NAME example_simplelog.null COMMAND simplelog_example_null)
 set_tests_properties(
-    example_simplelog.null PROPERTIES PASS_REGULAR_EXPRESSION "NULL-EXAMPLE: Finished."
+    example_simplelog.null PROPERTIES PASS_REGULAR_EXPRESSION
+                                      "NULL-EXAMPLE: Finished."
 )

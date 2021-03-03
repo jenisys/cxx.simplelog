@@ -18,12 +18,17 @@ target_sources(
             test_compilable.LogMacros0.cpp
             test_compilable.TraceMacros.cpp
 )
-target_link_libraries(test_simplelog_backend_null simplelog::simplelog_null doctest::doctest)
+target_link_libraries(
+    test_simplelog_backend_null simplelog::simplelog_null doctest::doctest
+)
 target_compile_definitions(
-    test_simplelog_backend_null PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
+    test_simplelog_backend_null
+    PRIVATE ${SIMPLELOG_TEST__COMMON_CXX_COMPILE_DEFINITIONS}
 )
 
 # ---------------------------------------------------------------------------
 # SECTION: Tests
 # ---------------------------------------------------------------------------
-add_test(NAME test_simplelog.backend.null COMMAND test_simplelog_backend_null -s)
+add_test(NAME test_simplelog.backend.null COMMAND test_simplelog_backend_null
+                                                  -s
+)

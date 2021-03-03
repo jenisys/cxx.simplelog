@@ -37,7 +37,10 @@ elseif(CMAKE_CXX_COMPILER_LOADED)
     include(CheckIncludeFileCXX)
     include(CheckCXXSourceCompiles)
 else()
-    message(FATAL_ERROR "FindSyslog: Only works if either C or CXX language is enabled")
+    message(
+        FATAL_ERROR
+            "FindSyslog: Only works if either C or CXX language is enabled"
+    )
 endif()
 
 # simple pthread test code

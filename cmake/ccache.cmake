@@ -41,6 +41,9 @@ if(CCACHE_PROGRAM)
         set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
         set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK "${CCACHE_PROGRAM}")
     else()
-        message(STATUS "DISABLED: ccache (found: ${CCACHE_PROGRAM}; USE_CCACHE=yes to enable)")
+        message(
+            STATUS
+                "DISABLED: ccache (found: ${CCACHE_PROGRAM}; USE_CCACHE=yes to enable)"
+        )
     endif()
 endif()

@@ -38,7 +38,10 @@ target_compile_features(
 
 # install the target and create export-set
 if(ON)
-    add_library(${PROJECT_NAMESPACE}::simplelog_systemd_journal ALIAS simplelog_systemd_journal)
+    add_library(
+        ${PROJECT_NAMESPACE}::simplelog_systemd_journal ALIAS
+        simplelog_systemd_journal
+    )
     install(
         TARGETS simplelog_systemd_journal
         EXPORT ${PROJECT_NAMESPACE}Targets
