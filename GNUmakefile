@@ -21,10 +21,10 @@ BUILD_DIR?=../.build-$(PROJECT_NAME)-$(CXX)-$(BUILD_TYPE)
 all: install
 
 clean:
-	find . -type d -name $(BUILD_DIR) | xargs rm -rf
+	rm -rf $(BUILD_DIR)
 
 distclean: clean
-	rm -rf $(BUILD_DIR) ${STAGEDIR}
+	rm -rf ${STAGEDIR}
 
 # update CPM.cmake
 update:
@@ -37,7 +37,7 @@ install:
 	cmake --build $(BUILD_DIR)/$@ --target test
 	cmake --build $(BUILD_DIR)/$@ --target $@
 	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' $(BUILD_DIR)/$@/compile_commands.json
-	run-clang-tidy.py -p $(BUILD_DIR)/$@ tests    # Note: only local sources! CK
+	run-clang-tidy.py -p $(BUILD_DIR)/$@ -quiet -header-filter='$(CURDIR)/.*' tests    # Note: only local sources! CK
 
 format: distclean
 	find . -name CMakeLists.txt | xargs cmake-format -i
@@ -55,4 +55,4 @@ examples: install
 
 # check the library
 check: examples
-	run-clang-tidy.py -p $(BUILD_DIR)/examples -checks='-*,modernize-*,misc-*,hicpp-*,cert-*,readability-*,portability-*,performance-*,google-*' examples
+	run-clang-tidy.py -p $(BUILD_DIR)/examples -quiet -header-filter='$(CURDIR)/.*' -checks='-*,modernize-*,misc-*,hicpp-*,cert-*,readability-*,portability-*,performance-*,google-*' examples

@@ -21,7 +21,7 @@ readability-*,\
 -*named-parameter,\
 -*uppercase-literal-suffix,\
 "
-WarningsAsErrors: ''
+WarningsAsErrors: 'clang*'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     file
