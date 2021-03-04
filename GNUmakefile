@@ -3,13 +3,17 @@
 #XXX GENERATOR?="Unix Makefiles"
 GENERATOR?=Ninja
 
-STAGEDIR?="${CURDIR}/stage"
-CMAKE_PRESET:=-G "${GENERATOR}" -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=${STAGEDIR}
+STAGEDIR?=$(CURDIR)/stage
+BUILD_TYPE?=Debug
+CMAKE_PRESET:=-G "$(GENERATOR)" -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_PREFIX_PATH=$(STAGEDIR)
 # Note: not needed -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 #XXX export CXX=clang++
 export CPM_USE_LOCAL_PACKAGES=0
 export CPM_SOURCE_CACHE=${HOME}/.cache/CPM
+
+PROJECT_NAME:=$(shell basename $(CURDIR))
+BUILD_DIR?=../.build-$(PROJECT_NAME)-$(CXX)-$(BUILD_TYPE)
 
 .PHONY: update format all test examples check clean distclean
 
@@ -17,10 +21,10 @@ export CPM_SOURCE_CACHE=${HOME}/.cache/CPM
 all: install
 
 clean:
-	find . -type d -name build | xargs rm -rf
+	find . -type d -name $(BUILD_DIR) | xargs rm -rf
 
 distclean: clean
-	rm -rf build ${STAGEDIR}
+	rm -rf $(BUILD_DIR) ${STAGEDIR}
 
 # update CPM.cmake
 update:
@@ -28,12 +32,12 @@ update:
 
 # install the library to stagedir
 install:
-	cmake -S . -B build/$@ ${CMAKE_PRESET} -DCMAKE_INSTALL_PREFIX=${STAGEDIR} -DCMAKE_CXX_STANDARD=20 #NO! -DCMAKE_CXX_CLANG_TIDY=clang-tidy # --trace-expand
-	cmake --build build/$@ --target all
-	cmake --build build/$@ --target test
-	cmake --build build/$@ --target $@
-	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' build/$@/compile_commands.json
-	run-clang-tidy.py -p build/$@ tests    # Note: only local sources! CK
+	cmake -S . -B $(BUILD_DIR)/$@ ${CMAKE_PRESET} -DCMAKE_INSTALL_PREFIX=${STAGEDIR} -DCMAKE_CXX_STANDARD=20 #NO! -DCMAKE_CXX_CLANG_TIDY=clang-tidy # --trace-expand
+	cmake --build $(BUILD_DIR)/$@ --target all
+	cmake --build $(BUILD_DIR)/$@ --target test
+	cmake --build $(BUILD_DIR)/$@ --target $@
+	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' $(BUILD_DIR)/$@/compile_commands.json
+	run-clang-tidy.py -p $(BUILD_DIR)/$@ tests    # Note: only local sources! CK
 
 format: distclean
 	find . -name CMakeLists.txt | xargs cmake-format -i
@@ -42,13 +46,13 @@ format: distclean
 	find . -name '*.h' | xargs clang-format -i
 
 test: examples
-	cmake --build build/examples --target test
+	cmake --build $(BUILD_DIR)/examples --target test
 
 examples: install
-	cmake -S $@ -B build/$@ ${CMAKE_PRESET}
-	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' build/$@/compile_commands.json
-	cmake --build build/$@
+	cmake -S $@ -B $(BUILD_DIR)/$@ ${CMAKE_PRESET}
+	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' $(BUILD_DIR)/$@/compile_commands.json
+	cmake --build $(BUILD_DIR)/$@
 
 # check the library
 check: examples
-	run-clang-tidy.py -p build/examples -checks='-*,modernize-*,misc-*,hicpp-*,cert-*,readability-*,portability-*,performance-*,google-*' examples
+	run-clang-tidy.py -p $(BUILD_DIR)/examples -checks='-*,modernize-*,misc-*,hicpp-*,cert-*,readability-*,portability-*,performance-*,google-*' examples
