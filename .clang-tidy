@@ -3,8 +3,8 @@ Checks: "-*,\
 boost-*,\
 cert-*,\
 clang-analyzer-*,\
-cppcoreguidelines-*,\
--hicpp-*,\
+--cppcoreguidelines-*,\
+hicpp-*,\
 hicpp-exception-baseclass,\
 hicpp-no-array-decay,\
 misc-*,\

@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        # type: [static, shared]
+        # TODO: type: [static, shared]
 
         os: [macos, ubuntu, windows]
 
@@ -59,17 +59,17 @@ jobs:
           cmake -S examples -B build/test -D CMAKE_PREFIX_PATH=$PWD/stage -D CMAKE_EXPORT_COMPILE_COMMANDS=1
           cmake --build build/test --config Release --target test_examples -j 4
 
-#       - name: Run clang-tidy on MacOS Host
-#         if: startsWith(matrix.os, 'macos')
-#         shell: bash
-#         run: |
-#           export PATH=/usr/local/opt/llvm/bin/:${PATH}
-#           /usr/local/opt/llvm/share/clang/run-clang-tidy.py -p build/test examples ||
-#           echo IGNORED
-#
-#       - name: Run clang-tidy on Ubuntu Host
-#         if: startsWith(matrix.os, 'ubuntu')
-#         shell: bash
-#         run: |
-#           run-clang-tidy-10 -p build/test examples ||
-#           echo IGNORED
+      - name: Run clang-tidy on MacOS Host
+        if: startsWith(matrix.os, 'macos')
+        shell: bash
+        run: |
+          export PATH=/usr/local/opt/llvm/bin/:${PATH}
+          perl -i.bak -pe 's#-I($CPM_SOURCE_CACHE)#-isystem $1#g' build/test/compile_commands.json
+          /usr/local/opt/llvm/share/clang/run-clang-tidy.py -p build/test examples
+
+      - name: Run clang-tidy on Ubuntu Host
+        if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
+        run: |
+          perl -i.bak -pe 's#-I($CPM_SOURCE_CACHE)#-isystem $1#g' build/test/compile_commands.json
+          run-clang-tidy-10 -p build/test examples

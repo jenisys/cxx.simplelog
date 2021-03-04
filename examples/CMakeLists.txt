@@ -102,8 +102,8 @@ endforeach()
 
 # -- SOLUTION 1: Builds other programs, libs first
 add_custom_target(
-    test_examples ALL
-    COMMAND ctest --config Release
+    test_examples #XXX ALL
+    COMMAND ctest -C Release
     DEPENDS ${EXAMPLE_PROGRAMS}
     COMMENT "AUTO-RUN EXAMPLES with: all"
 )

@@ -12,7 +12,6 @@
 #include "doctest/doctest.h"
 
 // -- MORE-INCLUDES:
-#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
 #include "simplelog/LogMacros.hpp"
 #include "simplelog/backend/spdlog/ModuleUtil.hpp"
 #include "simplelog/backend/spdlog/SetupUtil.hpp"
@@ -26,6 +25,7 @@
 #include <sstream>
 
 // -- LOCAL-INCLUDES:
+#include "../simplelog.backend.spdlog/CleanupLoggingFixture.hpp"
 // PREPARED: #include "CleanupLoggingFixture.hpp"
 
 namespace {
@@ -39,7 +39,7 @@ using tests::simplelog::backend_spdlog::CleanupLoggingFixture;
 // TEST CONFIG:
 // ============================================================================
 const bool NO_SHORT_MACROS = (SIMPLELOG_HAVE_SHORT_MACROS == 0);
-const auto DEFAULT_EOL = std::string(spdlog::details::os::default_eol);
+const auto DEFAULT_EOL = std::string(spdlog::details::os::default_eol); // NOLINT(cert-err58-cpp)
 
 // ============================================================================
 // TEST SUPPORT:

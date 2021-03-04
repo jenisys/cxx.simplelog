@@ -33,7 +33,7 @@ install:
 	cmake --build build/$@ --target test
 	cmake --build build/$@ --target $@
 	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' build/$@/compile_commands.json
-	#FIXME: NO! run-clang-tidy.py -p build/$@ tests    # Note: only local sources! CK
+	run-clang-tidy.py -p build/$@ tests    # Note: only local sources! CK
 
 format: distclean
 	find . -name CMakeLists.txt | xargs cmake-format -i
@@ -42,6 +42,8 @@ format: distclean
 	find . -name '*.h' | xargs clang-format -i
 
 test: examples
+	cmake --build build/examples --target test
+
 examples: install
 	cmake -S $@ -B build/$@ ${CMAKE_PRESET}
 	perl -i.bak -pe 's#-I($$CPM_SOURCE_CACHE)#-isystem $$1#g' build/$@/compile_commands.json
