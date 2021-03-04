@@ -70,5 +70,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
 # ----------------------------------------------------------------------------
 # MORE C++ SETUPS:
 # ----------------------------------------------------------------------------
+include(WarningsAsErrors)
 include(cxx.setup_cxx_standard)
 include(build_config)

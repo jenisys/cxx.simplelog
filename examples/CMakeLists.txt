@@ -21,7 +21,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 endif()
 
 # ---------------------------------------------------------------------------
-# SECTION: EXECUTABLES
+# SECTION: examples
 # ---------------------------------------------------------------------------
 add_executable(simplelog_example_spdlog)
 target_sources(simplelog_example_spdlog PRIVATE main.example_spdlog.cpp)
@@ -69,7 +69,7 @@ target_link_libraries(example_variadic_args fmt::fmt)
 ### endif()
 
 # ---------------------------------------------------------------------------
-# SECTION: AUTO-RUN PROGRAMS
+# SECTION: add examples as tests
 # ---------------------------------------------------------------------------
 enable_testing()
 
@@ -83,7 +83,7 @@ endif()
 add_custom_target(
     examples
     DEPENDS ${EXAMPLE_PROGRAMS}
-    COMMENT "RUN: examples"
+    COMMENT "BUILD: examples"
 )
 
 foreach(_EXAMPLE_PROGRAM ${EXAMPLE_PROGRAMS})
@@ -97,16 +97,16 @@ foreach(_EXAMPLE_PROGRAM ${EXAMPLE_PROGRAMS})
 endforeach()
 
 # ---------------------------------------------------------------------------
-# SECTION: Run examples as tests
+# SECTION: Auto-Run examples as tests
 # ---------------------------------------------------------------------------
 
-# -- SOLUTION 1: Builds other programs, libs first
-add_custom_target(
-    test_examples #XXX ALL
-    COMMAND ctest -C Release
-    DEPENDS ${EXAMPLE_PROGRAMS}
-    COMMENT "AUTO-RUN EXAMPLES with: all"
-)
+# -- MAYBY: Builds other programs, libs first
+# add_custom_target(
+#     test_examples ALL
+#     COMMAND ctest -C Release --output-on-failure
+#     DEPENDS ${EXAMPLE_PROGRAMS}
+#     COMMENT "AUTO-RUN EXAMPLES with: all"
+# )
 
 # -- more TESTS:
 add_test(NAME example_simplelog.spdlog COMMAND simplelog_example_spdlog)

@@ -22,7 +22,7 @@ endif()
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
 project(
-    cxx.simplelog
+    simplelog
     VERSION 0.2.0
     LANGUAGES CXX
 )
