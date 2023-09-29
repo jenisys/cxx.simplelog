@@ -1,0 +1,8 @@
+{
+    "paths": [
+      "src/**/*.cpp",
+      "src/**/*.hpp"
+    ],
+    "buildRoot": "build.multi",
+    "command": "/usr/local/opt/llvm/bin/clang-tidy"
+  }

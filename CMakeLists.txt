@@ -15,7 +15,7 @@ if(MASTER_PROJECT)
     include(ccache)
     # MAYBE:
     include(GenerateExportHeader)
-    include(WriteCompilerDetectionHeader)
+    # DEPRECATED: include(WriteCompilerDetectionHeader)
 endif()
 
 # ---------------------------------------------------------------------------

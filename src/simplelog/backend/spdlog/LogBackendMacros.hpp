@@ -30,7 +30,7 @@
  * Defines a logging module (logger).
  **/
 #define SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name) \
-    auto var_name = ::simplelog::backend_spdlog::useOrCreateLogger(name)
+    auto (var_name) = ::simplelog::backend_spdlog::useOrCreateLogger(name)
 
 /**
  * @macro SIMPLELOG_BACKEND_LOG(logger, level, ...)
@@ -41,7 +41,7 @@
  **/
 #if SIMPLELOG_BACKEND_SPDLOG__USE_SOURCE_LOCATION
 #  define SIMPLELOG_BACKEND_LOG(logger, level, ...) \
-    logger->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, level, __VA_ARGS__)
+    (logger)->log(::spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, (level), __VA_ARGS__)
 #else
 #  define SIMPLELOG_BACKEND_LOG(logger, level, ...)  logger->log(level, __VA_ARGS__)
 #endif

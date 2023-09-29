@@ -22,7 +22,7 @@
 // XXX #  define SIMPLELOG_DIAG_TRACE(format, ...)  fmt::print("SIMPLELOG_DIAG: " format  "\n", __VA_ARGS__)
 // OLD: #  include <iostream>
 // OLD: #  define SIMPLELOG_DIAG_TRACE__0(x) std::cout << x << std::endl
-#  define SIMPLELOG_DIAG_TRACE0(message)      std::cout <<"SIMPLELOG_DIAG: "<< message <<"\n"
+#  define SIMPLELOG_DIAG_TRACE0(message)      std::cout <<"SIMPLELOG_DIAG: "<< (message) <<"\n"
 #  define SIMPLELOG_DIAG_TRACE(...)  std::cout <<"SIMPLELOG_DIAG: "<< fmt::format(__VA_ARGS__) <<"\n"
 #else
 #  define SIMPLELOG_DIAG_TRACE0(message)     (void)0

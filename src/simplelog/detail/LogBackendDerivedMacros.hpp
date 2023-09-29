@@ -17,7 +17,7 @@
 // --------------------------------------------------------------------------
 #ifndef SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE
 #define SIMPLELOG_BACKEND_DEFINE_STATIC_MODULE(var_name, name) \
-    static SIMPLELOG_BACKEND_DEFINE_MODULE(var_name, name)
+    static SIMPLELOG_BACKEND_DEFINE_MODULE((var_name), (name))
 #endif
 
 #ifndef SIMPLELOG_BACKEND_LOG_IF

@@ -21,9 +21,9 @@
 // --------------------------------------------------------------------------
 // LOGGING BACKEND MACROS
 // --------------------------------------------------------------------------
-#define SIMPLELOG_BACKEND_DEFINE_MODULE(module, name) auto module = ::simplelog::backend_systemd_journal::useOrCreateModule(name)
-#define SIMPLELOG_BACKEND_LOG(module, level, ...)       module.log(level, __VA_ARGS__)
-#define SIMPLELOG_BACKEND_LOG0(module, level, message)  module.log(level, message)
+#define SIMPLELOG_BACKEND_DEFINE_MODULE(module, name) auto (module) = ::simplelog::backend_systemd_journal::useOrCreateModule(name)
+#define SIMPLELOG_BACKEND_LOG(module, level, ...)       (module).log(level, __VA_ARGS__)
+#define SIMPLELOG_BACKEND_LOG0(module, level, message)  (module).log(level, message)
 
 // --------------------------------------------------------------------------
 // LOGGING BACKEND: LEVEL DEFINITIONS

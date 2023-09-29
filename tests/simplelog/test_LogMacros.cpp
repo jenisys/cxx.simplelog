@@ -47,7 +47,7 @@ const auto DEFAULT_EOL = std::string(spdlog::details::os::default_eol);
 //     return std::make_shared<spdlog::logger>(name);
 // }
 
-void setupLoggingToNullSink(void)
+void setupLoggingToNullSink()
 {
     // OR: using NullSink = spdlog::sinks::null_sink_st;
     using NullSink = spdlog::sinks::null_sink_mt;
@@ -66,7 +66,7 @@ void setupLoggingToStreamSink(std::ostream& outputStream)
     simplelog::backend_spdlog::setLevel(spdlog::level::info);
 }
 
-unsigned count(const std::string& subject, const std::string& part)
+auto count(const std::string& subject, const std::string& part) -> unsigned
 {
     unsigned counter = 0;
     size_t pos = subject.find(part);

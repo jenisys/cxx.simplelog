@@ -24,7 +24,7 @@ namespace simplelog { namespace backend {
 // LOGGING BACKEND MACROS
 // --------------------------------------------------------------------------
 #define SIMPLELOG_BACKEND_NULL_STATEMENT  (void)0
-#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) ::simplelog::backend_null::NullCategory *vname = nullptr
+#define SIMPLELOG_BACKEND_DEFINE_MODULE(vname, name) ::simplelog::backend_null::NullCategory *(vname) = nullptr
 
 #define SIMPLELOG_BACKEND_LOG(logger, level, ...)                   SIMPLELOG_BACKEND_NULL_STATEMENT
 #define SIMPLELOG_BACKEND_LOG_IF(condition, logger, level, ...)     SIMPLELOG_BACKEND_NULL_STATEMENT

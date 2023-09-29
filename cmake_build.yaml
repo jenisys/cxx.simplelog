@@ -20,8 +20,10 @@ cmake_defines:
 build_dir_schema: "build.{BUILD_CONFIG}"
 build_config: multi
 build_configs:
-  - debug
-  - release
+  - debug:
+      cmake_config_type: Debug
+  - release:
+      cmake_config_type: Release
   - multi:
       cmake_generator: ninja.multi
 
