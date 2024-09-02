@@ -1,65 +1,26 @@
-# ===========================================================================
-# PYTHON PACKAGE REQUIREMENTS:
-# ===========================================================================
-# PRECONDITION: python 2.7.16 or newer is installed
+# ============================================================================
+# PYTHON PACKAGE REQUIREMENTS: cxx.simplelog
+# ============================================================================
 # DESCRIPTION:
-#    cmake-build: Simplify building CMake projects on command-line.
-#    cmake:       Python package from cmake.org to simplify update of cmake.
-#
-# USAGE:
-#    On Windows: pip install -U -r <THIS_FILE>
-#    On UNIX:    sudo pip install -U -r <THIS_FILE>
-#
-# USING VIRTUALENV FOR SETUP OF ISOLATED ENVIRONMENT:
-#    On Windows:
-#
-#        virtualenv .venv_py
-#        call .venv_py\Scripts\activate
-#        pip install -U -r py.requirements.txt
-#
-#    On UNIX:
-#
-#        virtualenv .venv_py
-#        source .venv_py/bin/activate
-#        pip install -U -r py.requirements.txt
+#    pip install -r <THIS_FILE>
 #
 # SEE ALSO:
-#   * https://github.com/jenisys/cmake-build
-#   * https://cmake.org
-#
-# SEE ALSO: Multi-repo tools (for git)
-#   * https://github.com/vcstools/wstool
-#   * https://github.com/vcstools/wstool/blob/master/doc/wstool_usage.rst
-#   * https://github.com/dirk-thomas/vcstool
-#   * https://github.com/mateodelnorte/meta
-#   * https://medium.com/@patrickleet/mono-repo-or-multi-repo-why-choose-one-when-you-can-have-both-e9c77bd0c668
-# ===========================================================================
-# -- cmake-build >= 0.2.2
-# OR: git+https://github.com/jenisys/cmake-build
-# OR: https://github.com/jenisys/cmake-build/archive/v0.2.2.tar.gz
-git+https://github.com/jenisys/cmake-build@v0.2.2
+#  * http://www.pip-installer.org/
+# ============================================================================
 
-# -- OPTIONAL: Use newer CMake and ninja version(s) with pip.
-# BASED ON:
-#   * https://github.com/scikit-build/cmake-python-distributions
-#   * https://github.com/scikit-build/ninja-python-distributions
-#   * https://cmake-python-distributions.readthedocs.io/en/latest/
-# cmake >= 3.18
-# ninja >= 1.10
-cmake >= 3.18
+# -- HINT: cmake can be installed as python wheel (provide by cmake team).
+# REASON: Many package managers (debian, apt, ...) are rather conservative.
+# BUT:    Developer(s) often need newer versions.
+# BETTER: cmake >= 3.18
+cmake >= 3.16
+ninja
 
-# -- wstool: multi-repo tool for git, svn, ...
-# wstool >= 0.1.18 (not release on pypi.org)
-# OR: https://github.com/vcstools/wstool/archive/0.1.18.tar.gz
-git+https://github.com/vcstools/wstool@0.1.18
+cmake-format
+clang-format >= 18.1.8
+clang-tidy >= 18.1.8
+gcovr
 
-# MAYBE: vcstool >= 0.2.15
-# -- meta: multi-repo tool which supports to splitup monorepos in meta-repos/multi-repos.
-# INSTALL: npm install -g meta
+# -- MAYBE:
+# uv >= 0.4.0
 
-# EXPERIMENT: CMake package manager
-# https://cget.readthedocs.io/en/latest/src/intro.html
-# DISABLED: cget
-
-# -- OPTIONAL: invoke constraints
-# DISABLED: -r tasks/py.requirements.txt
+-r tasks/py.requirements.txt

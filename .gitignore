@@ -4,7 +4,11 @@
 /build/
 /build.*/
 /bin/
+/cmake-build-*/
 /.cproject
+/.direnv/
+/.fleet/
+/.idea/
 /.vscode/
 /.installed/
 
