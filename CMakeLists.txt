@@ -2,7 +2,7 @@
 # CMAKE: cxx.simplelog
 # ===========================================================================
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15..3.30)
 
 set(MASTER_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
@@ -15,69 +15,51 @@ if(MASTER_PROJECT)
     include(ccache)
     # MAYBE:
     include(GenerateExportHeader)
-    include(WriteCompilerDetectionHeader)
+    # DISABLED: include(WriteCompilerDetectionHeader)
 endif()
 
 # ---------------------------------------------------------------------------
 # PROJECT: simplelog
 # ---------------------------------------------------------------------------
-project(cxx.simplelog VERSION 0.1.11 LANGUAGES CXX)
+project(cxx.simplelog VERSION 0.3.0 LANGUAGES CXX)
 
 option(BUILD_EXAMPLES "Enable simplelog examples" OFF)
 option(BUILD_TESTING  "Enable tests (and examples)" OFF)
 
 option(SIMPLELOG_USE_BACKEND_SPDLOG "Use spdlog as simplelog-backend" ON)
 option(SIMPLELOG_USE_BACKEND_SYSLOG "Use syslog as simplelog-backend" ON)
-option(SIMPLELOG_USE_BUNDLED_SPDLOG "Use bundled spdlog library" ON)
-option(SIMPLELOG_USE_BUNDLED_FMTLIB "Use bundled fmt library" ON)
 option(SIMPLELOG_CPACK_SOURCE_IGNORE_THIRD_PARTY "Bundle third-party libs with source-package" ON)
 option(SIMPLELOG_BUILD_EXAMPLES "Enable simplelog examples"   ${MASTER_PROJECT})
 option(SIMPLELOG_BUILD_TESTS    "Enable tests (and examples)" ${MASTER_PROJECT})
 set(DOCTEST_NO_INSTALL ON CACHE BOOL "Normally exclude doctest from packages" FORCE)
-set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BUNDLED_SPDLOG} CACHE BOOL
+set(SPDLOG_INSTALL  ${SIMPLELOG_USE_BACKEND_SPDLOG} CACHE BOOL
                     "Normally include spdlog from packages" FORCE)
-set(FMT_INSTALL ${SIMPLELOG_USE_BUNDLED_FMTLIB} CACHE BOOL
-                "Normally include fmt from packages" FORCE)
+set(FMT_INSTALL ON CACHE BOOL  "Normally include fmt from packages" FORCE)
 
 include(cxx.setup_project)
-
-# ---------------------------------------------------------------------------
-# SECTION: BOOTSTRAP -- When wstool update was not done yet
-# ---------------------------------------------------------------------------
-if(NOT DEFINED BOOTSTRAP_VARIANT)
-    set(BOOTSTRAP_VARIANT "wstool")
-endif()
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_project/bootstrap_subprojects_with_${BOOTSTRAP_VARIANT}.cmake")
+include(CPM)
 
 
 # ---------------------------------------------------------------------------
 # SECTION: Find Packages
 # ---------------------------------------------------------------------------
-# SHORTCUT: Supports spdlog-1.5.0, spdlog-1.4.2 at least
-# CURRENT: SPDLOG_VERSION = 1.8.0
-set(SPDLOG_MIN_VERSION "1.4.2")
+# SEE: https://github.com/gabime/spdlog
+# SEE: https://github.com/gabime/spdlog/wiki/9.-CMake
+CPMAddPackage(NAME spdlog
+    VERSION 1.14.1
+    GITHUB_REPOSITORY gabime/spdlog
+)
 
-# find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
-# DISABLED: if(NOT spdlog_FOUND)
-if(TRUE)
-    set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
-    # set(spdlog_FOUND ON)
-endif()
+CPMAddPackage("gh:fmtlib/fmt#11.0.2")
 
-# -- THIRD-PARTY PARTS:
-# set(SIMPLELOG_USE_BUNDLED_SPDLOG ON)
-if(SIMPLELOG_USE_BUNDLED_SPDLOG)
-    message(STATUS "USING: spdlog (bundled, as subproject)")
-    set(SPDLOG_INSTALL ON)
-    add_subdirectory(lib/spdlog spdlog)
+# -- SEE: https://github.com/doctest/doctest
+# https://github.com/doctest/doctest/blob/master/doc/markdown/build-systems.md
+if(SIMPLELOG_BUILD_TESTS)
+    CPMAddPackage(NAME doctest
+        VERSION 2.4.11
+        GITHUB_REPOSITORY doctest/doctest
+    )
 endif()
-if(SIMPLELOG_USE_BUNDLED_FMTLIB)
-    message(STATUS "USING: fmt (bundled, as subproject)")
-    add_subdirectory(lib/fmt fmt)
-endif()
-# TODO: SPDLOG_VERSION, FMT_VERSION is EMPTY or UNDEFINED
-message(STATUS "USING: spdlog.version=${SPDLOG_VERSION} (expected: ${SPDLOG_MIN_VERSION}, bundled: ${SIMPLELOG_USE_BUNDLED_SPDLOG})")
-message(STATUS "USING: fmt.version=${FMT_VERSION} (bundled: ${SIMPLELOG_USE_BUNDLED_FMTLIB})")
 
 # find_package(Syslog)
 # message(STATUS "Syslog_FOUND=${Syslog_FOUND}")
@@ -121,8 +103,6 @@ endif()
 # ---------------------------------------------------------------------------
 if(SIMPLELOG_BUILD_TESTS OR BUILD_TESTING)
     enable_testing()
-    # find_package(doctest REQUIRED)
-    add_subdirectory(lib/doctest doctest)
     add_subdirectory(tests)
 endif()
 

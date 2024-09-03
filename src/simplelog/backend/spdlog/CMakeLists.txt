@@ -5,10 +5,9 @@
 # ---------------------------------------------------------------------------
 # DEPENDENCIES
 # ---------------------------------------------------------------------------
-# MAYBE: set(SPDLOG_MIN_VERSION "1.5.2")
 if(NOT TARGET spdlog::spdlog)
     if(NOT DEFINED SPDLOG_MIN_VERSION)
-        set(SPDLOG_MIN_VERSION "1.4.2")
+        set(SPDLOG_MIN_VERSION "1.14.1")
     endif()
     find_package(spdlog ${SPDLOG_MIN_VERSION} REQUIRED)
 endif()

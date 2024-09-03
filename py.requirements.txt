@@ -20,6 +20,8 @@ clang-format >= 18.1.8
 clang-tidy >= 18.1.8
 gcovr
 
+cmake-build @ git+https://github.com/jenisys/cmake-build@v0.2.4.dev2
+
 # -- MAYBE:
 # uv >= 0.4.0
 

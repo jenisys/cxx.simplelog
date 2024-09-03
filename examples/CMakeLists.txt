@@ -74,26 +74,19 @@ target_compile_definitions(simplelog_example_syslog
 # ---------------------------------------------------------------------------
 # SECTION: Run examples as tests
 # ---------------------------------------------------------------------------
-set(CXX_FMTLIB "spdlog::spdlog")    # Use embedded FMT library.
-# XXX-MARKER: set(CXX_FMTLIB "spdlog")    # Use embedded FMT library.
-if(SIMPLELOG_USE_BUNDLED_FMTLIB OR FMT_FOUND)
-    set(CXX_FMTLIB "fmt::fmt")
+set(CXX_FMTLIB "fmt::fmt")    # Use embedded FMT library.
+if(NOT TARGET fmt::fmt)
+    set(CXX_FMTLIB "spdlog::spdlog")    # Use embedded FMT library.
 endif()
+
 # -- EXECUTABLE:
 add_executable(example_variadic_args)
 target_sources(example_variadic_args PRIVATE
     main.variadic_args_recipe_for_zero_args.cpp
 )
-target_link_libraries(example_variadic_args
-    # fmt::fmt
+target_link_libraries(example_variadic_args PRIVATE
     ${CXX_FMTLIB}
 )
-if(SIMPLELOG_USE_BUNDLED_FMTLIB)
-    target_compile_definitions(example_variadic_args
-        PRIVATE
-            SIMPLELOG_DIAG__USE_SPDLOG_FMTLIB=0
-    )
-endif()
 list(APPEND EXAMPLE_PROGRAMS  example_variadic_args)
 
 # ---------------------------------------------------------------------------
