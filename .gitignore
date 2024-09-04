@@ -28,6 +28,6 @@ __*.diff
 /lib/quill/
 
 # -- MANUAL COPIES: For a specific version.
-/lib/doctet_v*/
+/lib/doctest_v*/
 /lib/fmt_v*/
 /lib/spdlog_v*/

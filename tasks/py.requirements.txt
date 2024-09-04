@@ -10,6 +10,8 @@
 
 invoke >= 1.3.0
 six >= 1.12.0
+
+# For cleanup of python files: py.cleanup
 pycmd
 
 # -- HINT: path.py => path (python-install-package was renamed for python3)
@@ -20,6 +22,3 @@ path >= 13.1.0;    python_version >= '3.5'
 # DISABLED: pathlib;    python_version <= '3.4'
 pathlib2; python_version < '3.4'
 backports.shutil_which; python_version <= '3.3'
-
-# For cleanup of python files: py.cleanup
-pycmd
